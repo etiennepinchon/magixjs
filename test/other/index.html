@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>OrbeJS test</title>
+	<script type="text/javascript" src="orbe.min.js"></script>
+</head>
+<body>
+	<script type="text/javascript">
+		console.time('load')
+			
+		// Run App
+		App.run(function() {
+			console.timeEnd('load')
+			console.log('App Running!');
+
+			myPage = new Page({
+				background: 'white',
+				parent: App
+			});
+
+			hello = new View({
+				width: 300,
+				height: 300,
+				bc: red,
+				parent: myPage
+			})
+				
+			hello.center()
+		});
+	</script>
+</body>
+</html>

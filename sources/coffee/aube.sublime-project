@@ -1,0 +1,18 @@
+{
+	"folders":
+	[
+		{
+			"follow_symlinks": true,
+			"path": "/Users/etienne/Documents/OrbeJS/assets/coffee"
+		}
+	],
+  	"settings":
+  	{
+  		"CoffeeScript":
+  		{
+  			"noWrapper": true,
+  			"compileOnSave": true,
+  			"compileDir": "out"
+  		}
+  	}
+}

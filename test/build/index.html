@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>OrbeJS</title>
+	<script type="text/javascript" src="/orbe.min.js"></script>
+</head>
+<body>
+	<script type="text/javascript">
+		console.time('load')
+			
+		// Run App
+		App.run(function() {
+			console.timeEnd('load')
+			console.log('App Running!');
+		});
+	</script>
+</body>
+</html>

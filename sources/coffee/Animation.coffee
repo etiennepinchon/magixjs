@@ -1,0 +1,311 @@
+AnimatorClasses =
+	"linear": LinearAnimator
+	"bezier-curve": BezierCurveAnimator
+	"spring-rk4": SpringRK4Animator
+	"spring-dho": SpringDHOAnimator
+
+AnimatorClasses["spring"] = AnimatorClasses["spring-rk4"]
+AnimatorClasses["cubic-bezier"] = AnimatorClasses["bezier-curve"]
+
+AnimatorClassBezierPresets = ["ease", "ease-in", "easein", "ease-out", "easeout", "ease-in-out", "easeinout"]
+
+numberRE = /[+-]?(?:\d*\.|)\d+(?:[eE][+-]?\d+|)/
+relativePropertyRE = new RegExp('^(?:([+-])=|)(' + numberRE.source + ')([a-z%]*)$', 'i')
+
+isRelativeProperty = (v) ->
+	Utils.isString(v) and relativePropertyRE.test(v)
+
+evaluateRelativeProperty = (target, k, v) ->
+	[match, sign, number, unit, rest...] = relativePropertyRE.exec(v)
+	return target[k] + (sign + 1) * number if sign
+	return +number
+
+# _runningAnimations = []
+
+# Todo: this would normally be Element but the properties keyword
+# is not compatible and causes problems.
+class Animation extends Element
+
+	constructor: (options={}) ->
+
+		if options.props
+			options.properties = options.props
+
+		if options.duration
+			options.time = options.duration
+		
+		options = Defaults.get "Animation", options
+
+		super options
+
+		@options = Utils.clone Utils.defaults options,
+			view: null
+			properties: {}
+			curve: "linear"
+			curveOptions: {}
+			time: 0.3
+			repeat: 0
+			delay: 0
+			debug: false
+			colorModel: "husl"
+
+		finishCallback = false
+		finishCallback = options.then if options.then isnt undefined
+		finishCallback = options.finish if options.finish isnt undefined
+		finishCallback = options.done if options.done isnt undefined
+		finishCallback = options.end if options.end isnt undefined
+		finishCallback = options.finished if options.finished isnt undefined
+		
+		if finishCallback
+			@on Event.AnimationEnd, ->
+				try
+					finishCallback()
+				catch e
+					console.error e.toString()
+					
+		if options.origin
+			console.warn "Animation.origin: please use view.originX and view.originY"
+
+		@options.properties = Animation.filterAnimatableProperties(@options.properties)
+
+		@_parseAnimatorOptions()
+		@_originalState = @_currentState()
+		@_repeatCounter = @options.repeat
+
+	@define "isAnimating",
+		get: -> @ in @options.view.context.animations
+
+	start: =>
+
+		if @options.view is null
+			console.error "Animation: missing view"
+
+		AnimatorClass = @_animatorClass()
+
+		if @options.debug
+			console.log "Animation.duration #{@options.time}"
+			console.log "Animation.start #{AnimatorClass.name}", @options.curveOptions
+
+		@_animator = new AnimatorClass @options.curveOptions
+
+		@_target = @options.view
+		@_stateA = @_currentState()
+		@_stateB = {}
+
+		for k, v of @options.properties
+
+			# Evaluate function properties
+			if Utils.isFunction(v)
+				v = v(@options.view, k)
+
+			# Evaluate relative properties
+			else if isRelativeProperty(v)
+				v = evaluateRelativeProperty(@_target, k, v)
+
+			# Filter out the properties that are equal
+			@_stateB[k] = v if @_stateA[k] != v
+
+		if Utils.keys(@_stateA).length is 0
+			console.warn "Animation: nothing to animate, no animatable properties"
+			return false
+
+		if Utils.isEqual(@_stateA, @_stateB)
+			console.warn "Animation: nothing to animate, all properties are equal to what it is now"
+			return false
+
+		# If this animation wants to animate a property that is already being animated, it stops
+		# that currently running animation. If not, it allows them both to continue.
+		for property, animation of @_target.animatingProperties()
+
+			if @_stateA.hasOwnProperty(property)
+				animation.stop()
+
+			# We also need to account for derivatives from x, y
+			if property is "x" and (
+				@_stateA.hasOwnProperty("minX") or
+				@_stateA.hasOwnProperty("midX") or
+				@_stateA.hasOwnProperty("maxX"))
+				animation.stop()
+
+			if property is "y" and (
+				@_stateA.hasOwnProperty("minY") or
+				@_stateA.hasOwnProperty("midY") or
+				@_stateA.hasOwnProperty("maxY"))
+				animation.stop()
+
+		if @options.debug
+			console.log "Animation.start"
+			console.log "\t#{k}: #{@_stateA[k]} -> #{@_stateB[k]}" for k, v of @_stateB
+
+		# See if we need to repeat this animation
+		# Todo: more repeat behaviours:
+		# 1) add (from end position) 2) reverse (loop between a and b)
+		if @_repeatCounter > 0
+			@once "end", =>
+				for k, v of @_stateA
+					@_target[k] = v
+				@_repeatCounter--
+				@start()
+
+		#console.log @options
+
+		# If we have a delay, we wait a bit for it to start
+		if @options.delay
+			Utils.delay(@options.delay, @_start)
+		else
+			@_start()
+
+		return true
+
+	stop: (emit=true)->
+
+		@options.view.context.removeAnimation(@)
+
+		@emit("stop") if emit
+		App.Loop.off("update", @_update)
+
+	reverse: ->
+		# TODO: Add some tests
+		options = Utils.clone(@options)
+		options.properties = @_originalState
+		animation = new Animation options
+		animation
+
+	copy: -> return new Animation(Utils.clone(@options))
+
+	# A bunch of common aliases to minimize frustration
+	revert: -> 	@reverse()
+	inverse: -> @reverse()
+	invert: -> 	@reverse()
+
+	emit: (event) ->
+		super
+		# Also emit this to the view with self as argument
+		@options.view.emit(event, @)
+
+	animatingProperties: ->
+		Utils.keys(@_stateA)
+
+	_start: =>
+		@options.view.context.addAnimation(@)
+		@emit("start")
+		App.Loop.on("update", @_update)
+
+		# Figure out what kind of values we have so we don't have to do it in
+		# the actual update loop. This saves a lot of frame budget.
+
+		@_valueUpdaters = {}
+	
+		for k, v of @_stateB
+			if Color.isColorObject(v) or Color.isColorObject(@_stateA[k])
+				@_valueUpdaters[k] = @_updateColorValue
+			else
+				@_valueUpdaters[k] = @_updateNumberValue
+
+
+	_update: (delta) =>
+		if @_animator.finished()
+			@_updateValues(1)
+			@stop(emit=false)
+			@emit("end")
+			@emit("stop")
+		else
+			@_updateValues(@_animator.next(delta))
+
+	_updateValues: (value) =>
+		@_valueUpdaters[k](k, value) for k, v of @_stateB
+		return null
+
+	_updateNumberValue: (key, value) =>
+		@_target[key] = Utils.mapRange(value, 0, 1, @_stateA[key], @_stateB[key])
+		
+	_updateColorValue: (key, value) =>
+		@_target[key] = Color.mix(@_stateA[key], @_stateB[key], value, false, @options.colorModel)
+
+	_currentState: ->
+		return Utils.pick(@options.view, Utils.keys(@options.properties))
+
+	_animatorClass: ->
+
+		parsedCurve = Utils.parseFunction(@options.curve)
+		animatorClassName = parsedCurve.name.toLowerCase()
+
+		if AnimatorClasses.hasOwnProperty(animatorClassName)
+			return AnimatorClasses[animatorClassName]
+
+		if animatorClassName in AnimatorClassBezierPresets
+			return BezierCurveAnimator
+
+		return LinearAnimator
+
+	_parseAnimatorOptions: ->
+
+		animatorClass = @_animatorClass()
+		parsedCurve = Utils.parseFunction @options.curve
+		animatorClassName = parsedCurve.name.toLowerCase()
+
+		# This is for compatibility with the direct Animation.time argument. This should
+		# ideally also be passed as a curveOption
+
+		if animatorClass in [LinearAnimator, BezierCurveAnimator]
+			if Utils.isString(@options.curveOptions) or Utils.isArray(@options.curveOptions)
+				@options.curveOptions =
+					values: @options.curveOptions
+
+			@options.curveOptions.time = @options.time
+			#@options.curveOptions.time ?= @options.time
+
+		# Support ease-in etc
+		if animatorClass in [BezierCurveAnimator] and animatorClassName in AnimatorClassBezierPresets
+			@options.curveOptions.values = animatorClassName
+			@options.curveOptions.time = @options.time
+			#@options.curveOptions.time ?= @options.time
+
+		# All this is to support curve: "spring(100,20,10)". In the future we'd like people
+		# to start using curveOptions: {tension:100, friction:10} etc
+
+		if parsedCurve.args.length
+
+			# console.warn "Animation.curve arguments are deprecated. Please use Animation.curveOptions"
+
+			if animatorClass is BezierCurveAnimator
+				@options.curveOptions.values = parsedCurve.args.map (v) -> parseFloat(v) or 0
+
+			if animatorClass is SpringRK4Animator
+				for k, i in ["tension", "friction", "velocity", "tolerance"]
+					value = parseFloat parsedCurve.args[i]
+					@options.curveOptions[k] = value if value
+
+			if animatorClass is SpringDHOAnimator
+				for k, i in ["stiffness", "damping", "mass", "tolerance"]
+					value = parseFloat parsedCurve.args[i]
+					@options.curveOptions[k] = value if value
+
+	@filterAnimatableProperties = (properties) ->
+		# Function to filter only animatable properties out of a given set
+		animatableProperties = {}
+
+		# Only animate numeric properties for now
+		for k, v of properties
+			if Utils.isNumber(v) or Utils.isFunction(v) or isRelativeProperty(v) or Color.isColorObject(v) or v == null
+				animatableProperties[k] = v
+			else if Utils.isString(v)
+				if Color.isColorString(v)
+					animatableProperties[k] = new Color(v)
+
+
+		return animatableProperties
+
+	toInspect: ->
+		return "<Animation id:#{@id} isAnimating:#{@isAnimating} [#{Utils.keys(@options.properties)}]>"
+
+
+	##############################################################
+	## EVENT HELPERS
+
+	onAnimationStart: (cb) -> @on(Event.AnimationStart, cb)
+	onAnimationStop: (cb) -> @on(Event.AnimationStop, cb)
+	onAnimationEnd: (cb) -> @on(Event.AnimationEnd, cb)
+	onAnimationDidStart: (cb) -> @on(Event.AnimationDidStart, cb)
+	onAnimationDidStop: (cb) -> @on(Event.AnimationDidStop, cb)
+	onAnimationDidEnd: (cb) -> @on(Event.AnimationDidEnd, cb)
