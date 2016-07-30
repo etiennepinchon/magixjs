@@ -113,7 +113,7 @@ TextView = (function(_super) {
   });
 
   TextView.prototype.fit = function() {
-    return this.height = this.scrollHeight + 2;
+    return this.height = this.scrollHeight;
   };
 
   return TextView;

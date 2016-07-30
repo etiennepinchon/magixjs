@@ -17,16 +17,23 @@ Import = function(paths, cb) {
         urlPathname = App.location.pathname.split('/');
         urlPathname.shift();
         urlPathname.shift();
-        path = '/p/' + urlPathname[0] + '/' + path;
+        path = '/p/' + urlPathname[0] + path;
       }
     }
     if (App.__IS_DIRECT_PATH && Utils.startsWith(path, '/build/')) {
       path = '/' + window.__ID + path;
     }
-    if (App.__BUILD) {
+    if (App.__IS_PREVIEW) {
+      path += '?b=' + (new Date().getTime());
+    } else if (App.__BUILD) {
       path += '?b=' + App.__BUILD;
     }
     toImport.push(path);
+  }
+  if (App.USE_PROJECT_PATH) {
+    $LAB.setGlobalDefaults({
+      CacheBust: true
+    });
   }
   return $LAB.setGlobalDefaults({
     'ErrorHandler': function(e) {

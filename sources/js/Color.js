@@ -1,15 +1,7 @@
-var Color, ColorModel, ColorType, bound01, color, convertToPercentage, correctAlpha, cssNames, hslToRgb, inputData, isNumeric, isOnePointZero, isPercentage, matchers, numberFromString, pad2, percentToFraction, rgb, rgbToHex, rgbToHsl, rgbToRgb, rgba, rgbaFromHusl, stringToObject,
+var Color, ColorModel, ColorType, bound01, color, convertToPercentage, correctAlpha, cssNames, hslToRgb, inputData, isNumeric, isOnePointZero, isPercentage, matchers, numberFromString, pad2, percentToFraction, rgbToHex, rgbToHsl, rgbToRgb, rgbaFromHusl, stringToObject,
   __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
-
-rgb = function(r, g, b) {
-  return "rgb(" + r + ", " + g + ", " + b + ")";
-};
-
-rgba = function(r, g, b, a) {
-  return "rgba(" + r + ", " + g + ", " + b + ", " + a + ")";
-};
 
 ColorType = {
   RGB: "rgb",
@@ -188,6 +180,7 @@ Color = (function(_super) {
   };
 
   Color.prototype.brighten = function(amount) {
+    var rgb;
     if (amount == null) {
       amount = 10;
     }
@@ -431,6 +424,8 @@ Color = (function(_super) {
       if (typeof arg === "string" && this.isColorString(arg)) {
         arg = new Color(arg);
         colors.push(arg);
+      } else if (arg !== void 0 && arg.toString) {
+        colors.push(arg.toString());
       } else {
         if (arg === 'transparent' || arg === 'clear') {
           arg = new Color();
@@ -490,7 +485,7 @@ ColorModel.isHSL = function(colorModel) {
 };
 
 rgbaFromHusl = function(husl) {
-  var c;
+  var c, rgb, rgba;
   c = libhusl._conv;
   rgb = c.xyz.rgb(c.luv.xyz(c.lch.luv(c.husl.lch([husl.h, husl.s, husl.l]))));
   rgba = {
@@ -503,7 +498,7 @@ rgbaFromHusl = function(husl) {
 };
 
 inputData = function(color, g, b, alpha) {
-  var a, h, hsl, l, ok, s, type;
+  var a, h, hsl, l, ok, rgb, s, type;
   rgb = {
     r: 0,
     g: 0,
@@ -994,3 +989,11 @@ for (color in cssNames) {
 window.clear = 'clear';
 
 window.transparent = 'transparent';
+
+window.rgb = function(r, g, b) {
+  return "rgb(" + r + ", " + g + ", " + b + ")";
+};
+
+window.rgba = function(r, g, b, a) {
+  return "rgba(" + r + ", " + g + ", " + b + ", " + a + ")";
+};

@@ -20,18 +20,21 @@ Import = (paths, cb) ->
 				urlPathname = App.location.pathname.split('/')
 				urlPathname.shift()
 				urlPathname.shift()
-				path = '/p/' + urlPathname[0] + '/' + path# + '?b=' + new Date().getTime()
+				path = '/p/' + urlPathname[0] + path
 
 		if App.__IS_DIRECT_PATH and Utils.startsWith(path, '/build/')
 			path = '/' + window.__ID + path
 
-		if App.__BUILD# and not App.USE_PROJECT_PATH
+		if App.__IS_PREVIEW
+			path += '?b=' + (new Date().getTime())
+		else if App.__BUILD
 			path += '?b=' + App.__BUILD
 
 		toImport.push path
 
-	# $LAB.setGlobalDefaults
-	# 	CacheBust: yes
+	if App.USE_PROJECT_PATH
+		$LAB.setGlobalDefaults
+			CacheBust: yes
 
 	$LAB
 		.setGlobalDefaults 

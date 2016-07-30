@@ -15,8 +15,7 @@ App.run(function() {
       weight: '600,500,400,300,100'
     }
   ]);
-  say(Color.gradient(red, blue, 'top'));
-  Playground.background = Color.gradient(red, blue, 'top');
+  Playground.background = Color.gradient(Color.random(), Color.random(), Color.random(), Color.random(), Color.random(), Color.random());
   hello = new Text({
     text: 'Hello',
     width: 300,

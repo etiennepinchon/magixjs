@@ -5,12 +5,6 @@
 # ** By Etienne Pinchon
 # ** ©2016
 
-rgb = (r, g, b) ->
-	return "rgb(#{r}, #{g}, #{b})"
-
-rgba = (r, g, b, a) ->
-	return "rgba(#{r}, #{g}, #{b}, #{a})"
-
 ColorType =
 	RGB: "rgb"
 	HSL: "hsl"
@@ -344,6 +338,8 @@ class Color extends Element
 			if typeof arg is "string" and @isColorString(arg)
 				arg = new Color arg
 				colors.push arg
+			else if arg isnt undefined and arg.toString
+				colors.push arg.toString()
 			else
 				if arg is 'transparent' or arg is 'clear'
 					arg = new Color()
@@ -869,5 +865,12 @@ for color of cssNames
 
 window.clear = 'clear'
 window.transparent = 'transparent'
+
+
+window.rgb = (r, g, b) ->
+	return "rgb(#{r}, #{g}, #{b})"
+
+window.rgba = (r, g, b, a) ->
+	return "rgba(#{r}, #{g}, #{b}, #{a})"
 
 

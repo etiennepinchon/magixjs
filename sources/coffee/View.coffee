@@ -2442,11 +2442,11 @@ class View extends Element
 		properties
 
 	# *********************************
-	# enterFullScreen method
+	# enterFullscreen method
 	# *********************************
 	# ** Allow you to switch full screen
 
-	enterFullScreen : ->
+	enterFullscreen : ->
 		# Not already full-screen?
 		if not document.fullscreenElement or not document.webkitFullscreenElement or not document.mozFullScreenElement or not document.msFullscreenElement
 			# go full-screen
@@ -2461,11 +2461,11 @@ class View extends Element
 		return
 
 	# *********************************
-	# exitFullScreen method
+	# exitFullscreen method
 	# *********************************
 	# ** Exit full screen
 
-	exitFullScreen : ->
+	exitFullscreen : ->
 		# Are we already full-screen?
 		if document.fullscreenElement or document.webkitFullscreenElement or document.mozFullScreenElement or document.msFullscreenElement
 			# exit full-screen
@@ -2480,11 +2480,11 @@ class View extends Element
 		return
 
 	# *********************************
-	# isFullScreen method
+	# isFullscreen method
 	# *********************************
 	# ** Check if the application is in fullscreen
 
-	isFullScreen : ->
+	isFullscreen : ->
 		if document.fullscreenEnabled or document.mozFullscreenEnabled or document.webkitIsFullScreen
 			return true
 		false

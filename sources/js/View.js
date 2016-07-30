@@ -2792,7 +2792,7 @@ View = (function(_super) {
     return properties;
   };
 
-  View.prototype.enterFullScreen = function() {
+  View.prototype.enterFullscreen = function() {
     if (!document.fullscreenElement || !document.webkitFullscreenElement || !document.mozFullScreenElement || !document.msFullscreenElement) {
       if (this._element.requestFullscreen) {
         this._element.requestFullscreen();
@@ -2806,7 +2806,7 @@ View = (function(_super) {
     }
   };
 
-  View.prototype.exitFullScreen = function() {
+  View.prototype.exitFullscreen = function() {
     if (document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement) {
       if (document.exitFullscreen) {
         document.exitFullscreen();
@@ -2820,7 +2820,7 @@ View = (function(_super) {
     }
   };
 
-  View.prototype.isFullScreen = function() {
+  View.prototype.isFullscreen = function() {
     if (document.fullscreenEnabled || document.mozFullscreenEnabled || document.webkitIsFullScreen) {
       return true;
     }

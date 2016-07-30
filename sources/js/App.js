@@ -56,7 +56,7 @@ if (window.__ID && window.__ID.length === 8) {
   }
 }
 
-Before = null;
+Before = void 0;
 
 Routes = function(routes, beforeFn) {
   if (beforeFn) {
@@ -215,6 +215,12 @@ App.setup = function() {
   this.Loop = new AnimationLoop();
   Utils.domComplete(this.Loop.start);
   this.GestureInputRecognizer = new GestureRecognizer();
+  this.define('selected', {
+    configurable: true,
+    get: function() {
+      return this.getSelection().toString();
+    }
+  });
   this.define('routes', {
     configurable: true,
     get: function() {
@@ -461,23 +467,23 @@ App.setup = function() {
   this.removePage = function(page) {
     return page.parent = null;
   };
-  this.enterFullScreen = function() {
+  this.enterFullscreen = function() {
     if (!this.page) {
       return false;
     }
-    return this.page.enterFullScreen();
+    return this.page.enterFullscreen();
   };
-  this.exitFullScreen = function() {
+  this.exitFullscreen = function() {
     if (!this.page) {
       return false;
     }
-    return this.page.exitFullScreen();
+    return this.page.exitFullscreen();
   };
-  this.isFullScreen = function() {
+  this.isFullscreen = function() {
     if (!this.page) {
       return false;
     }
-    return this.page.isFullScreen();
+    return this.page.isFullscreen();
   };
   this.inWebView = function() {
     var e;
@@ -704,7 +710,7 @@ App._routing = function() {
   path = this.pathname();
   fireRoute = function(name) {
     var routeFound, routeReturned, stop;
-    if (window.Before) {
+    if (window.Before && typeof window.Before === 'function') {
       stop = window.Before();
       if (stop === false) {
         return;

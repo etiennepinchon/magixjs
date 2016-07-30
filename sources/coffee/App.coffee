@@ -44,7 +44,7 @@ if window.__ID and window.__ID.length is 8
 ######################################################
 # MINIMAL FUNCTIONS
 
-Before = null
+Before = undefined
 
 Routes =  (routes, beforeFn) ->
 	if beforeFn
@@ -211,7 +211,15 @@ App.setup = ->
 	# Initiate Gesture Recognizer
 	@GestureInputRecognizer = new GestureRecognizer()
 
-	# *********************************
+	##############################################################
+	# Return Selected text
+
+	@define 'selected',
+		configurable: true
+		get: ->
+			@getSelection().toString()
+
+	##############################################################
 	# Routes property
 	#
 	# * Define the routes of the application
@@ -229,7 +237,7 @@ App.setup = ->
 
 			return
 		
-	# *********************************
+	##############################################################
 	# page property
 	#
 	# * Allow you to add a page to the app
@@ -255,7 +263,7 @@ App.setup = ->
 		get: ->
 			App._wrapper.children
 
-	# *********************************
+	##############################################################
 	# title property
 	# 
 	# * Set the current title of the page
@@ -267,7 +275,7 @@ App.setup = ->
 			document.title = value
 			return
 
-	# *********************************
+	##############################################################
 	# Fonts property
 	# 
 	# * Allow you to load font directly from google font
@@ -311,7 +319,7 @@ App.setup = ->
 				Utils.domLoadScript (if 'https:' is document.location.protocol then 'https' else 'http') + '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js'
 
 
-	# *********************************
+	##############################################################
 	# fontName property
 	#
 	# * Set the default FontName to use
@@ -333,7 +341,7 @@ App.setup = ->
 			return
 
 
-	# *********************************
+	##############################################################
 	# fontWeight property
 	# 
 	# * Set the default FontWeight to use
@@ -346,7 +354,7 @@ App.setup = ->
 			return
 
 
-	# *********************************
+	##############################################################
 	# fontSize property
 	#
 	# * Set the default FontSize to use
@@ -359,7 +367,7 @@ App.setup = ->
 			return
 
 
-	# *********************************
+	##############################################################
 	# textColor property
 	# 
 	# * Set the default TextColor to use
@@ -372,7 +380,7 @@ App.setup = ->
 			return
 
 
-	# *********************************
+	##############################################################
 	# width property
 	# 
 	# * Return the width of the app, which is the width of the window
@@ -382,7 +390,7 @@ App.setup = ->
 			@innerWidth
 
 
-	# *********************************
+	##############################################################
 	# height property
 	# 
 	# * Return the height of the app, which is the height of the window
@@ -392,7 +400,7 @@ App.setup = ->
 			@innerHeight
 
 
-	# *********************************
+	##############################################################
 	# size property
 	# 
 	# * Return the current size of the view
@@ -405,7 +413,7 @@ App.setup = ->
 			}
 
 
-	# *********************************
+	##############################################################
 	# frame property
 	# 
 	# * Return the current frame of the view
@@ -560,36 +568,34 @@ App.setup = ->
 	# FULLSCREEN
 
 	# *********************************
-	# enterFullScreen method
+	# enterFullscreen method
 	# 
 	# ** Allow you to switch full screen
 
-	@enterFullScreen = ->
+	@enterFullscreen = ->
 		if not @page
 			return false
-		@page.enterFullScreen()
+		@page.enterFullscreen()
 
 	# *********************************
-	# exitFullScreen method
+	# exitFullscreen method
 	# 
 	# * Exit full screen
 
-	@exitFullScreen = ->
+	@exitFullscreen = ->
 		if not @page
 			return false
-		@page.exitFullScreen()
+		@page.exitFullscreen()
 
 	# *********************************
-	# isFullScreen method
+	# isFullscreen method
 	# 
 	# * Check if the application is in full screen
 
-	@isFullScreen = ->
+	@isFullscreen = ->
 		if not @page
 			return false
-		@page.isFullScreen()
-
-
+		@page.isFullscreen()
 
 	# *********************************
 	# inWebView method
@@ -602,7 +608,6 @@ App.setup = ->
 		catch e
 			return true
 		return
-
 
 	######################################################
 	# ONLINE/OFFLINE CHECK
@@ -870,7 +875,7 @@ App._routing = ->
 	fireRoute = (name) ->
 
 		# Execute the before route function
-		if window.Before
+		if window.Before and typeof window.Before is 'function'
 			stop = window.Before()
 			
 			# If the returning value is false, we stop the routing

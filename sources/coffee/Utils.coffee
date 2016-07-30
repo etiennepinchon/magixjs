@@ -759,8 +759,38 @@ Utils.insertCSS = (css) ->
 		head = document.head or document.getElementsByTagName('head')[0]
 		head.appendChild styleElement
 
-# TODO: Utils.importCSS = () ->
-	
+Utils.loadCSS = (paths) ->
+	return if not paths
+	paths = [paths] if Utils.isString(paths)
+	toImport = []
+
+	# Parse paths
+	for path in paths
+
+		# No ending with .js
+		if path.indexOf('.css') is -1
+			path = '/build/' + path + '.css'
+
+			if App.USE_PROJECT_PATH
+				urlPathname = App.location.pathname.split('/')
+				urlPathname.shift()
+				urlPathname.shift()
+				path = '/p/' + urlPathname[0] + '/' + path# + '?b=' + new Date().getTime()
+
+		if App.__IS_DIRECT_PATH and Utils.startsWith(path, '/build/')
+			path = '/' + window.__ID + path
+
+		if App.__BUILD
+			path += '?b=' + App.__BUILD
+
+		head = document.getElementsByTagName('head')[0]
+		link = document.createElement('link')
+		link.rel = 'stylesheet'
+		link.type = 'text/css'
+		link.href = path
+		link.media = 'all'
+		head.appendChild link
+
 
 ######################################################
 # GEOMETRY FUNCTIONS

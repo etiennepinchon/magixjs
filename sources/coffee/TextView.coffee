@@ -118,5 +118,5 @@ class TextView extends TextField
 
 	# Will fit the content
 	fit : ->
-		@height = @scrollHeight+2
+		@height = @scrollHeight#+2
 

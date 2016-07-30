@@ -940,6 +940,44 @@ Utils.insertCSS = function(css) {
   });
 };
 
+Utils.loadCSS = function(paths) {
+  var head, link, path, toImport, urlPathname, _i, _len, _results;
+  if (!paths) {
+    return;
+  }
+  if (Utils.isString(paths)) {
+    paths = [paths];
+  }
+  toImport = [];
+  _results = [];
+  for (_i = 0, _len = paths.length; _i < _len; _i++) {
+    path = paths[_i];
+    if (path.indexOf('.css') === -1) {
+      path = '/build/' + path + '.css';
+      if (App.USE_PROJECT_PATH) {
+        urlPathname = App.location.pathname.split('/');
+        urlPathname.shift();
+        urlPathname.shift();
+        path = '/p/' + urlPathname[0] + '/' + path;
+      }
+    }
+    if (App.__IS_DIRECT_PATH && Utils.startsWith(path, '/build/')) {
+      path = '/' + window.__ID + path;
+    }
+    if (App.__BUILD) {
+      path += '?b=' + App.__BUILD;
+    }
+    head = document.getElementsByTagName('head')[0];
+    link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.type = 'text/css';
+    link.href = path;
+    link.media = 'all';
+    _results.push(head.appendChild(link));
+  }
+  return _results;
+};
+
 Utils.pointDivide = function(point, fraction) {
   return point = {
     x: point.x / fraction,
