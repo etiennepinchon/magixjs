@@ -2,8 +2,11 @@
 In mystery lies beauty. 
 [magixjs](https://magixjs.com)
 
+MagiX allow you to create the most advance webapps ever built.
+Combined with Coffeescript, MagiX get ride of HTML/CSS and Javascript allowing you to create webapps only using one language and one framework. It is easy to learn and will push your next project to new heights.
+
 #############################################
-# Stuff to know about magiX
+# About magiX
 
 * You code using COFFEESCRIPT.
 * No HTML, no CSS, no javascript required.
@@ -12,14 +15,14 @@ In mystery lies beauty.
 * No stress, no anxiety, only friendly coding!
 
 #############################################
-# DOCS / HELP
+# Help
 
 To find help visit:
 [Documentation](https://magixjs.com/learn)
 [Twitter](https://twitter.com/etiennepinchon)
 
 #############################################
-# ABOUT
+# About
 Created by Etienne Pinchon (@etiennepinchon)
 [Twitter](https://twitter.com/etiennepinchon)
 ©2016
