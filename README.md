@@ -1,4 +1,4 @@
-# magiX
+# MagiX
 In mystery lies beauty. 
 [magixjs](https://magixjs.com)
 
