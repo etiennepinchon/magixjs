@@ -7,24 +7,20 @@
 
 class Text extends View
 	constructor: (options={}) ->
-		
 		if options.header
 			@_kind = 'TextHeader'
 			@_elementType = 'h1'
 		else if options.paragraph
 			_kind = 'TextParagraph'
 			_elementType = 'p'
-			
 		super
 
-
-	
-	_kind : 'Text'
-	_assigned : {}
-	_text : ''
+	_kind 		: 'Text'
+	_assigned 	: {}
+	_text 		: ''
 
 	##############################################################
-	# Properties
+	# PROPERTIES
 
 	# *********************************
 	# text property
@@ -40,9 +36,9 @@ class Text extends View
 			for item in @children
 				item.parent = null
 			@_assigned  = {}
-			@_text = value
-			@emit 'change:text', value
+			@_text 		= value
 			@html = Utils.e(value)
+			@emit 'change:text', value
 			return
 
 	# Alias of text
@@ -51,13 +47,11 @@ class Text extends View
 		get: ->
 			@text
 		set: (value) ->
-			@emit 'change:value', value
 			@text = value
+			@emit 'change:value', value
 			return
 
-
 	# *********************************
-
 
 	# Alias that will create a header element instead of a simple text
 	@define 'header',
@@ -66,12 +60,11 @@ class Text extends View
 			@_header
 		set: (value) ->
 			return if not value
-			@emit 'change:header', value
 			@text = @_header = value
+			@emit 'change:header', value
 			return
 
 	# *********************************
-
 
 	# Alias that will create a paragraph element instead of a simple text
 	@define 'paragraph',
@@ -80,12 +73,11 @@ class Text extends View
 			@_paragraph
 		set: (value) ->
 			return if not value
-			@emit 'change:paragraph', value
 			@text = @_paragraph = value
+			@emit 'change:paragraph', value
 			return
 
 	# *********************************
-
 
 	@define 'indent',
 		get: ->
@@ -101,7 +93,6 @@ class Text extends View
 		set: (value) -> @_element.style.textDecoration = value
 	@_alias 'textDecoration', 'decoration'
 
-	
 	# *********************************
 	# spacing property
 	#
@@ -143,7 +134,6 @@ class Text extends View
 				@_element.style.wordWrap = 'normal'
 			return
 
-
 	# *********************************
 	# break property
 	#
@@ -179,11 +169,6 @@ class Text extends View
 		get: -> @_element.style.whiteSpace
 		set: (value) -> @_element.style.whiteSpace = value
 
-	# *********************************
-	# nowrap property
-	# *********************************
-	# ** Sequences of whitespace will collapse into a single whitespace. Text will never wrap to the next line. The text continues on the same line until a <br> tag is encountered
-	# BOOLEAN
 	@define 'nowrap',
 		get: ->
 			return true if @_element.style.whiteSpace is 'nowrap'
@@ -194,7 +179,6 @@ class Text extends View
 			else
 				@_element.style.whiteSpace = 'normal'
 			return
-
 
 	# *********************************
 	# lineHeight property
@@ -213,8 +197,6 @@ class Text extends View
 	@_def 'textShadowBlur', 0, -> @_updateTextShadow()
 	@_def 'textShadowColor', '', -> @_updateTextShadow()
 
-
-
 	##############################################################
 	## TEXT PROPERTIES
 
@@ -231,7 +213,7 @@ class Text extends View
 		return
 
 	centerText : ->
-		@align = 'center'
+		@align 		= 'center'
 		@lineHeight = @parent.height if @parent
 			
 	assignLink : (keyword, url, options) ->
@@ -249,11 +231,13 @@ class Text extends View
 		return
 
 	_assignProcessor : ->
-		assigned_length = Utils.keys(@_assigned).length
-		regexs = ''
-		i = 0
-		for key of @_assigned
 
+		assigned_length = Utils.keys(@_assigned).length
+		regexs 			= ''
+		i 				= 0
+		that 			= this
+
+		for key of @_assigned
 			if @_assigned[key].url
 				@_assigned[key].assign = new Link
 					color: 'inherit'
@@ -263,19 +247,14 @@ class Text extends View
 				@_assigned[key].assign = new Text
 					color: 'inherit'
 					display: 'inline'
-
-			# Add what ever options to the Text
 			for p of @_assigned[key].options
 				@_assigned[key].assign[p] = @_assigned[key].options[p]
-
 			regexs += key
 			if i < assigned_length-1
 				regexs += '|'
 			i++
-
-		that = this
 		pattern = new RegExp "("+regexs+")", 'g'
-		@html = @_text.replace pattern, (match) ->
+		@html 	= @_text.replace pattern, (match) ->
 			type = that._assigned[match].assign._elementType
 			split_pattern = new RegExp "(<\/?"+type+">)", 'i'
 			that._assigned[match].assign._element.outerHTML.split(split_pattern)[0] + match + "</#{type}>"

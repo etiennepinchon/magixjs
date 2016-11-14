@@ -1,0 +1,43 @@
+###
+var reader = new Reader({
+	arrayBuffer: blob,
+
+or
+
+	binary: blob,
+
+or
+
+	base64: blob,
+
+or
+
+	text: blob
+});
+
+Example 1
+var blob = new Blob(['Hello!'], {type: 'text/plain'});
+var reader = new Reader({
+	text: blob,
+	then: function(result) {
+		console.log(result);
+	}
+});
+
+reader.on(Event.LoadEnd, function() {
+	console.log("Loading ended");
+});
+
+reader.on(Event.Progress, function(e) {
+	console.log(e);
+});
+
+Example 2
+var blob = new Blob(['Hello!'], {type: 'text/plain'});
+var reader = new Reader();
+reader.base64 = blob;
+reader.on(Event.Loaded, function(result) {
+	console.log(result);
+});
+
+###

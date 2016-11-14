@@ -1,12 +1,9 @@
-# ORBE.IO
-A NEW WAY TO CREATE ANYTHING. 
-
-(..also the coolest framework out there :P)
-
-[orbe.io](https://orbe.io)
+# magiX
+In mystery lies beauty. 
+[magixjs](https://magixjs.com)
 
 #############################################
-# Stuff to know about Orb
+# Stuff to know about magiX
 
 * You code using COFFEESCRIPT.
 * No HTML, no CSS, no javascript required.
@@ -18,8 +15,8 @@ A NEW WAY TO CREATE ANYTHING.
 # DOCS / HELP
 
 To find help visit:
-[Orbe Documentation](https://orbe.io/learn)
-[Twitter](https://twitter.com/orbeio)
+[Documentation](https://magixjs.com/learn)
+[Twitter](https://twitter.com/etiennepinchon)
 
 #############################################
 # ABOUT

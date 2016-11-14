@@ -256,11 +256,11 @@ Context = (function(_super) {
   Context.prototype._createRootElement = function() {
     this._destroyRootElement();
     this._element = document.createElement('div');
-    this._element.id = 'OrbeRoot';
+    this._element.id = 'MagiXRoot';
     this._element.setAttribute("name", this._name);
     this._element.style['perspective'] = this.perspective;
     this._element.style['backgroundColor'] = this.backgroundColor;
-    this.__pendingElementAppend = (function(_this) {
+    this.__pendingElementMagiXnd = (function(_this) {
       return function() {
         var parentElement, _ref;
         parentElement = (_ref = _this._parent) != null ? _ref._element : void 0;
@@ -270,16 +270,16 @@ Context = (function(_super) {
         return parentElement.appendChild(_this._element);
       };
     })(this);
-    return Utils.domComplete(this.__pendingElementAppend);
+    return Utils.domComplete(this.__pendingElementMagiXnd);
   };
 
   Context.prototype._destroyRootElement = function() {
     if (this._element && this._element.parentNode) {
       this._element.parentNode.removeChild(this._element);
     }
-    if (this.__pendingElementAppend) {
-      Utils.domCompleteCancel(this.__pendingElementAppend);
-      this.__pendingElementAppend = void 0;
+    if (this.__pendingElementMagiXnd) {
+      Utils.domCompleteCancel(this.__pendingElementMagiXnd);
+      this.__pendingElementMagiXnd = void 0;
     }
     return this._element = void 0;
   };

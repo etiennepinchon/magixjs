@@ -242,19 +242,19 @@ class Context extends Element
 		@_destroyRootElement()
 		
 		@_element = document.createElement('div')
-		@_element.id = 'OrbeRoot'
+		@_element.id = 'MagiXRoot'
 		@_element.setAttribute "name", @_name
 		@_element.style['perspective'] = @perspective
 		@_element.style['backgroundColor'] = @backgroundColor
 		
 		# Once the dom is loaded insert element inside document body
-		@__pendingElementAppend = =>
+		@__pendingElementMagiXnd = =>
 			parentElement = @_parent?._element
 			parentElement ?= document.body
 			parentElement.appendChild(@_element)
 
 		# Add call back to dom completion method
-		Utils.domComplete @__pendingElementAppend
+		Utils.domComplete @__pendingElementMagiXnd
 
 
 	# Remove older root element
@@ -264,9 +264,9 @@ class Context extends Element
 			@_element.parentNode.removeChild @_element
 		
 		# Remove append callback from dom completion method
-		if @__pendingElementAppend
-			Utils.domCompleteCancel @__pendingElementAppend
-			@__pendingElementAppend = undefined
+		if @__pendingElementMagiXnd
+			Utils.domCompleteCancel @__pendingElementMagiXnd
+			@__pendingElementMagiXnd = undefined
 		
 		@_element = undefined
 

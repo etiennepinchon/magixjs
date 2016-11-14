@@ -1,9 +1,5 @@
-# *********************************
-# *********************************
+
 # Store.js
-# *********************************
-# ** By Etienne Pinchon
-# ** ©2016
 
 Store = 
 	set: (name, value) ->
@@ -24,12 +20,7 @@ Store =
 			console.warn 'Error, Store not available.'
 		return
 
-# *********************************
-# *********************************
-# SessionStore.js
-# *********************************
-# ** By Etienne Pinchon
-# ** ©2016
+# SessionStore
 
 SessionStore = 
 	set: (name, value) ->

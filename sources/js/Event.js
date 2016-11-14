@@ -153,6 +153,30 @@ Event.End = 'end';
 
 Event.Granted = 'granted';
 
+Event.Boundary = 'boundary';
+
+Event.Mark = 'mark';
+
+Event.Resume = 'resume';
+
+Event.Start = 'start';
+
+Event.AudioStart = 'audiostart';
+
+Event.AudioEnd = 'audioend';
+
+Event.NoMatch = 'nomatch';
+
+Event.Result = 'result';
+
+Event.SoundStart = 'soundstart';
+
+Event.SoundEnd = 'soundend';
+
+Event.SpeechStart = 'speechstart';
+
+Event.SpeechEnd = 'speechend';
+
 Event.Run = 'run';
 
 Event.Online = 'online';
@@ -247,167 +271,90 @@ Event.DisplayConnected = 'displayconnected';
 
 Event.DisplayDisconnected = 'displaydisconnected';
 
-Change = {};
-
-Change.x = 'change:x';
-
-Change.y = 'change:y';
-
-Change.point = 'change:point';
-
-Change.width = 'change:width';
-
-Change.height = 'change:height';
-
-Change.size = 'change:size';
-
-Change.frame = 'change:frame';
-
-Change.rotation = 'change:rotation';
-
-Change.borderRadius = 'change:borderRadius';
-
-Change.currentPage = 'change:currentPage';
-
-Change.style = 'change:style';
-
-Change.html = 'change:html';
-
-Change.children = 'change:children';
-
-Change.parent = 'change:parent';
-
-Change.page = 'change:page';
-
-Change.value = 'change:value';
-
-Change.BatteryCharging = 'change:batteryCharging';
-
-Change.BatteryLevel = 'change:batteryLevel';
-
-Change.ChargingTime = 'change:chargingTime';
-
-Change.DischargingTime = 'change:dischargingTime';
-
-Change.DeviceMotion = 'devicemotion';
-
-Change.DeviceOrientation = 'deviceorientation';
-
-Gesture = {};
-
-Gesture.Tap = 'tap';
-
-Gesture.TapStart = 'tapstart';
-
-Gesture.TapEnd = 'tapend';
-
-Gesture.DoubleTap = 'doubletap';
-
-Gesture.ForceTap = 'forcetap';
-
-Gesture.ForceTapChange = 'forcetapchange';
-
-Gesture.ForceTapStart = 'forcetapstart';
-
-Gesture.ForceTapEnd = 'forcetapend';
-
-Gesture.LongPress = 'longpress';
-
-Gesture.LongPressStart = 'longpressstart';
-
-Gesture.LongPressEnd = 'longpressend';
-
-Gesture.Swipe = 'swipe';
-
-Gesture.SwipeStart = 'swipestart';
-
-Gesture.SwipeEnd = 'swipeend';
-
-Gesture.SwipeUp = 'swipeup';
-
-Gesture.SwipeUpStart = 'swipeupstart';
-
-Gesture.SwipeUpEnd = 'swipeupend';
-
-Gesture.SwipeDown = 'swipedown';
-
-Gesture.SwipeDownStart = 'swipedownstart';
-
-Gesture.SwipeDownEnd = 'swipedownend';
-
-Gesture.SwipeLeft = 'swipeleft';
-
-Gesture.SwipeLeftStart = 'swipeleftstart';
-
-Gesture.SwipeLeftEnd = 'swipeleftend';
-
-Gesture.SwipeRight = 'swiperight';
-
-Gesture.SwipeRightStart = 'swiperightstart';
-
-Gesture.SwipeRightEnd = 'swiperightend';
-
-Gesture.EdgeSwipe = 'edgeswipe';
-
-Gesture.EdgeSwipeStart = 'edgeswipestart';
-
-Gesture.EdgeSwipeEnd = 'edgeswipeend';
-
-Gesture.EdgeSwipeTop = 'edgeswipetop';
-
-Gesture.EdgeSwipeTopStart = 'edgeswipetopstart';
-
-Gesture.EdgeSwipeTopEnd = 'edgeswipetopend';
-
-Gesture.EdgeSwipeRight = 'edgeswiperight';
-
-Gesture.EdgeSwipeRightStart = 'edgeswiperightstart';
-
-Gesture.EdgeSwipeRightEnd = 'edgeswiperightend';
-
-Gesture.EdgeSwipeBottom = 'edgeswipebottom';
-
-Gesture.EdgeSwipeBottomStart = 'edgeswipebottomstart';
-
-Gesture.EdgeSwipeBottomEnd = 'edgeswipebottomend';
-
-Gesture.EdgeSwipeLeft = 'edgeswipeleft';
-
-Gesture.EdgeSwipeLeftStart = 'edgeswipeleftstart';
-
-Gesture.EdgeSwipeLeftEnd = 'edgeswipeleftend';
-
-Gesture.Pan = 'pan';
-
-Gesture.PanStart = 'panstart';
-
-Gesture.PanEnd = 'panend';
-
-Gesture.PanLeft = 'panleft';
-
-Gesture.PanRight = 'panright';
-
-Gesture.PanUp = 'panup';
-
-Gesture.PanDown = 'pandown';
-
-Gesture.Pinch = 'pinch';
-
-Gesture.PinchStart = 'pinchstart';
-
-Gesture.PinchEnd = 'pinchend';
-
-Gesture.Scale = 'scale';
-
-Gesture.ScaleStart = 'scalestart';
-
-Gesture.ScaleEnd = 'scaleend';
-
-Gesture.Rotate = 'rotate';
-
-Gesture.RotateStart = 'rotatestart';
-
-Gesture.RotateEnd = 'rotateend';
+Change = {
+  x: 'change:x',
+  y: 'change:y',
+  point: 'change:point',
+  width: 'change:width',
+  height: 'change:height',
+  size: 'change:size',
+  frame: 'change:frame',
+  rotation: 'change:rotation',
+  borderRadius: 'change:borderRadius',
+  currentPage: 'change:currentPage',
+  style: 'change:style',
+  html: 'change:html',
+  children: 'change:children',
+  parent: 'change:parent',
+  page: 'change:page',
+  value: 'change:value',
+  BatteryCharging: 'change:batteryCharging',
+  BatteryLevel: 'change:batteryLevel',
+  ChargingTime: 'change:chargingTime',
+  DischargingTime: 'change:dischargingTime',
+  DeviceMotion: 'devicemotion',
+  DeviceOrientation: 'deviceorientation'
+};
+
+Gesture = {
+  Tap: 'tap',
+  TapStart: 'tapstart',
+  TapEnd: 'tapend',
+  DoubleTap: 'doubletap',
+  ForceTap: 'forcetap',
+  ForceTapChange: 'forcetapchange',
+  ForceTapStart: 'forcetapstart',
+  ForceTapEnd: 'forcetapend',
+  LongPress: 'longpress',
+  LongPressStart: 'longpressstart',
+  LongPressEnd: 'longpressend',
+  Swipe: 'swipe',
+  SwipeStart: 'swipestart',
+  SwipeEnd: 'swipeend',
+  SwipeUp: 'swipeup',
+  SwipeUpStart: 'swipeupstart',
+  SwipeUpEnd: 'swipeupend',
+  SwipeDown: 'swipedown',
+  SwipeDownStart: 'swipedownstart',
+  SwipeDownEnd: 'swipedownend',
+  SwipeLeft: 'swipeleft',
+  SwipeLeftStart: 'swipeleftstart',
+  SwipeLeftEnd: 'swipeleftend',
+  SwipeRight: 'swiperight',
+  SwipeRightStart: 'swiperightstart',
+  SwipeRightEnd: 'swiperightend',
+  EdgeSwipe: 'edgeswipe',
+  EdgeSwipeStart: 'edgeswipestart',
+  EdgeSwipeEnd: 'edgeswipeend',
+  EdgeSwipeTop: 'edgeswipetop',
+  EdgeSwipeTopStart: 'edgeswipetopstart',
+  EdgeSwipeTopEnd: 'edgeswipetopend',
+  EdgeSwipeRight: 'edgeswiperight',
+  EdgeSwipeRightStart: 'edgeswiperightstart',
+  EdgeSwipeRightEnd: 'edgeswiperightend',
+  EdgeSwipeBottom: 'edgeswipebottom',
+  EdgeSwipeBottomStart: 'edgeswipebottomstart',
+  EdgeSwipeBottomEnd: 'edgeswipebottomend',
+  EdgeSwipeLeft: 'edgeswipeleft',
+  EdgeSwipeLeftStart: 'edgeswipeleftstart',
+  EdgeSwipeLeftEnd: 'edgeswipeleftend',
+  Pan: 'pan',
+  PanStart: 'panstart',
+  PanEnd: 'panend',
+  PanLeft: 'panleft',
+  PanRight: 'panright',
+  PanUp: 'panup',
+  PanDown: 'pandown',
+  Pinch: 'pinch',
+  PinchStart: 'pinchstart',
+  PinchEnd: 'pinchend',
+  Scale: 'scale',
+  ScaleStart: 'scalestart',
+  ScaleEnd: 'scaleend',
+  Rotate: 'rotate',
+  RotateStart: 'rotatestart',
+  RotateEnd: 'rotateend'
+};
 
 Event.ScrollStart = 'scrollstart';
 

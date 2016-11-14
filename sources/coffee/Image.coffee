@@ -1,9 +1,5 @@
-# *********************************
-# *********************************
-# Image.js
-# *********************************
-# ** By Etienne Pinchon
-# ** ©2016
+
+# Image
 
 window._Image = window.Image
 
@@ -11,40 +7,30 @@ class Image extends View
 	constructor: (properties) ->
 		super
 
-	_kind : 'Image'
+	_kind        : 'Image'
 	_elementType : 'img'
 
 	##############################################################
-	# Properties
+	# PROPERTIES
 
 	@define 'src',
-		get: ->
-			@_src
+		get: -> @_src
 		set: (value) ->
 			@_src = value
 			@_element.setAttribute 'src', Utils.parseAsset(value)
 			return
-
-	# Alias
 	@define 'image',
-		get: ->
-			@src
+		get: -> @src
 		set: (value) ->
 			@src = value
 			return
-
-	# Alias
 	@define 'source',
-		get: ->
-			@src
+		get: -> @src
 		set: (value) ->
 			@src = value
 			return
-
-	# Alias
 	@define 'url',
-		get: ->
-			@src
+		get: -> @src
 		set: (value) ->
 			@src = value
 			return
@@ -114,8 +100,8 @@ class Image extends View
 	@define 'original',
 		get: ->
 			return {
-				width: this.element.naturalWidth
-				height: this.element.naturalHeight
+				width  : this.element.naturalWidth
+				height : this.element.naturalHeight
 			}
 
 	# *********************************
@@ -123,56 +109,31 @@ class Image extends View
 	# *********************************
 	@define 'loaded',
 		get: ->
-			if @_eventLoaded is undefined
-				return null
+			return null if @_eventLoaded is undefined
 			@_eventLoaded
 		set: (value) ->
-			if not value
-				return
+			return if not value
 			@_eventLoaded = value
 			@on Event.Load, value
 			return
 
 	# *********************************
 
-	@define 'done',
-		get: ->
-			@loaded
-		set: (value) ->
-			@loaded = value
-			return
-
 	@define 'then',
-		get: ->
-			@loaded
+		get: -> @loaded
 		set: (value) ->
 			@loaded = value
 			return
 
-	@define 'after',
-		get: ->
-			@loaded
-		set: (value) ->
-			@loaded = value
-			return
-
-	@define 'finished',
-		get: ->
-			@loaded
-		set: (value) ->
-			@loaded = value
-			return
-
-	@define 'finish',
-		get: ->
-			@loaded
-		set: (value) ->
-			@loaded = value
-			return
-
-	onLoad : (cb) -> @on Event.Load, cb
-	onLoaded : (cb) -> @on Event.Load, cb
-	onDone : (cb) -> @on Event.Load, cb
+	onLoad : (cb) -> 
+		@on Event.Load, cb
+		return
+	onLoaded : (cb) ->
+		@on Event.Load, cb
+		return
+	onDone : (cb) -> 
+		@on Event.Load, cb
+		return
 
 
 

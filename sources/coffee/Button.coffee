@@ -1,21 +1,13 @@
-# *********************************
-# *********************************
-# Button.js
-# *********************************
-# ** By Etienne Pinchon
-# ** ©2016
+
+# Button
 
 class Button extends Text
-	constructor: (options) ->
-		super
+
+	_kind 			: 'Button'
+	_elementType 	: 'button'
 	
-
-	_kind : 'Button'
-	_elementType : 'button'
-
-
 	##############################################################
-	# Properties
+	# PROPERTIES
 
 	# Set an icon image in the button
 	# myButton.icon = "URL";
@@ -31,10 +23,9 @@ class Button extends Text
 			@padding = 0
 			return
 
-Button::focus = ->
-	@_element.focus()
-	return
-
-Button::resignFocus = ->
-	@_element.blur()
-	return
+	focus : ->
+		@_element.focus()
+		return
+	resignFocus : ->
+		@_element.blur()
+		return

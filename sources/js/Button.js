@@ -5,8 +5,8 @@ var Button,
 Button = (function(_super) {
   __extends(Button, _super);
 
-  function Button(options) {
-    Button.__super__.constructor.apply(this, arguments);
+  function Button() {
+    return Button.__super__.constructor.apply(this, arguments);
   }
 
   Button.prototype._kind = 'Button';
@@ -27,14 +27,14 @@ Button = (function(_super) {
     }
   });
 
+  Button.prototype.focus = function() {
+    this._element.focus();
+  };
+
+  Button.prototype.resignFocus = function() {
+    this._element.blur();
+  };
+
   return Button;
 
 })(Text);
-
-Button.prototype.focus = function() {
-  this._element.focus();
-};
-
-Button.prototype.resignFocus = function() {
-  this._element.blur();
-};

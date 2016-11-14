@@ -5,30 +5,30 @@ var ListItem,
 ListItem = (function(_super) {
   __extends(ListItem, _super);
 
-  function ListItem(properties) {
-    ListItem.__super__.constructor.apply(this, arguments);
+  function ListItem() {
+    return ListItem.__super__.constructor.apply(this, arguments);
   }
 
   ListItem.prototype._kind = 'ListItem';
 
   ListItem.prototype._elementType = 'li';
 
+  ListItem.prototype.itemIndex = function() {
+    var i;
+    if (!this || !this.parent || !this.parent.children) {
+      return false;
+    }
+    for (i in this.parent.children) {
+      if (this.parent.children[i] === this) {
+        return parseInt(i, 10);
+      }
+    }
+  };
+
+  ListItem.prototype.removeFromList = function() {
+    this.parent.removeChild(this);
+  };
+
   return ListItem;
 
 })(View);
-
-ListItem.prototype.itemIndex = function() {
-  var i;
-  if (!this || !this.parent || !this.parent.children) {
-    false;
-  }
-  for (i in this.parent.children) {
-    if (this.parent.children[i] === this) {
-      return parseInt(i, 10);
-    }
-  }
-};
-
-ListItem.prototype.removeFromList = function() {
-  this.parent.removeChild(this);
-};

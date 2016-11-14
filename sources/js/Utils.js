@@ -871,7 +871,7 @@ __domComplete = [];
 
 __domReady = false;
 
-if (Orbe.__domReady) {
+if (MagiX.__domReady) {
   __domReady = true;
 }
 

@@ -1,20 +1,3 @@
-
-/*
-
-th = new Thread ->
-	 * Compute
-	i = 'd'
-	setInterval (->
-		self.postMessage('stuff')
-		return
-	), 400
-
-th.onReceive (e) ->
-	console.log 'yo'
-
-th.onError (e) ->
-	console.log e
- */
 var Thread,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -22,15 +5,17 @@ var Thread,
 Thread = (function(_super) {
   __extends(Thread, _super);
 
+  Thread.prototype._kind = 'Thread';
+
   function Thread(properties) {
-    if (properties === void 0) {
+    if (properties === NULL) {
       properties = {};
     }
     if (!window.Worker) {
-      this.emit(Event.Unsupported);
       if (properties.unsupported) {
         properties.unsupported();
       }
+      this.emit(Event.Unsupported);
       return false;
     }
     if (Utils.isFunction(properties)) {
@@ -48,14 +33,13 @@ Thread = (function(_super) {
     this;
   }
 
-  Thread.prototype._kind = 'Thread';
-
   Thread.define('process', {
     get: function() {
       return this._process;
     },
     set: function(fn) {
-      var func, workerData, _this;
+      var func, that, workerData;
+      that = this;
       window.send = window.postMessage;
       window.URL = window.URL || window.webkitURL;
       func = fn.toString().match(/function[^{]+\{([\s\S]*)\}$/)[1];
@@ -66,68 +50,67 @@ Thread = (function(_super) {
         this.end();
       }
       this.worker = new Worker(window.URL.createObjectURL(workerData));
-      _this = this;
       this.worker.addEventListener('message', function(e) {
-        return _this.emit(Event.Receive, e);
+        return that.emit(Event.Receive, e);
       }, false);
-      return this.worker.addEventListener('error', function(e) {
-        return _this.emit(Event.Error, e);
+      return this.worker.addEventListener(Event.Error, function(e) {
+        return that.emit(Event.Error, e);
       }, false);
     }
   });
 
+  Thread.prototype.send = function(message) {
+    if (this.worker !== NULL) {
+      this.worker.postMessage(message);
+      this.emit(Event.Send, message);
+    }
+  };
+
+  Thread.prototype.end = function() {
+    if (this.worker !== NULL) {
+      this.worker.terminate();
+      delete this.worker;
+      this.worker = NULL;
+      this.emit(Event.End);
+    }
+  };
+
+  Thread.prototype.stop = function() {
+    this.end();
+  };
+
+  Thread.prototype.terminate = function() {
+    this.terminate();
+  };
+
   Thread.prototype.onUnsupported = function(cb) {
-    return this.on(Event.Unsupported, cb);
+    this.on(Event.Unsupported, cb);
   };
 
   Thread.prototype.onReceive = function(cb) {
-    return this.on(Event.Receive, cb);
+    this.on(Event.Receive, cb);
   };
 
   Thread.prototype.onSend = function(cb) {
-    return this.on(Event.Send, cb);
+    this.on(Event.Send, cb);
   };
 
   Thread.prototype.onEnd = function(cb) {
-    return this.on(Event.End, cb);
+    this.on(Event.End, cb);
   };
 
   Thread.prototype.onStop = function(cb) {
-    return this.on(Event.End, cb);
+    this.on(Event.End, cb);
   };
 
   Thread.prototype.onTerminate = function(cb) {
-    return this.on(Event.End, cb);
+    this.on(Event.End, cb);
   };
 
   Thread.prototype.onError = function(cb) {
-    return this.on(Event.Error, cb);
+    this.on(Event.Error, cb);
   };
 
   return Thread;
 
 })(Element);
-
-Thread.prototype.send = function(message) {
-  if (this.worker !== void 0) {
-    this.worker.postMessage(message);
-    this.emit(Event.Send, message);
-  }
-};
-
-Thread.prototype.end = function() {
-  if (this.worker !== void 0) {
-    this.worker.terminate();
-    delete this.worker;
-    this.worker = void 0;
-    this.emit(Event.End);
-  }
-};
-
-Thread.prototype.stop = function() {
-  this.end();
-};
-
-Thread.prototype.terminate = function() {
-  this.terminate();
-};

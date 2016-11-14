@@ -44,5 +44,4 @@ Import = (paths, cb) ->
 		.script(toImport).wait ->
 			App.emit Event.ImportEnd
 			cb() if cb
-
-
+			

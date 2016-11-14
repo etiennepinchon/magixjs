@@ -6,8 +6,6 @@ var View,
   __slice = [].slice;
 
 View = (function(_super) {
-  var onScrollAnimationDidEnd, onScrollAnimationDidStart, onScrollEnd, onScrollStart;
-
   __extends(View, _super);
 
   function View(options) {
@@ -16,12 +14,28 @@ View = (function(_super) {
     }
     this.addListener = __bind(this.addListener, this);
     this.once = __bind(this.once, this);
+    this._element = {};
     View.__super__.constructor.apply(this, arguments);
     this._children = [];
     this._createElement();
-    this.userInteraction = false;
     this._context.addView(this);
     this._context.emit("view:create", this);
+    this.userInteraction = false;
+    if (!options.parent) {
+      if (this._kind === 'Page') {
+        options.parent = App.page;
+      } else if (App.running) {
+        if (App.page) {
+          options.parent = App.page;
+        } else {
+          App.page = new Page({
+            backgroundColor: white,
+            parent: App
+          });
+          options.parent = App.page;
+        }
+      }
+    }
     this.props = Defaults.getDefaults(this._kind, options);
     if (options.parent) {
       delete options.parent;
@@ -37,20 +51,6 @@ View = (function(_super) {
   View.prototype._kind = 'View';
 
   View.prototype._elementType = 'div';
-
-  View.prototype._createElement = function() {
-    this._element = document.createElement(this._elementType);
-    this._element.setAttribute('id', ("Orbe" + this._kind + "::") + this.id);
-    this._element.style.overflow = 'hidden';
-    this._element.style.outline = 'none';
-    this._element.style.position = 'relative';
-    return this._element.instance = this;
-  };
-
-  View.prototype._insertElement = function() {
-    this.bringToFront();
-    return this._context._element.appendChild(this._element);
-  };
 
   View.define('html', {
     get: function() {
@@ -106,7 +106,7 @@ View = (function(_super) {
     },
     set: function(value) {
       this._eventClick = value;
-      return this.on(Event.Click, value);
+      this.on(Event.Click, value);
     }
   });
 
@@ -116,7 +116,7 @@ View = (function(_super) {
     },
     set: function(value) {
       this._eventDoubleClick = value;
-      return this.on(Event.DoubleClick, value);
+      this.on(Event.DoubleClick, value);
     }
   });
 
@@ -126,7 +126,7 @@ View = (function(_super) {
     },
     set: function(value) {
       this._eventDown = value;
-      return this.on(Event.Down, value);
+      this.on(Event.Down, value);
     }
   });
 
@@ -136,7 +136,7 @@ View = (function(_super) {
     },
     set: function(value) {
       this._eventOver = value;
-      return this.on(Event.Over, value);
+      this.on(Event.Over, value);
     }
   });
 
@@ -146,7 +146,7 @@ View = (function(_super) {
     },
     set: function(value) {
       this._eventUp = value;
-      return this.on(Event.Up, value);
+      this.on(Event.Up, value);
     }
   });
 
@@ -156,7 +156,7 @@ View = (function(_super) {
     },
     set: function(value) {
       this._eventIn = value;
-      return this.on(Event.In, value);
+      this.on(Event.In, value);
     }
   });
 
@@ -166,7 +166,7 @@ View = (function(_super) {
     },
     set: function(value) {
       this._eventOut = value;
-      return this.on(Event.Out, value);
+      this.on(Event.Out, value);
     }
   });
 
@@ -176,7 +176,7 @@ View = (function(_super) {
     },
     set: function(value) {
       this._eventDown = value;
-      return this.on(Event.Down, value);
+      this.on(Event.Down, value);
     }
   });
 
@@ -186,7 +186,7 @@ View = (function(_super) {
     },
     set: function(value) {
       this._eventOver = value;
-      return this.on(Event.Over, value);
+      this.on(Event.Over, value);
     }
   });
 
@@ -196,7 +196,7 @@ View = (function(_super) {
     },
     set: function(value) {
       this._eventUp = value;
-      return this.on(Event.Up, value);
+      this.on(Event.Up, value);
     }
   });
 
@@ -206,7 +206,7 @@ View = (function(_super) {
     },
     set: function(value) {
       this._eventIn = value;
-      return this.on(Event.In, value);
+      this.on(Event.In, value);
     }
   });
 
@@ -216,14 +216,14 @@ View = (function(_super) {
     },
     set: function(value) {
       this._eventOut = value;
-      return this.on(Event.Out, value);
+      this.on(Event.Out, value);
     }
   });
 
   View._def = function(name, get_default, set_action) {
     return this.define(name, {
       get: function() {
-        if (this["_" + name] === void 0) {
+        if (this["_" + name] === NULL) {
           return get_default;
         }
         return this["_" + name];
@@ -291,7 +291,7 @@ View = (function(_super) {
 
   View.define('margin', {
     get: function() {
-      if (this._margin === void 0) {
+      if (this._margin === NULL) {
         this._margin = {
           x: 0,
           y: 0,
@@ -305,7 +305,7 @@ View = (function(_super) {
     },
     set: function(value) {
       var i, item, output;
-      if (this._margin === void 0) {
+      if (this._margin === NULL) {
         this._margin = {
           x: 0,
           y: 0,
@@ -325,47 +325,45 @@ View = (function(_super) {
         this._margin.right = value;
         this._margin.bottom = value;
         this._margin.left = value;
-      } else {
-        if (value.x !== void 0) {
-          if (value.x === 'center') {
-            value.x = 'auto';
-          }
-          this._margin.x = value.x;
-          if (value.left === void 0) {
-            value.left = value.x;
-          }
-          if (value.right === void 0) {
-            value.right = value.x;
-          }
+      } else if (value.x !== NULL) {
+        if (value.x === 'center') {
+          value.x = 'auto';
         }
-        if (value.y !== void 0) {
-          if (value.y === 'center') {
-            value.y = 'auto';
-          }
-          this._margin.y = value.y;
-          if (value.top === void 0) {
-            value.top = value.y;
-          }
-          if (value.bottom === void 0) {
-            value.bottom = value.y;
-          }
+        this._margin.x = value.x;
+        if (value.left === NULL) {
+          value.left = value.x;
         }
-        if (value.top !== void 0) {
-          this._margin.top = value.top;
+        if (value.right === NULL) {
+          value.right = value.x;
         }
-        if (value.bottom !== void 0) {
-          this._margin.bottom = value.bottom;
+      }
+      if (value.y !== NULL) {
+        if (value.y === 'center') {
+          value.y = 'auto';
         }
-        if (value.left !== void 0) {
-          this._margin.left = value.left;
+        this._margin.y = value.y;
+        if (value.top === NULL) {
+          value.top = value.y;
         }
-        if (value.right !== void 0) {
-          this._margin.right = value.right;
+        if (value.bottom === NULL) {
+          value.bottom = value.y;
         }
+      }
+      if (value.top !== NULL) {
+        this._margin.top = value.top;
+      }
+      if (value.bottom !== NULL) {
+        this._margin.bottom = value.bottom;
+      }
+      if (value.left !== NULL) {
+        this._margin.left = value.left;
+      }
+      if (value.right !== NULL) {
+        this._margin.right = value.right;
       }
       this.emit('change:margin', this._margin);
       output = '';
-      i = void 0;
+      i = NULL;
       for (item in this._margin) {
         if (item !== 'x' && item !== 'y') {
           i = this._margin[item];
@@ -441,7 +439,7 @@ View = (function(_super) {
       return this.margin.left;
     },
     set: function(value) {
-      this.margin = {
+      return this.margin = {
         left: value
       };
     }
@@ -449,7 +447,7 @@ View = (function(_super) {
 
   View.define('padding', {
     get: function() {
-      if (this._padding === void 0) {
+      if (this._padding === NULL) {
         this._padding = {
           x: 0,
           y: 0,
@@ -463,7 +461,7 @@ View = (function(_super) {
     },
     set: function(value) {
       var i, item, output;
-      if (this._padding === void 0) {
+      if (this._padding === NULL) {
         this._padding = {
           x: 0,
           y: 0,
@@ -481,40 +479,40 @@ View = (function(_super) {
         this._padding.bottom = value;
         this._padding.left = value;
       } else {
-        if (value.x !== void 0) {
+        if (value.x !== NULL) {
           this._padding.x = value.x;
-          if (value.left === void 0) {
+          if (value.left === NULL) {
             value.left = value.x;
           }
-          if (value.right === void 0) {
+          if (value.right === NULL) {
             value.right = value.x;
           }
         }
-        if (value.y !== void 0) {
+        if (value.y !== NULL) {
           this._padding.y = value.y;
-          if (value.top === void 0) {
+          if (value.top === NULL) {
             value.top = value.y;
           }
-          if (value.bottom === void 0) {
+          if (value.bottom === NULL) {
             value.bottom = value.y;
           }
         }
-        if (value.top !== void 0) {
+        if (value.top !== NULL) {
           this._padding.top = value.top;
         }
-        if (value.bottom !== void 0) {
+        if (value.bottom !== NULL) {
           this._padding.bottom = value.bottom;
         }
-        if (value.left !== void 0) {
+        if (value.left !== NULL) {
           this._padding.left = value.left;
         }
-        if (value.right !== void 0) {
+        if (value.right !== NULL) {
           this._padding.right = value.right;
         }
       }
       this.emit('change:padding', this._padding);
       output = '';
-      i = void 0;
+      i = NULL;
       for (item in this._padding) {
         if (item !== 'x' && item !== 'y') {
           i = this._padding[item];
@@ -720,10 +718,10 @@ View = (function(_super) {
     configurable: true,
     get: function() {
       var borders, leftBorder, rightBorder;
-      if (this._width !== void 0 && typeof this._width !== 'number') {
+      if (this._width !== NULL && typeof this._width !== 'number') {
         return this._width;
       }
-      if (this._element.offsetWidth === 0 && this._width !== void 0) {
+      if (this._element.offsetWidth === 0 && this._width !== NULL) {
         return this._width;
       }
       leftBorder = this._element.style.borderLeftWidth !== '' ? this._element.style.borderLeftWidth : 0;
@@ -751,10 +749,10 @@ View = (function(_super) {
     configurable: true,
     get: function() {
       var borders, bottomBorder, topBorder;
-      if (this._height !== void 0 && typeof this._height !== 'number') {
+      if (this._height !== NULL && typeof this._height !== 'number') {
         return this._height;
       }
-      if (this._element.offsetHeight === 0 && this._height !== void 0) {
+      if (this._element.offsetHeight === 0 && this._height !== NULL) {
         return this._height;
       }
       topBorder = this._element.style.borderTopWidth !== '' ? this._element.style.borderTopWidth : 0;
@@ -905,10 +903,10 @@ View = (function(_super) {
       };
     },
     set: function(value) {
-      if (value.x !== void 0) {
+      if (value.x !== NULL) {
         this.x = value.x;
       }
-      if (value.y !== void 0) {
+      if (value.y !== NULL) {
         this.y = value.y;
       }
     }
@@ -922,10 +920,10 @@ View = (function(_super) {
       };
     },
     set: function(value) {
-      if (value.width !== void 0) {
+      if (value.width !== NULL) {
         this.width = value.width;
       }
-      if (value.height !== void 0) {
+      if (value.height !== NULL) {
         this.height = value.height;
       }
     }
@@ -941,16 +939,16 @@ View = (function(_super) {
       };
     },
     set: function(value) {
-      if (value.x !== void 0) {
+      if (value.x !== NULL) {
         this.x = value.x;
       }
-      if (value.y !== void 0) {
+      if (value.y !== NULL) {
         this.y = value.y;
       }
-      if (value.width !== void 0) {
+      if (value.width !== NULL) {
         this.width = value.width;
       }
-      if (value.height !== void 0) {
+      if (value.height !== NULL) {
         this.height = value.height;
       }
     }
@@ -966,26 +964,70 @@ View = (function(_super) {
       };
     },
     set: function(value) {
-      if (value.x !== void 0) {
+      if (value.x !== NULL) {
         this.x = value.x;
       }
-      if (value.y !== void 0) {
+      if (value.y !== NULL) {
         this.y = value.y;
       }
-      if (value.width !== void 0) {
-        this.width = value.width;
-      }
-      if (value.height !== void 0) {
+      this.width = value.widthif(value.width !== NULL);
+      if (value.height !== NULL) {
         this.height = value.height;
       }
       return this.fixed = true;
     }
   });
 
+  View.define('display', {
+    get: function() {
+      var disp;
+      disp = this._element.style.display;
+      if (disp === 'none') {
+        return false;
+      }
+      if (disp === '') {
+        return true;
+      }
+      return disp;
+    },
+    set: function(value) {
+      if (!Utils.isString(value)) {
+        if (value) {
+          value = 'block';
+        } else {
+          value = 'none';
+        }
+        return this._element.style.display = value;
+      } else {
+        this._element.style.display = value;
+        return this._element.style.webkitDisplay = value;
+      }
+    }
+  });
+
+  View.define('visible', {
+    get: function() {
+      var visibility;
+      visibility = this._element.style.visibility;
+      if (visibility === 'visible' || visibility === '') {
+        return true;
+      }
+      return false;
+    },
+    set: function(value) {
+      if (value) {
+        value = 'visible';
+      } else {
+        value = 'hidden';
+      }
+      return this._element.style.visibility = value;
+    }
+  });
+
   View.define('backgroundColor', {
     configurable: true,
     get: function() {
-      if (this._background === void 0) {
+      if (this._background === NULL) {
         return null;
       }
       return this._background;
@@ -1009,53 +1051,10 @@ View = (function(_super) {
 
   View._alias('bc', 'backgroundColor');
 
-  View.define('display', {
-    get: function() {
-      if (this._element.style.display === 'none') {
-        return false;
-      }
-      if (this._element.style.display === '') {
-        return true;
-      }
-      return this._element.style.display;
-    },
-    set: function(value) {
-      if (!Utils.isString(value)) {
-        if (value === true) {
-          return this._element.style.display = 'block';
-        } else {
-          return this._element.style.display = 'none';
-        }
-      } else {
-        this._element.style.display = value;
-        return this._element.style.webkitDisplay = value;
-      }
-    }
-  });
-
-  View.define('visible', {
-    get: function() {
-      var visibility;
-      visibility = this._element.style.visibility;
-      if (visibility === 'visible' || visibility === '') {
-        return true;
-      }
-      return false;
-    },
-    set: function(value) {
-      if (value === true) {
-        value = 'visible';
-      } else {
-        value = 'hidden';
-      }
-      return this._element.style.visibility = value;
-    }
-  });
-
   View.define('image', {
     configurable: true,
     get: function() {
-      if (this._image === void 0) {
+      if (this._image === NULL) {
         return false;
       }
       return this._image;
@@ -1076,7 +1075,7 @@ View = (function(_super) {
       return this.image;
     },
     set: function(value) {
-      if (Color.isColor(value) || value.color) {
+      if (Color.isColor(value) || value.color || value === clear) {
         return this.backgroundColor = value;
       } else {
         this.image = value;
@@ -1089,7 +1088,7 @@ View = (function(_super) {
 
   View.define('imageSize', {
     get: function() {
-      if (this._imageSize === void 0) {
+      if (this._imageSize === NULL) {
         return 'cover';
       }
       return this._image;
@@ -1107,13 +1106,13 @@ View = (function(_super) {
 
   View.define('imageRepeat', {
     get: function() {
-      if (this._imageRepeat === void 0) {
+      if (this._imageRepeat === NULL) {
         return true;
       }
       return this._imageRepeat;
     },
     set: function(value) {
-      if (value === true || value === 'repeat') {
+      if (value || value === 'repeat') {
         this._imageRepeat = true;
         this._element.style.backgroundRepeat = 'repeat';
         if (this.imageSize === 'cover') {
@@ -1128,25 +1127,26 @@ View = (function(_super) {
 
   View.define('imageFixed', {
     get: function() {
-      if (this._imageFixed === void 0) {
+      if (this._imageFixed === NULL) {
         this._imageFixed = false;
       }
       return this._imageFixed;
     },
     set: function(value) {
-      if (value === true) {
+      if (value) {
         this._imageFixed = true;
-        return this._element.style.backgroundAttachment = 'fixed';
+        value = 'fixed';
       } else {
         this._imageFixed = false;
-        return this._element.style.backgroundAttachment = 'scroll';
+        value = 'scroll';
       }
+      return this._element.style.backgroundAttachment = value;
     }
   });
 
   View.define('imagePosition', {
     get: function() {
-      if (this._imagePosition === void 0) {
+      if (this._imagePosition === NULL) {
         this._imagePosition = '';
       }
       return this._imagePosition;
@@ -1166,7 +1166,7 @@ View = (function(_super) {
 
   View.define('clip', {
     get: function() {
-      if (this._clip === void 0) {
+      if (this._clip === NULL) {
         this._clip = true;
       }
       return this._clip;
@@ -1174,11 +1174,12 @@ View = (function(_super) {
     set: function(value) {
       if (value === true) {
         this._clip = true;
-        return this._element.style.overflow = 'hidden';
+        value = 'hidden';
       } else {
         this._clip = false;
-        return this._element.style.overflow = 'visible';
+        value = 'visible';
       }
+      return this._element.style.overflow = value;
     }
   });
 
@@ -1236,7 +1237,7 @@ View = (function(_super) {
   View.define('scroll', {
     configurable: true,
     get: function() {
-      if (this._scroll === void 0) {
+      if (this._scroll === NULL) {
         return false;
       }
       return this._scroll;
@@ -1260,7 +1261,7 @@ View = (function(_super) {
   View.define('scrollHorizontal', {
     configurable: true,
     get: function() {
-      if (this._scrollHorizontal === void 0) {
+      if (this._scrollHorizontal === NULL) {
         return false;
       }
       return this._scrollHorizontal;
@@ -1287,7 +1288,7 @@ View = (function(_super) {
   View.define('scrollVertical', {
     configurable: true,
     get: function() {
-      if (this._scrollVertical === void 0) {
+      if (this._scrollVertical === NULL) {
         return false;
       }
       return this._scrollVertical;
@@ -1321,7 +1322,7 @@ View = (function(_super) {
       return this._parent || null;
     },
     set: function(view) {
-      if (view === this._parent) {
+      if (view === this._parent || view === -1) {
         return;
       }
       Utils.domCompleteCancel(this.__insertElement);
@@ -1387,8 +1388,6 @@ View = (function(_super) {
       return this.emit("change:parent");
     }
   });
-
-  View._alias('addTo', 'parent');
 
   View.define('children', {
     enumerable: false,
@@ -1460,7 +1459,7 @@ View = (function(_super) {
 
   View.define('originX', {
     get: function() {
-      if (this._originX === void 0) {
+      if (this._originX === NULL) {
         return 0.5;
       }
       return this._originX;
@@ -1470,7 +1469,7 @@ View = (function(_super) {
         value = 0.5;
       }
       this._originX = value;
-      if (this._originY === void 0) {
+      if (this._originY === NULL) {
         this._originY = 0.5;
       }
       this._element.style.transformOrigin = value * 100 + '% ' + this._originY * 100 + '%';
@@ -1479,7 +1478,7 @@ View = (function(_super) {
 
   View.define('originY', {
     get: function() {
-      if (this._originY === void 0) {
+      if (this._originY === NULL) {
         return 0.5;
       }
       return this._originY;
@@ -1489,7 +1488,7 @@ View = (function(_super) {
         value = 0.5;
       }
       this._originY = value;
-      if (this._originX === void 0) {
+      if (this._originX === NULL) {
         this._originX = 0.5;
       }
       return this._element.style.transformOrigin = this._originX * 100 + '% ' + value * 100 + '%';
@@ -1517,21 +1516,21 @@ View = (function(_super) {
   });
 
   View._def('translateX', 0, function(value) {
-    if (this._translateY === void 0) {
+    if (this._translateY === NULL) {
       this._translateY = 0;
     }
     return this._updateTransform();
   });
 
   View._def('translateY', 0, function(value) {
-    if (this._translateX === void 0) {
+    if (this._translateX === NULL) {
       this._translateX = 0;
     }
     return this._updateTransform();
   });
 
   View._def('translateZ', 0, function(value) {
-    if (this._translateZ === void 0) {
+    if (this._translateZ === NULL) {
       this._translateZ = 0;
     }
     return this._updateTransform();
@@ -1568,14 +1567,14 @@ View = (function(_super) {
   });
 
   View._def('scaleX', 1, function(value) {
-    if (this._scaleY === void 0) {
+    if (this._scaleY === NULL) {
       this._scaleY = 1;
     }
     return this._updateTransform();
   });
 
   View._def('scaleY', 1, function(value) {
-    if (this._scaleX === void 0) {
+    if (this._scaleX === NULL) {
       this._scaleX = 1;
     }
     return this._updateTransform();
@@ -1588,14 +1587,14 @@ View = (function(_super) {
   });
 
   View._def('skewX', 0, function(value) {
-    if (this._skewY === void 0) {
+    if (this._skewY === NULL) {
       this._skewY = 0;
     }
     return this._updateTransform();
   });
 
   View._def('skewY', 0, function(value) {
-    if (this._skewX === void 0) {
+    if (this._skewX === NULL) {
       this._skewX = 0;
     }
     return this._updateTransform();
@@ -1618,7 +1617,7 @@ View = (function(_super) {
 
   View.define('hueRotate', {
     get: function() {
-      if (this._hueRotate === void 0) {
+      if (this._hueRotate === NULL) {
         return 0;
       }
       return this._hueRotate;
@@ -1640,7 +1639,7 @@ View = (function(_super) {
 
   View.define('invert', {
     get: function() {
-      if (this._invert === void 0) {
+      if (this._invert === NULL) {
         return 0;
       }
       return this._invert;
@@ -1657,7 +1656,7 @@ View = (function(_super) {
 
   View.define('grayscale', {
     get: function() {
-      if (this._grayscale === void 0) {
+      if (this._grayscale === NULL) {
         return 0;
       }
       return this._grayscale;
@@ -1674,7 +1673,7 @@ View = (function(_super) {
 
   View.define('sepia', {
     get: function() {
-      if (this._sepia === void 0) {
+      if (this._sepia === NULL) {
         return 0;
       }
       return this._sepia;
@@ -1706,7 +1705,7 @@ View = (function(_super) {
 
   View.define('backdropHueRotate', {
     get: function() {
-      if (this._hueRotate === void 0) {
+      if (this._hueRotate === NULL) {
         return 0;
       }
       return this._hueRotate;
@@ -1728,7 +1727,7 @@ View = (function(_super) {
 
   View.define('backdropInvert', {
     get: function() {
-      if (this._invert === void 0) {
+      if (this._invert === NULL) {
         return 0;
       }
       return this._invert;
@@ -1745,7 +1744,7 @@ View = (function(_super) {
 
   View.define('backdropGrayscale', {
     get: function() {
-      if (this._grayscale === void 0) {
+      if (this._grayscale === NULL) {
         return 0;
       }
       return this._grayscale;
@@ -1762,7 +1761,7 @@ View = (function(_super) {
 
   View.define('backdropSepia', {
     get: function() {
-      if (this._sepia === void 0) {
+      if (this._sepia === NULL) {
         return 0;
       }
       return this._sepia;
@@ -1799,13 +1798,13 @@ View = (function(_super) {
 
   View.define('shadowInset', {
     get: function() {
-      if (this._shadowInset === void 0) {
+      if (this._shadowInset === NULL) {
         return '';
       }
       return this._shadowInset;
     },
     set: function(value) {
-      if (value === true) {
+      if (value) {
         value = 'inset';
       } else {
         value = '';
@@ -1817,7 +1816,7 @@ View = (function(_super) {
 
   View.define('borderBox', {
     get: function() {
-      if (this._borderBox === void 0) {
+      if (this._borderBox === NULL) {
         this._borderBox = false;
       }
       return this._borderBox;
@@ -1971,13 +1970,13 @@ View = (function(_super) {
 
   View.define('userInteraction', {
     get: function() {
-      if (this._userInteraction === void 0) {
+      if (this._userInteraction === NULL) {
         this._userInteraction = false;
       }
       return this._userInteraction;
     },
     set: function(value) {
-      if (value === true) {
+      if (value) {
         this._userInteraction = true;
         this.classList.remove('no-select');
         return this.classList.add('select');
@@ -2063,7 +2062,7 @@ View = (function(_super) {
     set: function(values) {
       var i, keys;
       if (!values || typeof values !== 'object') {
-        false;
+        return false;
       }
       this._hover = {};
       this._hover.originalValues = {};
@@ -2123,10 +2122,10 @@ View = (function(_super) {
       return this.hoverAnimated;
     },
     set: function(values) {
-      if (values.animate !== void 0) {
+      if (values.animate !== NULL) {
         values.animated = values.animate;
       }
-      if (values.animated === void 0) {
+      if (values.animated === NULL) {
         values.animated = false;
       }
       return this.hoverAnimated = values;
@@ -2135,7 +2134,7 @@ View = (function(_super) {
 
   View.define('delegate', {
     get: function() {
-      if (this._delegate === void 0) {
+      if (this._delegate === null) {
         this._delegate = null;
       }
       return this._delegate;
@@ -2169,26 +2168,6 @@ View = (function(_super) {
   View._def('tooltip', null, function(value) {
     return this._element.setAttribute('title', value);
   });
-
-
-  /*
-  	*	normal
-  	*	multiply
-  	*	screen
-  	*	overlay
-  	*	darken
-  	*	lighten
-  	*	color-dodge
-  	*	color-burn
-  	*	hard-light
-  	*	soft-light
-  	*	difference
-  	*	exclusion
-  	*	hue
-  	*	saturation
-  	*	color
-  	*	luminosity
-   */
 
   View.define('blend', {
     get: function() {
@@ -2452,7 +2431,7 @@ View = (function(_super) {
   };
 
   View.prototype.computedStyle = function(property) {
-    if (property !== void 0) {
+    if (property !== NULL) {
       return window.getComputedStyle(this._element).getPropertyValue(property);
     }
     return window.getComputedStyle(this._element);
@@ -2509,19 +2488,11 @@ View = (function(_super) {
     clonedView = Utils.clone(this);
     clonedView._element = this._element.cloneNode(true);
     clonedView._element.instance = clonedView;
-    clonedView._events = void 0;
+    clonedView._events = NULL;
     clonedView._id = Utils.randomID();
-    clonedView._element.setAttribute('id', ("Orbe" + this._kind + "::") + clonedView.id);
+    clonedView._element.setAttribute('id', ("MagiX" + this._kind + "::") + clonedView.id);
     clonedView._parent = null;
     return clonedView;
-
-    /*
-    		view = @copySingle()
-    		for child in @children
-    			copiedChild = child.copy()
-    			copiedChild.parent = view
-    		view
-     */
   };
 
   View.prototype.copySingle = function() {
@@ -2529,9 +2500,9 @@ View = (function(_super) {
     clonedView = Utils.clone(this);
     clonedView._parent = null;
     clonedView._element = this._element.cloneNode(false);
-    clonedView._events = void 0;
+    clonedView._events = NULL;
     clonedView._id = Utils.randomID();
-    clonedView._element.setAttribute('id', ("Orbe" + this._kind + "::") + clonedView.id);
+    clonedView._element.setAttribute('id', ("MagiX" + this._kind + "::") + clonedView.id);
     clonedView._children = [];
     return clonedView;
   };
@@ -2599,14 +2570,6 @@ View = (function(_super) {
   View.prototype.absoluteCenter = function(autoResize) {
     var frame, that;
     frame = this.centerFrame();
-
-    /*
-    		if not @parent
-    			@x = frame.x
-    			@y = frame.y
-    
-    		return
-     */
     this.x = {
       value: frame.x,
       centerX: true
@@ -2706,13 +2669,13 @@ View = (function(_super) {
     this.x = "50%";
     this.y = "50%";
     this.marginLeft = -(this.width / 2);
-    return this.marginTop = -(this.height / 2);
+    this.marginTop = -(this.height / 2);
   };
 
   View.prototype.centerX = function(offset) {
     this.element.style.position = 'absolute';
     this.x = '50%';
-    if (offset === void 0) {
+    if (offset === NULL) {
       offset = 0;
     }
     this.marginLeft = -(this.width / 2) + offset;
@@ -2721,10 +2684,10 @@ View = (function(_super) {
   View.prototype.centerY = function(offset) {
     this.element.style.position = 'absolute';
     this.y = '50%';
-    if (offset === void 0) {
+    if (offset === NULL) {
       offset = 0;
     }
-    return this.marginTop = -(this.height / 2) + offset;
+    this.marginTop = -(this.height / 2) + offset;
   };
 
   View.prototype.animate = function(options) {
@@ -2828,55 +2791,19 @@ View = (function(_super) {
   };
 
   View.prototype.fadeIn = function(parameters) {
-    var time;
-    if (!parameters) {
-      parameters = {};
-    }
-    time = false;
-    if (typeof parameters === 'number') {
-      time = parameters;
-      parameters = {};
-    }
-    if (parameters.props) {
-      parameters.properties = parameters.props;
-    }
-    if (!parameters.properties) {
-      parameters.properties = {};
-    }
-    parameters.properties.opacity = 1;
-    if (!parameters.curve) {
-      parameters.curve = 'linear';
-    }
-    if (time) {
-      parameters.time = time;
-    }
-    return this.animate(parameters);
+    return this._fade(1, parameters);
   };
 
   View.prototype.fadeOut = function(parameters) {
-    var time;
-    if (!parameters) {
-      parameters = {};
-    }
-    time = false;
-    if (typeof parameters === 'number') {
-      time = parameters;
-      parameters = {};
-    }
-    if (parameters.props) {
-      parameters.properties = parameters.props;
-    }
-    if (!parameters.properties) {
-      parameters.properties = {};
-    }
-    parameters.properties.opacity = 0;
-    if (!parameters.curve) {
-      parameters.curve = 'linear';
-    }
-    if (time) {
-      parameters.time = time;
-    }
-    return this.animate(parameters);
+    return this._fade(0, parameters);
+  };
+
+  View.prototype.show = function() {
+    return this.display = true;
+  };
+
+  View.prototype.hide = function() {
+    return this.display = false;
   };
 
   View.prototype.removeAll = function() {
@@ -2967,343 +2894,343 @@ View = (function(_super) {
   View.prototype.off = View.prototype.removeListener;
 
   View.prototype.onWillAppear = function(cb) {
-    return this.on(Event.WillAppear, cb);
+    this.on(Event.WillAppear, cb);
   };
 
   View.prototype.onAppear = function(cb) {
-    return this.on(Event.Appear, cb);
+    this.on(Event.Appear, cb);
   };
 
   View.prototype.onDidAppear = function(cb) {
-    return this.on(Event.DidAppear, cb);
+    this.on(Event.DidAppear, cb);
   };
 
   View.prototype.onWillDisappear = function(cb) {
-    return this.on(Event.WillDisappear, cb);
+    this.on(Event.WillDisappear, cb);
   };
 
   View.prototype.onDisappear = function(cb) {
-    return this.on(Event.Disappear, cb);
+    this.on(Event.Disappear, cb);
   };
 
   View.prototype.onDidDisappear = function(cb) {
-    return this.on(Event.DidDisappear, cb);
+    this.on(Event.DidDisappear, cb);
   };
 
   View.prototype.onClick = function(cb) {
-    return this.on(Event.Click, cb);
+    this.on(Event.Click, cb);
   };
 
   View.prototype.onDoubleClick = function(cb) {
-    return this.on(Event.DoubleClick, cb);
+    this.on(Event.DoubleClick, cb);
   };
 
   View.prototype.onIn = function(cb) {
-    return this.on(Event.In, cb);
+    this.on(Event.In, cb);
   };
 
   View.prototype.onOut = function(cb) {
-    return this.on(Event.Out, cb);
+    this.on(Event.Out, cb);
   };
 
   View.prototype.onDown = function(cb) {
-    return this.on(Event.Down, cb);
+    this.on(Event.Down, cb);
   };
 
   View.prototype.onOver = function(cb) {
-    return this.on(Event.Over, cb);
+    this.on(Event.Over, cb);
   };
 
   View.prototype.onUp = function(cb) {
-    return this.on(Event.Up, cb);
+    this.on(Event.Up, cb);
   };
 
   View.prototype.onMove = function(cb) {
-    return this.on(Event.Move, cb);
+    this.on(Event.Move, cb);
   };
 
   View.prototype.onRightClick = function(cb) {
-    return this.on(Event.RightClick, cb);
+    this.on(Event.RightClick, cb);
   };
 
   View.prototype.onMouseIn = function(cb) {
-    return this.on(Event.MouseIn, cb);
+    this.on(Event.MouseIn, cb);
   };
 
   View.prototype.onMouseUp = function(cb) {
-    return this.on(Event.MouseUp, cb);
+    this.on(Event.MouseUp, cb);
   };
 
   View.prototype.onMouseDown = function(cb) {
-    return this.on(Event.MouseDown, cb);
+    this.on(Event.MouseDown, cb);
   };
 
   View.prototype.onMouseOver = function(cb) {
-    return this.on(Event.MouseOver, cb);
+    this.on(Event.MouseOver, cb);
   };
 
   View.prototype.onMouseOut = function(cb) {
-    return this.on(Event.MouseOut, cb);
+    this.on(Event.MouseOut, cb);
   };
 
   View.prototype.onMouseMove = function(cb) {
-    return this.on(Event.MouseMove, cb);
+    this.on(Event.MouseMove, cb);
   };
 
   View.prototype.onMouseWheel = function(cb) {
-    return this.on(Event.MouseWheel, cb);
+    this.on(Event.MouseWheel, cb);
   };
 
-  onScrollStart = function(cb) {
-    return this.on(Event.ScrollStart, cb);
+  View.prototype.onScrollStart = function(cb) {
+    this.on(Event.ScrollStart, cb);
   };
 
   View.prototype.onScroll = function(cb) {
-    return this.on(Event.Scroll, cb);
+    this.on(Event.Scroll, cb);
   };
 
-  onScrollEnd = function(cb) {
-    return this.on(Event.ScrollEnd, cb);
+  View.prototype.onScrollEnd = function(cb) {
+    this.on(Event.ScrollEnd, cb);
   };
 
-  onScrollAnimationDidStart = function(cb) {
-    return this.on(Event.ScrollAnimationDidStart, cb);
+  View.prototype.onScrollAnimationDidStart = function(cb) {
+    this.on(Event.ScrollAnimationDidStart, cb);
   };
 
-  onScrollAnimationDidEnd = function(cb) {
-    return this.on(Event.ScrollAnimationDidEnd, cb);
+  View.prototype.onScrollAnimationDidEnd = function(cb) {
+    this.on(Event.ScrollAnimationDidEnd, cb);
   };
 
   View.prototype.onTouchStart = function(cb) {
-    return this.on(Event.TouchStart, cb);
+    this.on(Event.TouchStart, cb);
   };
 
   View.prototype.onTouchEnd = function(cb) {
-    return this.on(Event.TouchEnd, cb);
+    this.on(Event.TouchEnd, cb);
   };
 
   View.prototype.onTouchMove = function(cb) {
-    return this.on(Event.TouchMove, cb);
+    this.on(Event.TouchMove, cb);
   };
 
   View.prototype.onAnimationStart = function(cb) {
-    return this.on(Event.AnimationStart, cb);
+    this.on(Event.AnimationStart, cb);
   };
 
   View.prototype.onAnimationStop = function(cb) {
-    return this.on(Event.AnimationStop, cb);
+    this.on(Event.AnimationStop, cb);
   };
 
   View.prototype.onAnimationEnd = function(cb) {
-    return this.on(Event.AnimationEnd, cb);
+    this.on(Event.AnimationEnd, cb);
   };
 
   View.prototype.onAnimationDidStart = function(cb) {
-    return this.on(Event.AnimationDidStart, cb);
+    this.on(Event.AnimationDidStart, cb);
   };
 
   View.prototype.onAnimationDidStop = function(cb) {
-    return this.on(Event.AnimationDidStop, cb);
+    this.on(Event.AnimationDidStop, cb);
   };
 
   View.prototype.onAnimationDidEnd = function(cb) {
-    return this.on(Event.AnimationDidEnd, cb);
+    this.on(Event.AnimationDidEnd, cb);
   };
 
   View.prototype.onDragStart = function(cb) {
-    return this.on(Event.DragStart, cb);
+    this.on(Event.DragStart, cb);
   };
 
   View.prototype.onDragWillMove = function(cb) {
-    return this.on(Event.DragWillMove, cb);
+    this.on(Event.DragWillMove, cb);
   };
 
   View.prototype.onDragMove = function(cb) {
-    return this.on(Event.DragMove, cb);
+    this.on(Event.DragMove, cb);
   };
 
   View.prototype.onDragDidMove = function(cb) {
-    return this.on(Event.DragDidMove, cb);
+    this.on(Event.DragDidMove, cb);
   };
 
   View.prototype.onDrag = function(cb) {
-    return this.on(Event.Drag, cb);
+    this.on(Event.Drag, cb);
   };
 
   View.prototype.onDragEnd = function(cb) {
-    return this.on(Event.DragEnd, cb);
+    this.on(Event.DragEnd, cb);
   };
 
   View.prototype.onDragAnimationStart = function(cb) {
-    return this.on(Event.DragAnimationStart, cb);
+    this.on(Event.DragAnimationStart, cb);
   };
 
   View.prototype.onDragAnimationEnd = function(cb) {
-    return this.on(Event.DragAnimationEnd, cb);
+    this.on(Event.DragAnimationEnd, cb);
   };
 
   View.prototype.onDirectionLockStart = function(cb) {
-    return this.on(Event.DirectionLockStart, cb);
+    this.on(Event.DirectionLockStart, cb);
   };
 
   View.prototype.onDragEnter = function(cb) {
-    return this.on(Event.DragEnter, cb);
+    this.on(Event.DragEnter, cb);
   };
 
   View.prototype.onDragOver = function(cb) {
-    return this.on(Event.DragOver, cb);
+    this.on(Event.DragOver, cb);
   };
 
   View.prototype.onDragLeave = function(cb) {
-    return this.on(Event.DragLeave, cb);
+    this.on(Event.DragLeave, cb);
   };
 
   View.prototype.onDrop = function(cb) {
-    return this.on(Event.Drop, cb);
+    this.on(Event.Drop, cb);
   };
 
   View.prototype.onStateSwitch = function(cb) {
-    return this.on(Event.StateDidSwitch, cb);
+    this.on(Event.StateDidSwitch, cb);
   };
 
   View.prototype.onStateDidSwitch = function(cb) {
-    return this.on(Event.StateDidSwitch, cb);
+    this.on(Event.StateDidSwitch, cb);
   };
 
   View.prototype.onStateWillSwitch = function(cb) {
-    return this.on(Event.StateWillSwitch, cb);
+    this.on(Event.StateWillSwitch, cb);
   };
 
   View.prototype.onTap = function(cb) {
-    return this.on(Event.Tap, cb);
+    this.on(Event.Tap, cb);
   };
 
   View.prototype.onTapStart = function(cb) {
-    return this.on(Event.TapStart, cb);
+    this.on(Event.TapStart, cb);
   };
 
   View.prototype.onTapEnd = function(cb) {
-    return this.on(Event.TapEnd, cb);
+    this.on(Event.TapEnd, cb);
   };
 
   View.prototype.onDoubleTap = function(cb) {
-    return this.on(Event.DoubleTap, cb);
+    this.on(Event.DoubleTap, cb);
   };
 
   View.prototype.onForceTap = function(cb) {
-    return this.on(Event.ForceTap, cb);
+    this.on(Event.ForceTap, cb);
   };
 
   View.prototype.onForceTapChange = function(cb) {
-    return this.on(Event.ForceTapChange, cb);
+    this.on(Event.ForceTapChange, cb);
   };
 
   View.prototype.onForceTapStart = function(cb) {
-    return this.on(Event.ForceTapStart, cb);
+    this.on(Event.ForceTapStart, cb);
   };
 
   View.prototype.onForceTapEnd = function(cb) {
-    return this.on(Event.ForceTapEnd, cb);
+    this.on(Event.ForceTapEnd, cb);
   };
 
   View.prototype.onLongPress = function(cb) {
-    return this.on(Event.LongPress, cb);
+    this.on(Event.LongPress, cb);
   };
 
   View.prototype.onLongPressStart = function(cb) {
-    return this.on(Event.LongPressStart, cb);
+    this.on(Event.LongPressStart, cb);
   };
 
   View.prototype.onLongPressEnd = function(cb) {
-    return this.on(Event.LongPressEnd, cb);
+    this.on(Event.LongPressEnd, cb);
   };
 
   View.prototype.onSwipe = function(cb) {
-    return this.on(Event.Swipe, cb);
+    this.on(Event.Swipe, cb);
   };
 
   View.prototype.onSwipeStart = function(cb) {
-    return this.on(Event.SwipeStart, cb);
+    this.on(Event.SwipeStart, cb);
   };
 
   View.prototype.onSwipeEnd = function(cb) {
-    return this.on(Event.SwipeEnd, cb);
+    this.on(Event.SwipeEnd, cb);
   };
 
   View.prototype.onSwipeUp = function(cb) {
-    return this.on(Event.SwipeUp, cb);
+    this.on(Event.SwipeUp, cb);
   };
 
   View.prototype.onSwipeUpStart = function(cb) {
-    return this.on(Event.SwipeUpStart, cb);
+    this.on(Event.SwipeUpStart, cb);
   };
 
   View.prototype.onSwipeUpEnd = function(cb) {
-    return this.on(Event.SwipeUpEnd, cb);
+    this.on(Event.SwipeUpEnd, cb);
   };
 
   View.prototype.onSwipeDown = function(cb) {
-    return this.on(Event.SwipeDown, cb);
+    this.on(Event.SwipeDown, cb);
   };
 
   View.prototype.onSwipeDownStart = function(cb) {
-    return this.on(Event.SwipeDownStart, cb);
+    this.on(Event.SwipeDownStart, cb);
   };
 
   View.prototype.onSwipeDownEnd = function(cb) {
-    return this.on(Event.SwipeDownEnd, cb);
+    this.on(Event.SwipeDownEnd, cb);
   };
 
   View.prototype.onSwipeLeft = function(cb) {
-    return this.on(Event.SwipeLeft, cb);
+    this.on(Event.SwipeLeft, cb);
   };
 
   View.prototype.onSwipeLeftStart = function(cb) {
-    return this.on(Event.SwipeLeftStart, cb);
+    this.on(Event.SwipeLeftStart, cb);
   };
 
   View.prototype.onSwipeLeftEnd = function(cb) {
-    return this.on(Event.SwipeLeftEnd, cb);
+    this.on(Event.SwipeLeftEnd, cb);
   };
 
   View.prototype.onSwipeRight = function(cb) {
-    return this.on(Event.SwipeRight, cb);
+    this.on(Event.SwipeRight, cb);
   };
 
   View.prototype.onSwipeRightStart = function(cb) {
-    return this.on(Event.SwipeRightStart, cb);
+    this.on(Event.SwipeRightStart, cb);
   };
 
   View.prototype.onSwipeRightEnd = function(cb) {
-    return this.on(Event.SwipeRightEnd, cb);
+    this.on(Event.SwipeRightEnd, cb);
   };
 
   View.prototype.onPan = function(cb) {
-    return this.on(Event.Pan, cb);
+    this.on(Event.Pan, cb);
   };
 
   View.prototype.onPanStart = function(cb) {
-    return this.on(Event.PanStart, cb);
+    this.on(Event.PanStart, cb);
   };
 
   View.prototype.onPanEnd = function(cb) {
-    return this.on(Event.PanEnd, cb);
+    this.on(Event.PanEnd, cb);
   };
 
   View.prototype.onPanLeft = function(cb) {
-    return this.on(Event.PanLeft, cb);
+    this.on(Event.PanLeft, cb);
   };
 
   View.prototype.onPanRight = function(cb) {
-    return this.on(Event.PanRight, cb);
+    this.on(Event.PanRight, cb);
   };
 
   View.prototype.onPanUp = function(cb) {
-    return this.on(Event.PanUp, cb);
+    this.on(Event.PanUp, cb);
   };
 
   View.prototype.onPanDown = function(cb) {
-    return this.on(Event.PanDown, cb);
+    this.on(Event.PanDown, cb);
   };
 
 
@@ -3314,27 +3241,27 @@ View = (function(_super) {
    */
 
   View.prototype.onScale = function(cb) {
-    return this.on(Event.Scale, cb);
+    this.on(Event.Scale, cb);
   };
 
   View.prototype.onScaleStart = function(cb) {
-    return this.on(Event.ScaleStart, cb);
+    this.on(Event.ScaleStart, cb);
   };
 
   View.prototype.onScaleEnd = function(cb) {
-    return this.on(Event.ScaleEnd, cb);
+    this.on(Event.ScaleEnd, cb);
   };
 
   View.prototype.onRotate = function(cb) {
-    return this.on(Event.Rotate, cb);
+    this.on(Event.Rotate, cb);
   };
 
   View.prototype.onRotateStart = function(cb) {
-    return this.on(Event.RotateStart, cb);
+    this.on(Event.RotateStart, cb);
   };
 
   View.prototype.onRotateEnd = function(cb) {
-    return this.on(Event.RotateEnd, cb);
+    this.on(Event.RotateEnd, cb);
   };
 
   View.prototype.toInspect = function() {
@@ -3349,6 +3276,46 @@ View = (function(_super) {
       return "<" + this._kind + " id:" + this.id + " name:" + this.name + " (" + (round(this.x)) + "," + (round(this.y)) + ") " + (round(this.width)) + "x" + (round(this.height)) + ">";
     }
     return "<" + this._kind + " id:" + this.id + " (" + (round(this.x)) + "," + (round(this.y)) + ") " + (round(this.width)) + "x" + (round(this.height)) + ">";
+  };
+
+  View.prototype._createElement = function() {
+    this._element = document.createElement(this._elementType);
+    this._element.setAttribute('id', ("MagiX" + this._kind + "::") + this.id);
+    this._element.style.overflow = 'hidden';
+    this._element.style.outline = 'none';
+    this._element.style.position = 'relative';
+    return this._element.instance = this;
+  };
+
+  View.prototype._insertElement = function() {
+    this.bringToFront();
+    return this._context._element.appendChild(this._element);
+  };
+
+  View.prototype._fade = function(opacity, parameters) {
+    var time;
+    if (!parameters) {
+      parameters = {};
+    }
+    time = false;
+    if (typeof parameters === 'number') {
+      time = parameters;
+      parameters = {};
+    }
+    if (parameters.props) {
+      parameters.properties = parameters.props;
+    }
+    if (!parameters.properties) {
+      parameters.properties = {};
+    }
+    parameters.properties.opacity = opacity;
+    if (!parameters.curve) {
+      parameters.curve = 'linear';
+    }
+    if (time) {
+      parameters.time = time;
+    }
+    return this.animate(parameters);
   };
 
   View.prototype._updateShadow = function() {
@@ -3420,7 +3387,7 @@ View = (function(_super) {
   View.prototype._updateTransform = function() {
     var transform, unitX, unitY, unitZ;
     transform = '';
-    if (this._translateX !== void 0 || this._translateY !== void 0) {
+    if (this._translateX !== NULL || this._translateY !== NULL) {
       unitX = '';
       unitY = '';
       if (typeof this._translateX === 'number') {
@@ -3431,33 +3398,33 @@ View = (function(_super) {
       }
       transform += 'translate(' + this._translateX + '' + unitX + ', ' + this._translateY + '' + unitY + ') ';
     }
-    if (this._translateZ !== void 0) {
+    if (this._translateZ !== NULL) {
       unitZ = '';
       if (typeof this._translateZ === 'number') {
         unitZ = 'px';
       }
       transform += 'translateZ(' + this._translateZ + '' + unitZ + ') ';
     }
-    if (this._rotation !== void 0) {
+    if (this._rotation !== NULL) {
       transform += 'rotate(' + this._rotation + 'deg) ';
     }
-    if (this._rotationX !== void 0) {
+    if (this._rotationX !== NULL) {
       transform += 'rotateX(' + this._rotationX + 'deg) ';
     }
-    if (this._rotationY !== void 0) {
+    if (this._rotationY !== NULL) {
       transform += 'rotateY(' + this._rotationY + 'deg) ';
     }
-    if (this._rotationZ !== void 0) {
+    if (this._rotationZ !== NULL) {
       transform += 'rotateZ(' + this._rotationZ + 'deg) ';
     }
-    if (this._scale !== void 0) {
+    if (this._scale !== NULL) {
       if (this._scaleX === this._scaleY) {
         transform += 'scale(' + this._scaleX + ') ';
       } else {
         transform += 'scale(' + this._scaleX + ', ' + this._scaleY + ') ';
       }
     }
-    if (this._skewX !== void 0 || this._skewY !== void 0) {
+    if (this._skewX !== NULL || this._skewY !== NULL) {
       if (this._skewX === this._skewY) {
         transform += 'skew(' + this._skewX + 'deg) ';
       } else {

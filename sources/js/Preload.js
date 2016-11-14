@@ -9,6 +9,8 @@ Preload = function(urls, callback) {
     urls = [urls];
   }
   paths = [];
+  loaded = 0;
+  i = 0;
   for (_i = 0, _len = urls.length; _i < _len; _i++) {
     path = urls[_i];
     paths.push({
@@ -16,15 +18,15 @@ Preload = function(urls, callback) {
       loaded: false
     });
   }
-  loaded = 0;
-  i = 0;
   for (_j = 0, _len1 = paths.length; _j < _len1; _j++) {
     path = paths[_j];
     if (!path.loaded) {
       path.loaded = true;
       img = new Image({
-        source: path.image
+        source: path.image,
+        display: false
       });
+      img.parent = null;
       img.on(Event.Load, function(event, view) {
         var progress;
         loaded++;

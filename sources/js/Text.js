@@ -40,8 +40,8 @@ Text = (function(_super) {
       }
       this._assigned = {};
       this._text = value;
-      this.emit('change:text', value);
       this.html = Utils.e(value);
+      this.emit('change:text', value);
     }
   });
 
@@ -51,8 +51,8 @@ Text = (function(_super) {
       return this.text;
     },
     set: function(value) {
-      this.emit('change:value', value);
       this.text = value;
+      this.emit('change:value', value);
     }
   });
 
@@ -65,8 +65,8 @@ Text = (function(_super) {
       if (!value) {
         return;
       }
-      this.emit('change:header', value);
       this.text = this._header = value;
+      this.emit('change:header', value);
     }
   });
 
@@ -79,8 +79,8 @@ Text = (function(_super) {
       if (!value) {
         return;
       }
-      this.emit('change:paragraph', value);
       this.text = this._paragraph = value;
+      this.emit('change:paragraph', value);
     }
   });
 
@@ -281,6 +281,7 @@ Text = (function(_super) {
     assigned_length = Utils.keys(this._assigned).length;
     regexs = '';
     i = 0;
+    that = this;
     for (key in this._assigned) {
       if (this._assigned[key].url) {
         this._assigned[key].assign = new Link({
@@ -303,7 +304,6 @@ Text = (function(_super) {
       }
       i++;
     }
-    that = this;
     pattern = new RegExp("(" + regexs + ")", 'g');
     return this.html = this._text.replace(pattern, function(match) {
       var split_pattern, type;

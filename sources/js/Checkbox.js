@@ -1,11 +1,3 @@
-
-/*
-	myCheck = new Checkbox
-		text: 'Check me'
-		parent: @
-	myCheck.onChange (e)->
-		say @inputed
- */
 var Checkbox, CheckboxInput,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -28,33 +20,33 @@ CheckboxInput = (function(_super) {
 Checkbox = (function(_super) {
   __extends(Checkbox, _super);
 
+  Checkbox.prototype._kind = 'Checkbox';
+
   function Checkbox(properties) {
-    var _this;
+    var that;
     this.input = new CheckboxInput();
     this.input._element.setAttribute('type', 'checkbox');
     this.input.style.verticalAlign = 'middle';
     this.label = new Text(App.Originals.Checkbox.Text);
     Checkbox.__super__.constructor.apply(this, arguments);
-    _this = this;
+    that = this;
     this.addChild(this.input);
     this.addChild(this.label);
     this.onClick(function() {
       if (!this.enabled) {
         return;
       }
-      if (_this.checked) {
-        return _this.checked = false;
+      if (that.checked) {
+        return that.checked = false;
       } else {
-        return _this.checked = true;
+        return that.checked = true;
       }
     });
   }
 
-  Checkbox.prototype._kind = 'Checkbox';
-
   Checkbox.define('enabled', {
     get: function() {
-      if (this._enabled === void 0) {
+      if (this._enabled === NULL) {
         this._enabled = true;
       }
       return this._enabled;
@@ -96,18 +88,18 @@ Checkbox = (function(_super) {
     }
   });
 
+  Checkbox.prototype.focus = function() {
+    this.input._element.focus();
+  };
+
+  Checkbox.prototype.resignFocus = function() {
+    this.input._element.blur();
+  };
+
+  Checkbox.prototype.onChange = function(cb) {
+    this.on('change:value', cb);
+  };
+
   return Checkbox;
 
 })(View);
-
-Checkbox.prototype.focus = function() {
-  this.input._element.focus();
-};
-
-Checkbox.prototype.resignFocus = function() {
-  this.input._element.blur();
-};
-
-Checkbox.prototype.onChange = function(cb) {
-  return this.on('change:value', cb);
-};

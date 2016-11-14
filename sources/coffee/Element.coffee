@@ -1,12 +1,16 @@
+
+# Element
+
 class Element extends EventEmitter
-	constructor: (options={}) ->
-		@__options = options
-		@_context = App.CurrentContext
-		@['_DefinedPropertiesValuesKey'] = {}
-		@_id = Utils.randomID()
 
 	_kind : 'Element'
 
+	constructor: (options={}) ->
+		@_id 								= Utils.randomID()
+		@__options 							= options
+		@_context 							= App.CurrentContext
+		@['_DefinedPropertiesValuesKey'] 	= {}
+		
 	######################################################
 
 	toInspect: =>
@@ -52,7 +56,6 @@ class Element extends EventEmitter
 
 
 	######################################################
-
 
 	@simpleProperty = (name, fallback, options={}) ->
 		return Utils.extend options,
@@ -140,40 +143,4 @@ class Element extends EventEmitter
 					@[k] = v if propertyList[k]?.importable
 			if action
 				@do = action
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-				
+		

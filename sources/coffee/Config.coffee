@@ -1,11 +1,7 @@
-# *********************************
-# *********************************
-# Config
-# *********************************
-# ** By Etienne Pinchon
-# ** ©2016
 
-ResetCSS = "html, body, div, span, applet, object, iframe, \
+# Config
+
+_css_reset = "html, body, div, span, applet, object, iframe, \
 		h1, h2, h3, h4, h5, h6, p, blockquote, pre, \
 		a, abbr, acronym, address, big, cite, code, \
 		del, dfn, em, img, ins, kbd, q, s, samp, \
@@ -85,4 +81,4 @@ ResetCSS = "html, body, div, span, applet, object, iframe, \
 		:full-screen			{ display: block !important; width: 100% !important; height: 100% !important; } \
 "
 
-Utils.domComplete -> Utils.insertCSS(ResetCSS)
+Utils.domComplete -> Utils.insertCSS(_css_reset)

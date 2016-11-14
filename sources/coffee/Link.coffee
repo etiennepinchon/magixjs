@@ -1,72 +1,52 @@
-# *********************************
-# *********************************
+
 # Link
-# *********************************
-# ** By Etienne Pinchon
-# ** ©2016
 
 class Link extends Text
+	
+	_kind : 'Link'
+	_elementType : 'a'
+
 	constructor: (properties) ->
 		super
 		
-		# *********************************
-		# Events
-		# *********************************
 		@on Event.Click, (event, view) ->
 			
 			# Stop if link was explicitely describe as external
-			if @external
-				return
-
+			return if @external
+				
 			# Stop if the url is not defined or if not in auto mode
 			if not view.url or not @auto
 				event.preventDefault()
 				return
-
 			# Check if link is external to the website
 			if not @_isExternal(view.url)
 				App.go view.url, true
 				event.preventDefault()
 
-
-	_kind : 'Link'
-	_elementType : 'a'
-
 	##############################################################
-	# Properties
+	# PROPERTIES
 
 	# *********************************
 	# url property
 	# *********************************
 	# ** Add a url to the link
 	@define 'url',
-		get: ->
-			@_element.getAttribute 'href'
+		get: -> @_element.getAttribute 'href'
 		set: (value) ->
 			@_element.setAttribute 'href', Utils.parseURL(value)
 			return
-
-
-	# Alias of url
 	@define 'href',
-		get: ->
-			@url
+		get: -> @url
 		set: (value) ->
 			@url = value
 			return
-
-	# Alias of url
 	@define 'path',
-		get: ->
-			@url
+		get: -> @url
 		set: (value) ->
 			@url = value
 			return
-
-	# Alias of url
 	@define 'link',
-		get: ->
-			@url
+		get: -> @url
 		set: (value) ->
 			@url = value
 			return
@@ -79,8 +59,7 @@ class Link extends Text
 	# ** Example: control what's happening when clicking (animation before changing the url and page)
 	@define 'auto',
 		get: ->
-			if @_auto is undefined
-				@_auto = true
+			@_auto = true if @_auto is NULL
 			@_auto
 		set: (value) ->
 			if value is true
@@ -96,8 +75,7 @@ class Link extends Text
 	# ** Not using the navigation ajax system
 	@define 'external',
 		get: ->
-			if not @_external
-				@_external = false
+			@_external = false if not @_external
 			@_external
 		set: (value) ->
 			if value is true
@@ -113,8 +91,7 @@ class Link extends Text
 	# ** Open the link in a new tab
 	@define 'blank',
 		get: ->
-			if @_blank isnt undefined
-				@_blank = false
+			@_blank = false if @_blank isnt NULL
 			@_blank
 		set: (value) ->
 			if value is true
@@ -142,29 +119,26 @@ class Link extends Text
 	# *********************************
 	# ** Allow you to controls the url change
 
-	go : (event, view) ->
+	go: (event, view) ->
 
 		# Stop if the url is not defined
 		if not @url
-			if event
-				event.preventDefault()
+			if event then event.preventDefault()
 			return
 
 		# Check if link is external to the website
 		if not @_isExternal(@url)
 			App.go @url, true
-			if event
-				event.preventDefault()
+			if event then event.preventDefault()
 
+
+	##############################################################
+	# PRIVATE
 
 	# Test if URL is external or internal
 	_isExternal : (url) ->
 		domain = (url) ->
 			url.replace('http://', '').replace('https://', '').split('/')[0]
-
 		domainURL = domain(url)
-
-		if domainURL is ''
-			return false
-
+		return false if domainURL is ''
 		domain(location.href) isnt domainURL

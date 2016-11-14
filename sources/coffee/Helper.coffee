@@ -1,0 +1,9 @@
+Delay = Utils.delay
+Interval = Utils.interval
+Debounce = Utils.debounce
+Throttle = Utils.throttle
+FadeIn = (view, options)-> view.fadeIn(options)
+FadeOut = (view, options)-> view.fadeIn(options)
+Show = (view)-> view.show()
+Hide = (view)-> view.hide()
+CSS = Utils.insertCSS

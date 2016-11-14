@@ -1,0 +1,11 @@
+###
+	Example:
+	myPlayer = new Player
+		video: '/assets/images/demo.mp4'
+		parent : @
+
+	myPlayer.onTimeUpdate, (e)->
+		console.log e
+
+	myPlayer.play()
+###

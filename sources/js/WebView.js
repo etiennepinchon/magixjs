@@ -16,21 +16,13 @@ WebView = (function(_super) {
 
   WebView.prototype._elementType = 'iframe';
 
-  WebView.prototype.onLoad = function(cb) {
-    return this.on(Event.Load, cb);
-  };
-
-  WebView.prototype.onLoaded = function(cb) {
-    return this.on(Event.Loaded, cb);
-  };
-
-  WebView.prototype.onDone = function(cb) {
-    return this.on(Event.Loaded, cb);
+  WebView.prototype.reload = function() {
+    return this._element.contentWindow.location.reload();
   };
 
   WebView.define('url', {
     get: function() {
-      if (this._url === void 0) {
+      if (this._url === NULL) {
         this._url = '';
       }
       return this._url;
@@ -81,43 +73,40 @@ WebView = (function(_super) {
 
   WebView._def_enabled('navigationEnabled');
 
+  WebView.prototype.onLoad = function(cb) {
+    return this.on(Event.Load, cb);
+  };
+
+  WebView.prototype.onLoaded = function(cb) {
+    return this.on(Event.Loaded, cb);
+  };
+
+  WebView.prototype.onDone = function(cb) {
+    return this.on(Event.Loaded, cb);
+  };
+
+  WebView.prototype._updateSandbox = function() {
+    var key, output, sandbox;
+    sandbox = {
+      forms: 'allow-forms',
+      pointerLock: 'allow-pointer-lock',
+      popups: 'allow-popups',
+      sameOrigin: 'allow-same-origin',
+      scripts: 'allow-scripts',
+      navigation: 'allow-top-navigation'
+    };
+    output = '';
+    for (key in this._sandbox) {
+      if (sandbox[key] !== NULL && this._sandbox[key] === false) {
+        delete sandbox[key];
+      }
+    }
+    for (key in sandbox) {
+      output += sandbox[key] + ' ';
+    }
+    this._element.setAttribute('sandbox', output);
+  };
+
   return WebView;
 
 })(View);
-
-WebView.prototype.reload = function() {
-  this._element.contentWindow.location.reload();
-};
-
-
-/*
-** SANDBOX **
-*	allow-forms	Re-enables form submission
-*	allow-pointer-lock	Re-enables APIs
-*	allow-popups	Re-enables popups
-*	allow-same-origin	Allows the iframe content to be treated as being from the same origin
-*	allow-scripts	Re-enables scripts
-*	allow-top-navigation	Allows the iframe content to navigate its top-level browsing context
- */
-
-WebView.prototype._updateSandbox = function() {
-  var key, output, sandbox;
-  sandbox = {
-    forms: 'allow-forms',
-    pointerLock: 'allow-pointer-lock',
-    popups: 'allow-popups',
-    sameOrigin: 'allow-same-origin',
-    scripts: 'allow-scripts',
-    navigation: 'allow-top-navigation'
-  };
-  output = '';
-  for (key in this._sandbox) {
-    if (sandbox[key] !== void 0 && this._sandbox[key] === false) {
-      delete sandbox[key];
-    }
-  }
-  for (key in sandbox) {
-    output += sandbox[key] + ' ';
-  }
-  this._element.setAttribute('sandbox', output);
-};

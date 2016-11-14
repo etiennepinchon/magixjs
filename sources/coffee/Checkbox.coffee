@@ -1,57 +1,41 @@
-# *********************************
-# *********************************
-# Checkbox.js
-# *********************************
-# ** By Etienne Pinchon
-# ** ©2016
 
-###
-	myCheck = new Checkbox
-		text: 'Check me'
-		parent: @
-	myCheck.onChange (e)->
-		say @inputed
-###
+# Checkbox
 
 # TODO: Custom property -> bool
 
 class CheckboxInput extends View
-	_kind : 'CheckboxInput'
-	_elementType : 'input'
+	_kind 			: 'CheckboxInput'
+	_elementType 	: 'input'
 
 class Checkbox extends View
+
+	_kind : 'Checkbox'
+
 	constructor: (properties) ->
 		
 		@input = new CheckboxInput()
 		@input._element.setAttribute 'type', 'checkbox'
 		@input.style.verticalAlign = 'middle'
-
 		@label = new Text(App.Originals.Checkbox.Text)
 
 		super
 
-		_this = this
-
+		that = this
 		@addChild @input
 		@addChild @label
-
 		@onClick ->
 			return if not @enabled
-			if _this.checked
-				_this.checked = false
+			if that.checked
+				that.checked = false
 			else
-				_this.checked = true
-
-	
-	_kind : 'Checkbox'
+				that.checked = true
 
 	##############################################################
-	# Properties
+	# PROPERTIES
 
 	@define 'enabled',
 		get: ->
-			if @_enabled is undefined
-				@_enabled = true
+			@_enabled = true if @_enabled is NULL
 			@_enabled
 		set: (value) ->
 			if value is true
@@ -61,10 +45,8 @@ class Checkbox extends View
 				@_enabled = false
 				@input._element.disabled = true
 			return
-
 	@define 'checked',
-		get: ->
-			@input._element.checked
+		get: -> @input._element.checked
 		set: (value) ->
 			if value is true
 				@input._element.checked = true
@@ -75,24 +57,23 @@ class Checkbox extends View
 				@emit 'change:value', false
 				@emit 'change:checked', false
 			return
-
 	@define 'text',
-		get: ->
-			@label.text
+		get: -> @label.text
 		set: (value) ->
 			@label.text = value
 			return
 
-Checkbox::focus = ->
-	@input._element.focus()
-	return
+	##############################################################
+	# METHDOS
 
-Checkbox::resignFocus = ->
-	@input._element.blur()
-	return
-
-# Form Events
-Checkbox::onChange = (cb) ->
-  @on 'change:value', cb
+	focus : ->
+		@input._element.focus()
+		return
+	resignFocus : ->
+		@input._element.blur()
+		return
+	onChange : (cb) ->
+	  @on 'change:value', cb
+	  return
 
 

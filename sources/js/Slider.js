@@ -8,8 +8,8 @@ Event.SliderValueChange = "sliderValueChange";
 Knob = (function(_super) {
   __extends(Knob, _super);
 
-  function Knob(options) {
-    Knob.__super__.constructor.call(this, options);
+  function Knob() {
+    return Knob.__super__.constructor.apply(this, arguments);
   }
 
   Knob.define("constrained", Knob.simpleProperty("constrained", false));
@@ -21,17 +21,19 @@ Knob = (function(_super) {
 Slider = (function(_super) {
   __extends(Slider, _super);
 
+  Slider.prototype._kind = 'Slider';
+
   function Slider(options) {
     if (options == null) {
       options = {};
     }
-    this._updateValue = __bind(this._updateValue, this);
     this._setRadius = __bind(this._setRadius, this);
     this._updateFrame = __bind(this._updateFrame, this);
     this._updateKnob = __bind(this._updateKnob, this);
     this._updateFill = __bind(this._updateFill, this);
     this._touchEnd = __bind(this._touchEnd, this);
     this._touchStart = __bind(this._touchStart, this);
+    this._updateValue = __bind(this._updateValue, this);
     Utils.defaults(options, {
       backgroundColor: "#ccc",
       borderRadius: 50,
@@ -100,77 +102,6 @@ Slider = (function(_super) {
     }
   }
 
-  Slider.prototype._kind = 'Slider';
-
-  Slider.prototype._touchStart = function(event) {
-    event.preventDefault();
-    if (this.width > this.height) {
-      this.value = this.valueForPoint(Event.touchEvent(event).layerX);
-    } else {
-      this.value = this.valueForPoint(Event.touchEvent(event).layerY);
-    }
-    this.knob.draggable._touchStart(event);
-    return this._updateValue();
-  };
-
-  Slider.prototype._touchEnd = function(event) {
-    return this._updateValue();
-  };
-
-  Slider.prototype._updateFill = function() {
-    if (this.width > this.height) {
-      return this.fill.width = this.knob.midX;
-    } else {
-      return this.fill.height = this.knob.midY;
-    }
-  };
-
-  Slider.prototype._updateKnob = function() {
-    if (this.width > this.height) {
-      this.knob.midX = this.fill.width;
-      return this.knob.absoluteCenterY();
-    } else {
-      this.knob.midY = this.fill.height;
-      return this.knob.absoluteCenterX();
-    }
-  };
-
-  Slider.prototype._updateFrame = function() {
-    this.knob.draggable.constraints = {
-      x: -this.knob.width / 2,
-      y: -this.knob.height / 2,
-      width: this.width + this.knob.width,
-      height: this.height + this.knob.height
-    };
-    if (this.knob.constrained) {
-      this.knob.draggable.constraints = {
-        x: 0,
-        y: 0,
-        width: this.width,
-        height: this.height
-      };
-    }
-    if (this.width > this.height) {
-      this.fill.height = this.height;
-      this.knob.absoluteCenterY();
-    } else {
-      this.fill.width = this.width;
-      this.knob.absoluteCenterX();
-    }
-    if (this.width > this.height) {
-      this.knob.draggable.speedY = 0;
-    } else {
-      this.knob.draggable.speedX = 0;
-    }
-    return this.sliderOverlay.absoluteCenter();
-  };
-
-  Slider.prototype._setRadius = function() {
-    var radius;
-    radius = this.borderRadius;
-    return this.fill.style.borderRadius = "" + radius + "px 0 0 " + radius + "px";
-  };
-
   Slider.define("knobSize", {
     get: function() {
       return this._knobSize;
@@ -236,15 +167,6 @@ Slider = (function(_super) {
     }
   });
 
-  Slider.prototype._updateValue = function() {
-    if (this._lastUpdatedValue === this.value) {
-      return;
-    }
-    this._lastUpdatedValue = this.value;
-    this.emit("change:value", this.value);
-    return this.emit(Event.SliderValueChange, this.value);
-  };
-
   Slider.prototype.pointForValue = function(value) {
     if (this.width > this.height) {
       if (this.knob.constrained) {
@@ -297,6 +219,84 @@ Slider = (function(_super) {
 
   Slider.prototype.onValueChange = function(cb) {
     return this.on(Event.SliderValueChange, cb);
+  };
+
+  Slider.prototype._updateValue = function() {
+    if (this._lastUpdatedValue === this.value) {
+      return;
+    }
+    this._lastUpdatedValue = this.value;
+    this.emit("change:value", this.value);
+    return this.emit(Event.SliderValueChange, this.value);
+  };
+
+  Slider.prototype._touchStart = function(event) {
+    event.preventDefault();
+    if (this.width > this.height) {
+      this.value = this.valueForPoint(Event.touchEvent(event).viewX);
+    } else {
+      this.value = this.valueForPoint(Event.touchEvent(event).viewY);
+    }
+    this.knob.draggable._touchStart(event);
+    return this._updateValue();
+  };
+
+  Slider.prototype._touchEnd = function(event) {
+    return this._updateValue();
+  };
+
+  Slider.prototype._updateFill = function() {
+    if (this.width > this.height) {
+      return this.fill.width = this.knob.midX;
+    } else {
+      return this.fill.height = this.knob.midY;
+    }
+  };
+
+  Slider.prototype._updateKnob = function() {
+    if (this.width > this.height) {
+      this.knob.midX = this.fill.width;
+      return this.knob.absoluteCenterY();
+    } else {
+      this.knob.midY = this.fill.height;
+      return this.knob.absoluteCenterX();
+    }
+  };
+
+  Slider.prototype._updateFrame = function() {
+    this.knob.draggable.constraints = {
+      x: -this.knob.width / 2,
+      y: -this.knob.height / 2,
+      width: this.width + this.knob.width,
+      height: this.height + this.knob.height
+    };
+    if (this.knob.constrained) {
+      this.knob.draggable.constraints = {
+        x: 0,
+        y: 0,
+        width: this.width,
+        height: this.height
+      };
+    }
+    if (this.width > this.height) {
+      this.fill.height = this.height;
+      this.knob.absoluteCenterY();
+    } else {
+      this.fill.width = this.width;
+      this.knob.absoluteCenterX();
+    }
+    if (this.width > this.height) {
+      this.knob.draggable.speedY = 0;
+    } else {
+      this.knob.draggable.speedX = 0;
+    }
+    return this.sliderOverlay.absoluteCenter();
+  };
+
+  Slider.prototype._setRadius = function() {
+    var radius;
+    radius = this.borderRadius;
+    return this.fill.style.borderRadius = "" + radius + "px 0 0 " + radius + "px";
   };
 
   return Slider;

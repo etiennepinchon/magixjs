@@ -1,4 +1,6 @@
-var Defaults, Originals;
+var Defaults, NULL, Originals;
+
+NULL = void 0;
 
 Originals = {
   View: {
@@ -128,7 +130,7 @@ Originals = {
   Text: {
     clip: false,
     width: '100%',
-    align: 'center',
+    align: 'left',
     userInteraction: false,
     display: 'table'
   },

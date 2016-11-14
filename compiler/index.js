@@ -1,12 +1,13 @@
 var restify = require('restify');
 var fs = require('fs');
-var LZString = require('lz-string');
  
 var server = restify.createServer();
 server.use(restify.acceptParser(server.acceptable));
 server.use(restify.queryParser());
 server.use(restify.bodyParser());
 server.use(restify.gzipResponse());
+
+// ----------------------------------------------
 
 server.get('/api/:url', function (req, res, next) {
 	var body = '<html><body>something</body></html>';
@@ -29,11 +30,11 @@ server.get(/\/test\/?.*/, restify.serveStatic({
 		directory: '../'//__dirname
 }));
 
+// ----------------------------------------------
 
 var wrench = require("wrench");
 var uglify = require("uglify-js");
 var path = require('path');
-
 
 var walk = function(dir, done) {
 	var results = [];
@@ -59,13 +60,16 @@ var walk = function(dir, done) {
 	});
 };
 
+// ----------------------------------------------
+
 var framework_files = [
-	"../sources/js/Orbe.js",
+	"../sources/js/MagiX.js",
 	"../sources/js/Defaults.js",
 	"../sources/js/Utils.js",
 	"../sources/js/Config.js",
-	"../sources/js/Say.js",
+	"../sources/js/log.js",
 
+	"../sources/js/lib/bounce.min.js",
 	"../sources/js/lib/EE3.js",
 	"../sources/js/Event.js",
 	"../sources/js/EventEmitter.js",
@@ -79,7 +83,7 @@ var framework_files = [
 	"../sources/js/Color.js",
 	"../sources/js/Store.js",
 	"../sources/js/Cookie.js",
-	"../sources/js/Network.js",
+	"../sources/js/Request.js",
 	"../sources/js/GestureRecognizer.js",
 
 	"../sources/js/Transition.js",
@@ -103,6 +107,8 @@ var framework_files = [
 	"../sources/js/Notification.js",
 
 	"../sources/js/App.js",
+	"../sources/js/Fonts.js",
+	"../sources/js/Routes.js",
 	"../sources/js/Import.js",
 	"../sources/js/Preload.js",
 	"../sources/js/When.js",
@@ -116,9 +122,10 @@ var framework_files = [
 	"../sources/js/Button.js",
 	"../sources/js/Slider.js",
 	"../sources/js/ProgressBar.js",
-	"../sources/js/TextField.js",
-	"../sources/js/FileField.js",
-	"../sources/js/TextView.js",
+	"../sources/js/TextInput.js",
+	"../sources/js/FileInput.js",
+	"../sources/js/Say.js",
+	"../sources/js/SpeechRecognition.js",
 	"../sources/js/Canvas.js",
 	"../sources/js/WebView.js",
 	"../sources/js/Dropdown.js",
@@ -126,7 +133,8 @@ var framework_files = [
 	"../sources/js/RadioButton.js",
 	"../sources/js/Player.js",
 	"../sources/js/List.js",
-	"../sources/js/ListItem.js"
+	"../sources/js/ListItem.js",
+	"../sources/js/Helper.js"
 ];
 
 server.get('/compile', function (req, res, next) {
@@ -135,23 +143,23 @@ server.get('/compile', function (req, res, next) {
 
 	var uglified = uglify.minify(framework_files);
 
-	var versioning = '/* Orbe.io || Created by Etienne Pinchon (@etiennepinchon) || Copyright @2016 */var __ORBE_JS_BUILD_DATE__=' + new Date().getTime() / 1000 + ';';
+	var versioning = '/* magixjs.com || Created by Etienne Pinchon (@etiennepinchon) || Copyright @2016 */var __MAGIX_JS_BUILD_DATE__=' + new Date().getTime() / 1000 + ';';
 	var finalJS = versioning + uglified.code
 
-	fs.writeFile('../build/orbe.min.js', finalJS, function (err){
+	fs.writeFile('../build/magix.min.js', finalJS, function (err){
 		if(err) {
 			res.send(err);
 		} 
 		else {
-			var loader_files = ["../sources/js/OrbeLoader.js"]
+			var loader_files = ["../sources/js/MagiXLoader.js"]
 			uglified = uglify.minify(loader_files);
 
-			fs.writeFile('../build/orbe.loader.min.js', versioning + uglified.code, function (err){
+			fs.writeFile('../build/magix.loader.min.js', versioning + uglified.code, function (err){
 				if(err) {
 					res.send(err);
 				} else {
 					var end = +new Date();
-				 	res.send({"message": "OrbeJS compiled with success. " + (framework_files.length + loader_files.length) + ' files. Done in ' + (end-start) + 'ms'});
+				 	res.send({"message": "MagixJS compiled with success. " + (framework_files.length + loader_files.length) + ' files. Done in ' + (end-start) + 'ms'});
 				}
 			});
 		}
@@ -159,6 +167,8 @@ server.get('/compile', function (req, res, next) {
 
 	return next();
 });
+
+// ----------------------------------------------
 
 // App path
 server.get(/\/?/, function (req, res, next) {
@@ -178,5 +188,7 @@ server.get(/\/?/, function (req, res, next) {
 server.listen(8880, function () {
 	console.log('%s listening at %s', server.name, server.url);
 });
+
+// ----------------------------------------------
 
 console.log("Server now running....");

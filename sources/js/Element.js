@@ -6,6 +6,8 @@ var Element,
 Element = (function(_super) {
   __extends(Element, _super);
 
+  Element.prototype._kind = 'Element';
+
   function Element(options) {
     if (options == null) {
       options = {};
@@ -13,13 +15,11 @@ Element = (function(_super) {
     this._getPropertyValue = __bind(this._getPropertyValue, this);
     this._setPropertyValue = __bind(this._setPropertyValue, this);
     this.toInspect = __bind(this.toInspect, this);
+    this._id = Utils.randomID();
     this.__options = options;
     this._context = App.CurrentContext;
     this['_DefinedPropertiesValuesKey'] = {};
-    this._id = Utils.randomID();
   }
-
-  Element.prototype._kind = 'Element';
 
   Element.prototype.toInspect = function() {
     return "<" + this._kind + " id:" + (this.id || null) + ">";

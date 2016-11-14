@@ -1,9 +1,5 @@
-# *********************************
-# *********************************
+
 # List
-# *********************************
-# ** By Etienne Pinchon
-# ** ©2016
 
 class List extends View
 	constructor: (properties) ->
@@ -13,19 +9,15 @@ class List extends View
 
 		# Remove the lenght and each props BEFORE calling the super
 		if properties
-			if properties.length
-				delete properties.length
-		
-			if properties.each
-				delete properties.each
+			delete properties.length if properties.length
+			delete properties.each if properties.each
 
 		# Init super
 		super properties
 		
-		
-		@children = []
-		@count = 0
-		@functionAtIndex = false
+		@children 			= []
+		@count 				= 0
+		@functionAtIndex 	= false
 
 		@functionToCount = ->
 			@count
@@ -39,20 +31,14 @@ class List extends View
 				val = properties_copy.length
 				@length val
 				delete properties_copy.length
-			
-			if properties_copy.horizontal
-				@horizontal = properties_copy.horizontal
-			
-			if properties_copy.vertical
-				@horizontal = !properties_copy.vertical
-			
+			@horizontal = properties_copy.horizontal if properties_copy.horizontal
+			@horizontal = !properties_copy.vertical if properties_copy.vertical
 			if properties_copy.each
 				@each properties_copy.each
 				delete properties_copy.each
-		
-		
-	_kind : 'List'
-	_elementType : 'ul'
+	
+	_kind 			: 'List'
+	_elementType 	: 'ul'
 
 	##############################################################
 	# Methods
@@ -63,10 +49,8 @@ class List extends View
 	# * Set the number of item in the list with the help of a function
 
 	length : (functionToCount) ->
-		
 		if functionToCount and typeof functionToCount is 'number'
 			value = functionToCount
-
 			functionToCount = ->
 				value
 
@@ -77,10 +61,8 @@ class List extends View
 
 		# Execute function to get the count
 		number = @functionToCount()
-
 		if typeof number isnt 'number'
 			number = 0
-		
 		@count = number
 		return @count
 
@@ -107,11 +89,9 @@ class List extends View
 		while i < @count
 			if functionAtIndex
 				viewItem = functionAtIndex(null, i)
-				
 				if not viewItem
 					log 'List: nothing was return from the each function.'
 					return
-				
 				if @horizontal
 					viewItem.display = 'inline-block'
 				else
@@ -131,7 +111,6 @@ class List extends View
 
 	#addItem: (item, index) ->
 
-
 	# *********************************
 	# addItem method
 	#
@@ -140,7 +119,6 @@ class List extends View
 	addItem : (item) ->
 		@addChild item
 		return
-
 
 	# *********************************
 	# removeItem method

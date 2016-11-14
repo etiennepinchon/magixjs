@@ -1,9 +1,5 @@
-# *********************************
-# *********************************
+
 # Color
-# *********************************
-# ** By Etienne Pinchon
-# ** ©2016
 
 ColorType =
 	RGB: "rgb"
@@ -24,37 +20,30 @@ class Color extends Element
 		if Color.isColorObject(color) then return color
 
 		# Convert input to RGB
-		input = inputData(color, r, g, b)
-
-		@_type = input.type
-		@_r = input.r
-		@_g = input.g
-		@_b = input.b
-		@_a = input.a
-		@_h = input.h
-		@_s = input.s
-		@_l = input.l
-		@_roundA = Math.round(100*@_a) / 100
+		input 		= inputData(color, r, g, b)
+		@_type 		= input.type
+		@_r 		= input.r
+		@_g 		= input.g
+		@_b 		= input.b
+		@_a 		= input.a
+		@_h 		= input.h
+		@_s 		= input.s
+		@_l 		= input.l
+		@_roundA 	= Math.round(100*@_a) / 100
 
 
 	@define "r",
 		get: -> @_r
-
 	@define "g",
 		get: -> @_g
-
 	@define "b",
 		get: -> @_b
-
 	@define "a",
 		get: -> @_a
-
 	@define "h",
 		get: -> @_h
-
 	@define "s",
 		get: -> @_s
-
 	@define "l",
 		get: -> @_l
 

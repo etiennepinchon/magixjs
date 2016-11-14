@@ -5,16 +5,16 @@ var ProgressBar,
 ProgressBar = (function(_super) {
   __extends(ProgressBar, _super);
 
+  ProgressBar.prototype._kind = 'ProgressBar';
+
   function ProgressBar(properties) {
     properties.noknob = true;
     ProgressBar.__super__.constructor.apply(this, arguments);
     this.removeChild(this.knob);
-    if (properties.value === void 0) {
+    if (properties.value === NULL) {
       this.value = 0.5;
     }
   }
-
-  ProgressBar.prototype._kind = 'ProgressBar';
 
   return ProgressBar;
 

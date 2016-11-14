@@ -1,9 +1,7 @@
-# *********************************
-# *********************************
+
 # Defaults
-# *********************************
-# ** By Etienne Pinchon
-# ** ©2016
+
+NULL = undefined
 
 Originals =
 	View:
@@ -129,11 +127,10 @@ Originals =
 	Image: {}
 
 	Text:
-		#text: 'text'
-		clip: false
+		clip: no
 		width: '100%'
-		align: 'center'
-		userInteraction: false
+		align: 'left'
+		userInteraction: no
 		display: 'table'
 
 	Link:
@@ -141,7 +138,7 @@ Originals =
 		align: 'center'
 		display: 'block'
 		color: 'black'
-		userInteraction: false
+		userInteraction: no
 
 	FileField: 
 		padding:
@@ -173,7 +170,7 @@ Originals =
 		color: 'white'
 		borderWidth: 0
 		cursor: 'pointer'
-		userInteraction: false
+		userInteraction: no
 		borderBox: true
 
 	Canvas: 
@@ -191,7 +188,6 @@ Originals =
 		width: 400
 		height: 300
 		mouseWheel: false
-	
 ###
 
 Defaults =

@@ -6,6 +6,12 @@ Page = (function(_super) {
   __extends(Page, _super);
 
   function Page(options) {
+    if (options.url) {
+      options.parent = -1;
+    }
+    if (!options.parent && !options.url) {
+      options.parent = App;
+    }
     Page.__super__.constructor.apply(this, arguments);
   }
 
@@ -21,19 +27,28 @@ Page = (function(_super) {
     }
   });
 
+  Page.define('url', {
+    configurable: true,
+    get: function() {
+      return this.url;
+    },
+    set: function(value) {
+      Routes.add(value, this);
+    }
+  });
+
+  Page.prototype.isFirst = function() {
+    if (!App._pages_counter) {
+      return true;
+    }
+    return false;
+  };
+
   Page.prototype.toInspect = function() {
     if (this.name) {
       return "<Page id:" + this.id + " name:" + this.name + ">";
     }
     return "<Page id:" + this.id + ">";
-  };
-
-  Page.prototype.isFirst = function() {
-    if (!App._pages_counter) {
-      return true;
-    } else {
-      return false;
-    }
   };
 
   return Page;

@@ -1,12 +1,7 @@
-# *********************************
-# *********************************
+
 # Utils
-# *********************************
-# ** By Etienne Pinchon
-# ** ©2016
 
 Utils = {}
-
 
 ######################################################
 # Platform parsers
@@ -704,7 +699,7 @@ Utils.parseFunction = (str) ->
 __domComplete = []
 __domReady = false
 
-if Orbe.__domReady
+if MagiX.__domReady
 	__domReady = true
 
 if document?

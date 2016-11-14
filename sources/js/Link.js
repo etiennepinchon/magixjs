@@ -5,6 +5,10 @@ var Link,
 Link = (function(_super) {
   __extends(Link, _super);
 
+  Link.prototype._kind = 'Link';
+
+  Link.prototype._elementType = 'a';
+
   function Link(properties) {
     Link.__super__.constructor.apply(this, arguments);
     this.on(Event.Click, function(event, view) {
@@ -21,10 +25,6 @@ Link = (function(_super) {
       }
     });
   }
-
-  Link.prototype._kind = 'Link';
-
-  Link.prototype._elementType = 'a';
 
   Link.define('url', {
     get: function() {
@@ -64,7 +64,7 @@ Link = (function(_super) {
 
   Link.define('auto', {
     get: function() {
-      if (this._auto === void 0) {
+      if (this._auto === NULL) {
         this._auto = true;
       }
       return this._auto;
@@ -96,7 +96,7 @@ Link = (function(_super) {
 
   Link.define('blank', {
     get: function() {
-      if (this._blank !== void 0) {
+      if (this._blank !== NULL) {
         this._blank = false;
       }
       return this._blank;

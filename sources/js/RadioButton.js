@@ -1,11 +1,3 @@
-
-/*
-	myRadioButton = new RadioButton
-		text: 'Select me'
-		parent: @
-	myRadioButton.onChange (e)->
-		say @checked
- */
 var RadioButton, RadioButtonInput, RadioButtonOriginalInput,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -13,15 +5,15 @@ var RadioButton, RadioButtonInput, RadioButtonOriginalInput,
 RadioButtonOriginalInput = (function(_super) {
   __extends(RadioButtonOriginalInput, _super);
 
+  RadioButtonOriginalInput.prototype._elementType = 'input';
+
+  RadioButtonOriginalInput.prototype._kind = 'RadioButtonInput';
+
   function RadioButtonOriginalInput() {
     RadioButtonOriginalInput.__super__.constructor.apply(this, arguments);
     this.element.setAttribute('type', 'radio');
     this.style.verticalAlign = 'middle';
   }
-
-  RadioButtonOriginalInput.prototype._elementType = 'input';
-
-  RadioButtonOriginalInput.prototype._kind = 'RadioButtonInput';
 
   return RadioButtonOriginalInput;
 
@@ -29,6 +21,8 @@ RadioButtonOriginalInput = (function(_super) {
 
 RadioButtonInput = (function(_super) {
   __extends(RadioButtonInput, _super);
+
+  RadioButtonInput.prototype._kind = 'RadioButtonInput';
 
   function RadioButtonInput() {
     RadioButtonInput.__super__.constructor.apply(this, arguments);
@@ -39,8 +33,8 @@ RadioButtonInput = (function(_super) {
       borderRadius: 10,
       borderWidth: 1,
       borderColor: 'rgba(0, 0, 0, 0.08)',
-      backgroundColor: 'white',
-      display: 'inline-block'
+      backgroundColor: white,
+      display: inlineBlock
     };
     this.style.float = 'left';
     this.dot = new View({
@@ -55,8 +49,6 @@ RadioButtonInput = (function(_super) {
     this.checked = false;
   }
 
-  RadioButtonInput.prototype._kind = 'RadioButtonInput';
-
   return RadioButtonInput;
 
 })(View);
@@ -64,11 +56,13 @@ RadioButtonInput = (function(_super) {
 RadioButton = (function(_super) {
   __extends(RadioButton, _super);
 
+  RadioButton.prototype._kind = 'RadioButton';
+
   function RadioButton(properties) {
     if (properties == null) {
       properties = {};
     }
-    this.input = void 0;
+    this.input = NULL;
     if (!properties.original) {
       properties.original = false;
       this.input = new RadioButtonInput();
@@ -91,11 +85,9 @@ RadioButton = (function(_super) {
     });
   }
 
-  RadioButton.prototype._kind = 'RadioButton';
-
   RadioButton.define('enabled', {
     get: function() {
-      if (this._enabled === void 0) {
+      if (this._enabled === NULL) {
         this._enabled = true;
       }
       return this._enabled;
@@ -181,7 +173,7 @@ RadioButton = (function(_super) {
 
   RadioButton.define('group', {
     get: function() {
-      if (this._group === void 0) {
+      if (this._group === NULL) {
         this._group = '';
       }
       return this._group;
@@ -205,29 +197,22 @@ RadioButton = (function(_super) {
           App.__radiobuttons[this._group] = [];
         }
         App.__radiobuttons[this._group].push(this);
-
-        /*
-        				@on 'radiobuttongroup::' + @_group, (view)->
-        					console.log @id
-        					if @ isnt view
-        						@checked = false
-         */
       }
     }
   });
 
+  RadioButton.prototype.focus = function() {
+    this.input._element.focus();
+  };
+
+  RadioButton.prototype.resignFocus = function() {
+    this.input._element.blur();
+  };
+
+  RadioButton.prototype.onChange = function(cb) {
+    return this.on('change:value', cb);
+  };
+
   return RadioButton;
 
 })(View);
-
-RadioButton.prototype.focus = function() {
-  this.input._element.focus();
-};
-
-RadioButton.prototype.resignFocus = function() {
-  this.input._element.blur();
-};
-
-RadioButton.prototype.onChange = function(cb) {
-  return this.on('change:value', cb);
-};

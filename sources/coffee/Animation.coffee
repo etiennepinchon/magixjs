@@ -158,7 +158,6 @@ class Animation extends Element
 		return true
 
 	stop: (emit=true)->
-
 		@options.view.context.removeAnimation(@)
 
 		@emit("stop") if emit
@@ -298,7 +297,6 @@ class Animation extends Element
 
 	toInspect: ->
 		return "<Animation id:#{@id} isAnimating:#{@isAnimating} [#{Utils.keys(@options.properties)}]>"
-
 
 	##############################################################
 	## EVENT HELPERS

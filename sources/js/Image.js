@@ -141,15 +141,6 @@ Image = (function(_super) {
     }
   });
 
-  Image.define('done', {
-    get: function() {
-      return this.loaded;
-    },
-    set: function(value) {
-      this.loaded = value;
-    }
-  });
-
   Image.define('then', {
     get: function() {
       return this.loaded;
@@ -159,43 +150,16 @@ Image = (function(_super) {
     }
   });
 
-  Image.define('after', {
-    get: function() {
-      return this.loaded;
-    },
-    set: function(value) {
-      this.loaded = value;
-    }
-  });
-
-  Image.define('finished', {
-    get: function() {
-      return this.loaded;
-    },
-    set: function(value) {
-      this.loaded = value;
-    }
-  });
-
-  Image.define('finish', {
-    get: function() {
-      return this.loaded;
-    },
-    set: function(value) {
-      this.loaded = value;
-    }
-  });
-
   Image.prototype.onLoad = function(cb) {
-    return this.on(Event.Load, cb);
+    this.on(Event.Load, cb);
   };
 
   Image.prototype.onLoaded = function(cb) {
-    return this.on(Event.Load, cb);
+    this.on(Event.Load, cb);
   };
 
   Image.prototype.onDone = function(cb) {
-    return this.on(Event.Load, cb);
+    this.on(Event.Load, cb);
   };
 
   return Image;

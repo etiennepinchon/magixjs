@@ -6,22 +6,6 @@ var ViewStates, ViewStatesIgnoredKeys,
 
 ViewStatesIgnoredKeys = ["ignoreEvent"];
 
-
-/*
-
-myPview.states.add
-    stateA:
-        x: 500
-        opacity: 0.5
- 
-    stateB:
-        y: 200
-        x: 0
-        opacity: 1
-
-myPview.states.last(curve: "spring(400, 30, 0)", -> console.log 'nice')
- */
-
 ViewStates = (function(_super) {
   __extends(ViewStates, _super);
 
@@ -30,9 +14,9 @@ ViewStates = (function(_super) {
     this._states = {};
     this._orderedStates = [];
     this.animationOptions = {};
-    this.add("default", this.view.props);
     this._currentState = "default";
     this._previousStates = [];
+    this.add("default", this.view.props);
     ViewStates.__super__.constructor.apply(this, arguments);
   }
 
@@ -72,7 +56,7 @@ ViewStates = (function(_super) {
       instant = false;
     }
     args = arguments;
-    callback = void 0;
+    callback = NULL;
     if (Utils.isFunction(arguments[1])) {
       callback = arguments[1];
     } else if (Utils.isFunction(arguments[2])) {
@@ -188,12 +172,12 @@ ViewStates = (function(_super) {
     var args, callback, last;
     args = arguments;
     last = Utils.last(args);
-    callback = void 0;
+    callback = NULL;
     if (Utils.isFunction(last)) {
       args = Array.prototype.slice.call(arguments);
       callback = args.pop();
       if (states === callback) {
-        states = void 0;
+        states = NULL;
       }
       if (animationOptions === callback) {
         animationOptions = {};
@@ -209,7 +193,8 @@ ViewStates = (function(_super) {
     var args, callback, index, last, states, that;
     args = arguments;
     last = Utils.last(args);
-    callback = void 0;
+    callback = NULL;
+    that = this;
     if (Utils.isFunction(last)) {
       args = Array.prototype.slice.call(arguments);
       callback = args.pop();
@@ -224,7 +209,6 @@ ViewStates = (function(_super) {
         states = [states[index + 1]];
       }
     }
-    that = this;
     return this["switch"](Utils.arrayNext(states, this._currentState), function() {
       states.shift();
       if (states.length > 0) {
@@ -243,7 +227,8 @@ ViewStates = (function(_super) {
     var args, callback, last, state;
     args = arguments;
     last = Utils.last(args);
-    callback = void 0;
+    callback = NULL;
+    state = NULL;
     if (Utils.isFunction(last)) {
       args = Array.prototype.slice.call(arguments);
       callback = args.pop();
@@ -251,7 +236,6 @@ ViewStates = (function(_super) {
         animationOptions = {};
       }
     }
-    state = void 0;
     if (!this._previousStates.length) {
       state = this.states();
     } else {
