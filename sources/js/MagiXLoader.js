@@ -1,7 +1,7 @@
 var MagiX, __MAGIX_LOADED;
 
 if (!MagiX) {
-  console.log('MagiX | Beyond wonderland. @etiennepinchon');
+  console.log('MagiX | Beyond magical. @etiennepinchon');
 }
 
 __MAGIX_LOADED = false;
@@ -9,7 +9,7 @@ __MAGIX_LOADED = false;
 MagiX = {
   version: '1.0',
   creator: 'Etienne Pinchon (@etiennepinchon)',
-  about: 'Beyond wonderland.',
+  about: 'Beyond magical.',
   copyright: 'magixjs.com',
   boot: function() {
     MagiX.__domComplete = [];

@@ -1,14 +1,14 @@
 # MAGIX LOADER JS
 
 if not MagiX
-	console.log 'MagiX | Beyond wonderland. @etiennepinchon'
+	console.log 'MagiX | Beyond magical. @etiennepinchon'
 
 __MAGIX_LOADED = no
 
 MagiX =
 	version: '1.0'
 	creator: 'Etienne Pinchon (@etiennepinchon)'
-	about: 'Beyond wonderland.'
+	about: 'Beyond magical.'
 	copyright: 'magixjs.com'
 
 	boot: ->
