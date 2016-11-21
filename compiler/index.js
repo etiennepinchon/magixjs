@@ -69,7 +69,7 @@ var framework_files = [
 	"../sources/js/Config.js",
 	"../sources/js/log.js",
 
-	"../sources/js/lib/bounce.min.js",
+	//"../sources/js/lib/bounce.min.js",
 	"../sources/js/lib/EE3.js",
 	"../sources/js/Event.js",
 	"../sources/js/EventEmitter.js",

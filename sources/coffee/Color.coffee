@@ -324,7 +324,14 @@ class Color extends Element
 		string = ''
 		i = 0
 		for arg in args
-			if typeof arg is "string" and @isColorString(arg)
+			if Utils.isNumber(arg)
+				orientation = arg + 'deg'
+			# DEG STRING
+			else if arg.indexOf('deg') > -1
+				orientation = arg
+			else if arg is 'top' or arg is 'bottom' or arg is 'left' or arg is 'right'
+				orientation = 'to ' + arg
+			else if typeof arg is "string" and @isColorString(arg)
 				arg = new Color arg
 				colors.push arg
 			else if arg isnt undefined and arg.toString
@@ -334,38 +341,6 @@ class Color extends Element
 					arg = new Color()
 					arg = arg.transparent()
 					colors.push arg
-				else
-					if Utils.isNumber(arg)
-						orientation = arg + 'deg'
-					# DEG STRING
-					else if arg.indexOf('deg') is -1
-						orientation = 'to ' + arg
-					else
-						orientation = arg
-
-
-			# IF LAST PARAMETER -> ORIENTATION
-			#if i is args.length-1
-				
-				
-			#	console.log orientation
-
-			# OTHERWISE
-			#else
-			# NUMBER
-			# if Utils.isNumber(arg)
-			# 	orientation = arg + 'deg'
-			# # DEG STRING
-			# else if arg.indexOf('deg') isnt -1
-			# 	orientation = 'to ' + arg
-
-			# else if typeof arg is "string" and @isColorString(arg)
-			# 	arg = new Color arg
-
-			# if arg not instanceof Color
-			# 	arg = new Color()
-			# 	arg = arg.transparent()
-			# colors.push arg
 			i++
 
 		i = 0

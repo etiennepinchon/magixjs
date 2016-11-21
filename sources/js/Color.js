@@ -421,7 +421,13 @@ Color = (function(_super) {
     i = 0;
     for (_i = 0, _len = args.length; _i < _len; _i++) {
       arg = args[_i];
-      if (typeof arg === "string" && this.isColorString(arg)) {
+      if (Utils.isNumber(arg)) {
+        orientation = arg + 'deg';
+      } else if (arg.indexOf('deg') > -1) {
+        orientation = arg;
+      } else if (arg === 'top' || arg === 'bottom' || arg === 'left' || arg === 'right') {
+        orientation = 'to ' + arg;
+      } else if (typeof arg === "string" && this.isColorString(arg)) {
         arg = new Color(arg);
         colors.push(arg);
       } else if (arg !== void 0 && arg.toString) {
@@ -431,14 +437,6 @@ Color = (function(_super) {
           arg = new Color();
           arg = arg.transparent();
           colors.push(arg);
-        } else {
-          if (Utils.isNumber(arg)) {
-            orientation = arg + 'deg';
-          } else if (arg.indexOf('deg') === -1) {
-            orientation = 'to ' + arg;
-          } else {
-            orientation = arg;
-          }
         }
       }
       i++;

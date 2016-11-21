@@ -1,14 +1,14 @@
 # MAGIX LOADER JS
 
 if not MagiX
-	console.log 'MagiX | In mystery lies beauty. @etiennepinchon'
+	console.log 'MagiX | Beyond wonderland. @etiennepinchon'
 
 __MAGIX_LOADED = no
 
 MagiX =
 	version: '1.0'
 	creator: 'Etienne Pinchon (@etiennepinchon)'
-	about: 'In mystery lies beauty.'
+	about: 'Beyond wonderland.'
 	copyright: 'magixjs.com'
 
 	boot: ->
@@ -52,7 +52,7 @@ MagiX =
 			return
 		
 		MagiX._onComplete ->
-			url = '//magixjs.com/framework/1.0/magix.min.js?b=' + __MAGIX_JS_BUILD_DATE__
+			url = '//s3.amazonaws.com/data.magixjs.com/framework/1.0/magix.min.js?b=' + __MAGIX_JS_BUILD_DATE__ # //magixjs.com/framework/1.0/magix.min.js
 
 			# Create script
 			script = document.createElement "script"

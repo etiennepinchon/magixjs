@@ -1,7 +1,7 @@
 var MagiX, __MAGIX_LOADED;
 
 if (!MagiX) {
-  console.log('MagiX | In mystery lies beauty. @etiennepinchon');
+  console.log('MagiX | Beyond wonderland. @etiennepinchon');
 }
 
 __MAGIX_LOADED = false;
@@ -9,7 +9,7 @@ __MAGIX_LOADED = false;
 MagiX = {
   version: '1.0',
   creator: 'Etienne Pinchon (@etiennepinchon)',
-  about: 'In mystery lies beauty.',
+  about: 'Beyond wonderland.',
   copyright: 'magixjs.com',
   boot: function() {
     MagiX.__domComplete = [];
@@ -61,7 +61,7 @@ MagiX = {
     };
     return MagiX._onComplete(function() {
       var script, url;
-      url = '//magixjs.com/framework/1.0/magix.min.js?b=' + __MAGIX_JS_BUILD_DATE__;
+      url = '//s3.amazonaws.com/data.magixjs.com/framework/1.0/magix.min.js?b=' + __MAGIX_JS_BUILD_DATE__;
       script = document.createElement("script");
       script.type = "text/javascript";
       script.src = url;
