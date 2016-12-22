@@ -1,28 +1,28 @@
 
-# Pview
+# Player
 
-class Pview extends View
+class Player extends View
 
-	_kind : 'Pview'
+	_kind : 'Player'
 
 	constructor : (properties) ->
-		@pview = new Object
+		@player = new Element
 		super
 	
 	play : ->
-		@pview.play()
+		@player.play()
 		return
 
 	load : ->
-		@pview.load()
+		@player.load()
 		return
 
 	pause : ->
-		@pview.pause()
+		@player.pause()
 		return
 
 	canPlayType : (type) ->
-		@pview.canPlayType type
+		@player.canPlayType type
 
 	addTextTrack : (kind, label, language) ->
 		@_element.addTextTrack kind, label, language
@@ -32,200 +32,200 @@ class Pview extends View
 	# PROPERTIES
 
 	@define 'video',
-		get: -> @pview.currentSrc
+		get: -> @player.currentSrc
 		set: (value) ->
-			if @pview.mediaType isnt NULL
-				if @pview.mediaType is 'video'
-					@pview.src = Utils.parseAsset(value)
+			if @player.mediaType isnt NULL
+				if @player.mediaType is 'video'
+					@player.src = Utils.parseAsset(value)
 					return
 				else
-					@pview.pause()
-					@_element.removeChild @pview
-			@pview = document.createElement('video')
-			@pview.style.overflow = 'hidden'
-			@pview.style.display = 'block'
-			@pview.style.width = '100%'
-			@pview.innerHTML = ''
-			@pview.mediaType = 'video'
-			@_element.appendChild @pview
-			@pview.source = document.createElement('source')
-			@pview.source.setAttribute 'src', Utils.parseAsset(value)
-			@pview.appendChild @pview.source
+					@player.pause()
+					@_element.removeChild @player
+			@player = document.createElement('video')
+			@player.style.overflow = 'hidden'
+			@player.style.display = 'block'
+			@player.style.width = '100%'
+			@player.innerHTML = ''
+			@player.mediaType = 'video'
+			@_element.appendChild @player
+			@player.source = document.createElement('source')
+			@player.source.setAttribute 'src', Utils.parseAsset(value)
+			@player.appendChild @player.source
 			@_updateProperties()
-			@pview.element = Event.wrap(@pview).element
-			@pview.on = @pview.addEventListener
-			@pview.off = @pview.removeEventListener
+			@player.element = Event.wrap(@player).element
+			@player.on = @player.addEventListener
+			@player.off = @player.removeEventListener
 			return
 
 	@define 'audio',
-		get: -> @pview.currentSrc
+		get: -> @player.currentSrc
 		set: (value) ->
-			if @pview.mediaType isnt NULL
-				if @pview.mediaType is 'audio'
-					@pview.src = Utils.parseAsset(value)
+			if @player.mediaType isnt NULL
+				if @player.mediaType is 'audio'
+					@player.src = Utils.parseAsset(value)
 					return
 				else
-					@pview.pause()
-					@_element.removeChild @pview
-			@pview = document.createElement('audio')
-			@pview.style.overflow = 'hidden'
-			@pview.style.display = 'block'
-			@pview.style.width = '100%'
-			@pview.innerHTML = ''
-			@pview.mediaType = 'audio'
-			@_element.appendChild @pview
-			@pview.source = document.createElement('source')
-			@pview.source.setAttribute 'src', Utils.parseAsset(value)
-			@pview.appendChild @pview.source
+					@player.pause()
+					@_element.removeChild @player
+			@player = document.createElement('audio')
+			@player.style.overflow = 'hidden'
+			@player.style.display = 'block'
+			@player.style.width = '100%'
+			@player.innerHTML = ''
+			@player.mediaType = 'audio'
+			@_element.appendChild @player
+			@player.source = document.createElement('source')
+			@player.source.setAttribute 'src', Utils.parseAsset(value)
+			@player.appendChild @player.source
 			@_updateProperties()
-			@pview.element = Event.wrap(@pview).element
-			@pview.on = @pview.addEventListener
-			@pview.off = @pview.removeEventListener
+			@player.element = Event.wrap(@player).element
+			@player.on = @player.addEventListener
+			@player.off = @player.removeEventListener
 			return
 
 	@define 'autoplay',
-		get: -> @pview.autoplay
+		get: -> @player.autoplay
 		set: (value) ->
 			@_autoplay = value
-			@pview.autoplay = value
+			@player.autoplay = value
 			return
 
 	@define 'buffered',
-		get: -> @pview.buffered
+		get: -> @player.buffered
 		set: (value) ->
-			log 'Pview: cannot set buffered property.'
+			log 'Player: cannot set buffered property.'
 			return
 
 	@define 'controls',
-		get: -> @pview.controls
+		get: -> @player.controls
 		set: (value) ->
 			@_controls = value
-			@pview.controls = value
+			@player.controls = value
 			return
 
 	@define 'currentTime',
-		get: -> @pview.currentTime
+		get: -> @player.currentTime
 		set: (value) ->
 			@_currentTime = value
-			@pview.currentTime = value
+			@player.currentTime = value
 			return
 
 	@define 'defaultMuted',
-		get: -> @pview.defaultMuted
+		get: -> @player.defaultMuted
 		set: (value) ->
 			@_defaultMuted = value
-			@pview.defaultMuted = value
+			@player.defaultMuted = value
 			return
 
 	@define 'defaultPlaybackRate',
-		get: -> @pview.defaultPlaybackRate
+		get: -> @player.defaultPlaybackRate
 		set: (value) ->
 			@_defaultPlaybackRate = value
-			@pview.defaultPlaybackRate = value
+			@player.defaultPlaybackRate = value
 			return
 
 	@define 'duration',
-		get: -> @pview.duration
+		get: -> @player.duration
 		set: (value) ->
-			log 'Pview: cannot set duration property.'
+			log 'Player: cannot set duration property.'
 			return
 
 	@define 'ended',
-		get: -> @pview.ended
+		get: -> @player.ended
 		set: (value) ->
-			log 'Pview: cannot set ended property.'
+			log 'Player: cannot set ended property.'
 			return
 
 	@define 'loop',
 		get: -> @_element.loop
 		set: (value) ->
 			@_loop = value
-			@pview.loop = value
+			@player.loop = value
 			return
 
 	@define 'mediaGroup',
 		get: -> @_element.mediaGroup
 		set: (value) ->
 			@_mediaGroup = value
-			@pview.mediaGroup = value
+			@player.mediaGroup = value
 			return
 
 	@define 'muted',
 		get: -> @_element.muted
 		set: (value) ->
 			@_muted = value
-			@pview.muted = value
+			@player.muted = value
 			return
 
 	@define 'networkState',
-		get: -> @pview.networkState
+		get: -> @player.networkState
 		set: (value) ->
-			log 'Pview: cannot set networkState property.'
+			log 'Player: cannot set networkState property.'
 			return
 
 	@define 'paused',
-		get: -> @pview.paused
+		get: -> @player.paused
 		set: (value) ->
-			log 'Pview: cannot set paused property.'
+			log 'Player: cannot set paused property.'
 			return
 
 	@define 'playbackRate',
-		get: -> @pview.playbackRate
+		get: -> @player.playbackRate
 		set: (value) ->
 			@_playbackRate = value
-			@pview.playbackRate = value
+			@player.playbackRate = value
 			return
 
 	@define 'played',
-		get: -> @pview.played
+		get: -> @player.played
 		set: (value) ->
-			log 'Pview: cannot set played property.'
+			log 'Player: cannot set played property.'
 			return
 
 	@define 'preload',
-		get: -> @pview.preload
+		get: -> @player.preload
 		set: (value) ->
 			@_preload = value
-			@pview.preload = value
+			@player.preload = value
 			return
 
 	@define 'readyState',
-		get: -> @pview.readyState
+		get: -> @player.readyState
 		set: (value) ->
-			log 'Pview: cannot set readyState property.'
+			log 'Player: cannot set readyState property.'
 			return
 
 	@define 'seekable',
-		get: -> @pview.seekable
+		get: -> @player.seekable
 		set: (value) ->
-			console.log 'Pview: cannot set seekable property.'
+			console.log 'Player: cannot set seekable property.'
 			return
 
 	@define 'seeking',
-		get: -> @pview.seeking
+		get: -> @player.seeking
 		set: (value) ->
-			console.log 'Pview: cannot set seeking property.'
+			console.log 'Player: cannot set seeking property.'
 			return
 
 	@define 'textTracks',
-		get: -> @pview.textTracks
+		get: -> @player.textTracks
 		set: (value) ->
-			console.log 'Pview: cannot set textTracks property.'
+			console.log 'Player: cannot set textTracks property.'
 			return
 
 	@define 'volume',
-		get: -> @pview.volume
+		get: -> @player.volume
 		set: (value) ->
 			@_volume = value
-			@pview.volume = value
+			@player.volume = value
 			return
 
 
 	##############################################################
 	# EVENTS
 
-	on 					: (eventName, fn) -> @pview.on eventName, fn
-	off 				: (eventName, fn) -> @pview.off eventName, fn
+	on 					: (eventName, fn) -> @player.on eventName, fn
+	off 				: (eventName, fn) -> @player.off eventName, fn
 	onCanPlay 			: (cb) -> @on Event.CanPlay, cb
 	onCanPlayThrough 	: (cb) -> @on Event.CanPlayThrough, cb
 	onDurationChange	: (cb) -> @on Event.DurationChange, cb
@@ -247,11 +247,10 @@ class Pview extends View
 	onVolumeChange		: (cb) -> @on Event.VolumeChange, cb
 	onWaiting			: (cb) -> @on Event.Waiting, cb
 
-
 	##############################################################
 	# PRIVATE
 
-	@_updateProperties : ->
+	_updateProperties : ->
 		@autoplay 				= @_autoplay if @_autoplay isnt NULL
 		@controls 				= @_controls if @_controls isnt NULL
 		@currentTime 			= @_currentTime if @_currentTime isnt NULL
@@ -264,3 +263,5 @@ class Pview extends View
 		@preload 				= @_preload if @_preload isnt NULL
 		@volume 				= @_volume if @_volume isnt NULL
 		return
+
+	

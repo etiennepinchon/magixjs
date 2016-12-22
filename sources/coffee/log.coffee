@@ -9,9 +9,12 @@ log = (args...)->
 		catch e
 			sameOrigin = NULL
 		return if not sameOrigin
-		window.top.ORB_CONSOLE.push message
-		if window.top.REFRESH_ORB_CONSOLE isnt NULL
-			window.top.REFRESH_ORB_CONSOLE()
+ 		
+ 		# If console is defined from top
+		if window.top.__CONSOLE isnt NULL
+			window.top.__CONSOLE.push message
+			if window.top.__REFRESH_CONSOLE isnt NULL
+				window.top.__REFRESH_CONSOLE()
 	else
 		console.log message
 	return
@@ -23,7 +26,7 @@ log.time = (name)->
 log.timeEnd = (name)->
 	return if not log._times[name]
 	log Utils.round(window.performance.now()-log._times[name], 2)+'ms'
-
+print = log
 ###
 TODO
 

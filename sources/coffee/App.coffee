@@ -5,6 +5,8 @@ App 				= window
 App._kind 			= 'App'
 App._ee 			= new EventEmitter()
 App._pages_counter = 0
+App.deviceType = NULL
+App.deviceBackground = white
 
 # POSITION KEYWORD
 # TODO: http://www.w3schools.com/cssref/pr_class_cursor.asp
@@ -55,6 +57,9 @@ App._keywords = [
 	'luminosity'
 	'vertical'
 	'horizontal'
+	'border-box'
+	'padding-box'
+	'content-box'
 ]
 
 for kw in App._keywords
@@ -113,6 +118,9 @@ App.reset = ->
 	@_responsives 		= {}
 	@_fonts 			= []
 	@_fontsCollection 	= []
+	App.device = NULL
+	App.deviceType = NULL
+	App.deviceBackground = white
 
 	# Context
 	if not @DefaultContext
@@ -153,6 +161,7 @@ App.reset = ->
 # *********************************
 # ** Triggered when the DOM has been loaded
 
+
 App.running = no
 App.run = (callback) ->
 	
@@ -181,9 +190,18 @@ App.run = (callback) ->
 		@_wrapper = new View
 			width: '100%'
 			height: '100%'
+			parent: 'app'
 		@_element.appendChild @_wrapper._element
 		@_wrapper._element.setAttribute 'id', 'MagiXWrapper::' + @_wrapper.id
 		
+		###
+		if App.deviceType isnt NULL
+			App.device = new Device
+				background: App.deviceBackground
+				padding: 10
+			if App.deviceType
+				App.device.type = App.deviceType
+		###
 		######################################################
 		# HISTORY
 		
@@ -413,13 +431,19 @@ App.setup = ->
 
 	@addPage = (page) ->
 		App._responsives = {}
+
+		# Remove existing pages
 		for child in App._wrapper.children
 			if child._kind and child._kind is 'Page'
 				child.parent = null
+
+		# Remove current page
 		App._page.parent = null if App._page
 		if page._kind and page._kind is 'Page'
 			App._page = page
-			App._page.parent = @
+			p = App
+			p = App.device.content if App.device
+			App._page.parent = p
 
 	# *********************************
 	# removePage method
@@ -466,6 +490,20 @@ App.setup = ->
 		return no if not navigator.vibrate
 		window.navigator.vibrate pattern
 		return
+
+	# Change device
+	@setDevice = (device)->
+		App.deviceType = device
+		if App.device
+			App.device.type = App.deviceType
+		return
+
+	@setDeviceBackground = (background)->
+		App.deviceBackground = background
+		if App.device
+			App.device.background = App.deviceBackground
+		return
+
 	return
 
 	history.pushState {}, null, ('/'+@pathname.join('/'))

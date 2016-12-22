@@ -39,7 +39,7 @@ Animation = (function(_super) {
   __extends(Animation, _super);
 
   function Animation(options) {
-    var finishCallback;
+    var finishCallback, found, item, keyToRemove, op, opts, _i, _len;
     if (options == null) {
       options = {};
     }
@@ -51,12 +51,33 @@ Animation = (function(_super) {
     this.start = __bind(this.start, this);
     if (options.props) {
       options.properties = options.props;
+    } else if (!options.properties) {
+      options.properties = {};
+      opts = Utils.clone(options);
+      keyToRemove = ['view', 'properties', 'curve', 'curveOptions', 'time', 'duration', 'repeat', 'delay', 'debug', 'colorModel', 'then', 'options'];
+      for (item in opts) {
+        found = false;
+        for (_i = 0, _len = keyToRemove.length; _i < _len; _i++) {
+          op = keyToRemove[_i];
+          if (item === op) {
+            found = true;
+          }
+        }
+        if (found === false) {
+          options.properties[item] = opts[item];
+        }
+      }
+    }
+    if (options.options) {
+      for (item in options.options) {
+        options[item] = options.options[item];
+      }
     }
     if (options.duration) {
       options.time = options.duration;
     }
     options = Defaults.get("Animation", options);
-    Animation.__super__.constructor.call(this, options);
+    Animation.__super__.constructor.call(this, options.properties);
     this.options = Utils.clone(Utils.defaults(options, {
       view: null,
       properties: {},
@@ -71,18 +92,6 @@ Animation = (function(_super) {
     finishCallback = false;
     if (options.then !== void 0) {
       finishCallback = options.then;
-    }
-    if (options.finish !== void 0) {
-      finishCallback = options.finish;
-    }
-    if (options.done !== void 0) {
-      finishCallback = options.done;
-    }
-    if (options.end !== void 0) {
-      finishCallback = options.end;
-    }
-    if (options.finished !== void 0) {
-      finishCallback = options.finished;
     }
     if (finishCallback) {
       this.on(Event.AnimationEnd, function() {

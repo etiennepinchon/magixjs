@@ -1,4 +1,4 @@
-var CSS, Debounce, Delay, FadeIn, FadeOut, Hide, Interval, Show, Throttle;
+var CSS, Debounce, Delay, FadeIn, FadeOut, Gradient, Hide, Interval, Show, Throttle;
 
 Delay = Utils.delay;
 
@@ -25,3 +25,5 @@ Hide = function(view) {
 };
 
 CSS = Utils.insertCSS;
+
+Gradient = Color.gradient;

@@ -423,11 +423,11 @@ Color = (function(_super) {
       arg = args[_i];
       if (Utils.isNumber(arg)) {
         orientation = arg + 'deg';
-      } else if (arg.indexOf('deg') > -1) {
+      } else if (Utils.isArray(arg) && arg.indexOf('deg') > -1) {
         orientation = arg;
       } else if (arg === 'top' || arg === 'bottom' || arg === 'left' || arg === 'right') {
         orientation = 'to ' + arg;
-      } else if (typeof arg === "string" && this.isColorString(arg)) {
+      } else if (typeof arg === "string" && Color.isColorString(arg)) {
         arg = new Color(arg);
         colors.push(arg);
       } else if (arg !== void 0 && arg.toString) {

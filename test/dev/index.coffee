@@ -1,58 +1,244 @@
 
 App.run ->
-
-	class HomePage extends Page
-		didAppear : (properties) ->
-			console.log 4
-
-	#Fonts
-	# 	name: 'Open Sans'
-	# 	weight: '400,300'
-	# ,
-	# 	name: 'Comfortaa'
-	# 	weight: '700,600'
-	# ,
-	# 	name: 'Baloo Bhai'
-
-	#Font 'Baloo Bhai', '400,300'
-	#Font 'Quicksand', '400,300'
-	#Font 'Comfortaa', '700,600'
-	#Font 'Open Sans', '400,300'
-
-	#Fonts
-	#	name: 'Quicksand'
-	#	weight: '400,300'
 	
-	foo = new Text
-		backgroundColor: red
-		text: 'hello'
-		fontName: 'Comfortaa'
+	Font 'Montserrat', '400, 700'
+	App.setDevice Device.iPad
+	#App.setDeviceBackground Gradient red, blue
 
-	boo = new TextInput
-		placeholder: 'demo'
-		text: 'dd'
-		fontName: 'Quicksand'
+	Playground = new Page
+		parent: App
 
-	foo = new Page
-		url: "demo"
-		backgroundColor: green
+	myGradient = Gradient('#f52fee', '#6600FF')
+	Playground.backgroundColor = myGradient
 
-	Routes
-		main: ->
-			App.page = new HomePage
-				backgroundColor: red
+	# Create a new container
+	myView = new View
+		width: 200
+		height: 200
+		backgroundColor: white
+		borderRadius: 5
 
-			arrow = new View
-				bottom: 100
-				width: 42
-				height: 42
-				bc: blue
-				parent: App.page
-			arrow.absoluteCenterX()
+	# Center the container
+	myView.center()
+
+	# Add action when the mouse enter
+	myView.onMouseIn ->
+		this.animate
+			properties:
+				scale: 1.1
+				rotate: 45
+			curve: 'spring(800, 20, 10)'
+
+	# Add action when the mouse leave
+	myView.onMouseOut ->
+		this.animate
+			properties:
+				scale: 1
+				rotate: 0
+			curve: 'spring(800, 20, 10)'
 
 
-			App.onResize ->
-				log 4
+
+	Delay 2, ->
+		App.run ->
+			Font 'Montserrat', '400, 700'
+			App.setDevice Device.iPad
+			App.setDeviceBackground Gradient red, blue
+
+			Playground = new Page
+				parent: App
+
+			myGradient = Gradient('#f52fee', red)
+			Playground.backgroundColor = myGradient
+
+
+
+
+
+
+
+	###
+	# Create a new list
+	myList = new List
+		y: 100
+		width: 300
+		length: 20
+
+	myList.centerX()
+
+	App.page.background = red
+	# For each element of the list
+	myList.each (item, index) ->
+		if not item
+			item = new ListItem
+				width: '100%'
+				height: 128
+				marginBottom: 10
+				borderRadius: 5
+				transition: yes
+				
+			container = new View
+	         width: '100%'
+	         height: '100%'
+	         backgroundColor: white
+	         parent: item
+	            
+	      item.onSwipeLeftEnd ->
+	         container.fadeOut
+	            x: -300
+	            duration: .3
+	            then: ->
+	               item.height = 0
+	               item.marginBottom = 0
+		return item
+	###
+
+
+	###
+	test = new View
+		bc: red
+		width: 750
+		height: 120
+
+	App.device.background = Color.random()
+
+	Below Tablet, test,
+		width: 100
+		backgroundColor: blue
+	###
+
+	#App.setDevice Device.iPad
+
+	###
+	myPlayer = new Player
+		width: 400
+		height: 400
+		video: 'http://www.sample-videos.com/video/mp4/720/big_buck_bunny_720p_1mb.mp4'
+	myPlayer.play()
+	###
+	
+	#device = new Device
+	#	background: Color.gradient('#f52fee', '#6600ff', 120)
+	#	index: 100
+		
+	#device.content.backgroundColor = blue
+
+	#grammar = '#JSGF V1.0; grammar colors; public <color> = aqua | azure | beige | bisque | black | blue | brown | chocolate | coral | crimson | cyan | fuchsia | ghostwhite | gold | goldenrod | gray | green | indigo | ivory | khaki | lavender | lime | linen | magenta | maroon | moccasin | navy | olive | orange | orchid | peru | pink | plum | purple | red | salmon | sienna | silver | snow | tan | teal | thistle | tomato | turquoise | violet | white | yellow ;'
+	#speechRecognitionList = new SpeechGrammarList()
+	#speechRecognitionList.addFromString(grammar, 1)
+	###
+	test = new Button
+		bc: red
+		width: 310
+		height: 120
+		mouseDown: ->
+			this.animate
+				properties:
+					x: 10
+					
+			#	this.backgroundColor = Color.random()
+	###
+	#App.device.type = NULL
+
+	#TouchEmulator.enable()
+	###
+	Below iPhone7, test,
+		width: 100
+		backgroundColor: blue
+	###
+	#Interval .5, ->
+	#	console.log 'dd'
+	#	App.device.type = Utils.pickRandomProperty(Devices)
+
+	###
+	speech = new SpeechRecognition
+		continuous: yes
+		lang: 'en-US'
+		interimResults: yes
+		#grammars: speechRecognitionList
+
+	speech.onResult (event) ->
+   		console.log event
+
+	test = new View
+		bc: red
+		width: 750
+		height: 120
+		click: ->
+			speech.start()
+	###
+		#parent: device.content
+
+	###
+	myPlayer = new Player
+		width: 480
+
+	myCapture = new Capture
+		video: true
+		audio: true
+		success: (stream) ->
+			myPlayer.video = stream
+			myPlayer.play()
+		error: ->
+			console.log 'err'
+	###
+	
+	###
+	demo = new Text
+		width: auto
+		image: 'http://yoksel.github.io/about-svg/assets/img/parts/fire.gif'
+		text: 'Hello'
+		imagePosition: center
+		imageScale: 1.5
+		backgroundClip: text
+		fontSize: 140
+		color: clear
+	demo.center()
+	App.page.backgroundColor = black
+
+	started = no
+	speech = NULL
+	demo.onClick ->
+		if started is no
+			speech = new SpeechRecognition()
+			if speech.supported
+				started = yes
+				speech.onEnd (event)->
+					console.log event
+				speech.onResult (event)->
+					console.log event
+				speech.start()
+		else
+			started = no
+			speech.stop()
+	###
+
+
+	###
+	demo = new Text
+		width: auto
+		#image: 'http://yoksel.github.io/about-svg/assets/img/parts/fire.gif' 
+		image: '-webkit-linear-gradient(90deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, 1), rgba(0, 0, 0, 0))'
+		imageRepeat: yes
+		imagePosition:
+			x: 0
+			y: -308
+		text: 'Hello'
+		backgroundClip: text
+		imageSize: '100% 100%'
+		fontSize: 140
+		color: clear
+	demo.center()
+
+	App.page.backgroundColor = '#f5f5f5'
+	demo.animate
+		props:
+			imagePositionY: -500
+		duration: 2
+		repeat: 10
+		curve: 'linear'
+	###
+
 
 	###
 	Routes

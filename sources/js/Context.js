@@ -1,25 +1,3 @@
-
-/*
-	
-	An easy way to think of the context is a bucket of things related to a set of views. There
-	is always at least one context on the screen, but often many more. For example, the device has
-	a special context and replaces the default one (so it renders in the screen), and the print
-	function uses on to draw the console.
-	
-	The default context lives under Framer.DefaultContext and the current one in
-	Framer.CurrentContext. You can create views in any context by using the run function.
-	
-	A context keeps track of everyting around those views, so it can clean it up again. We use
-	this a lot in Framer Studio's autocomplete function. Async things like running animations and
-	timers get stopped too.
-	
-	Contexts can live inside another context (with a view as a parent) so you can only reload
-	a part of a prototype. This is mainly how device works.
-	
-	Another feature is to temporarily freeze/resume a context. If you freeze it, all user event
-	will temporarily get blocked so in theory nothing will change in the context. You can restore
-	these at any time.
- */
 var Context,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },

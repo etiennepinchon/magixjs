@@ -1,388 +1,388 @@
-var Pview,
+var Player,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-Pview = (function(_super) {
-  __extends(Pview, _super);
+Player = (function(_super) {
+  __extends(Player, _super);
 
-  Pview.prototype._kind = 'Pview';
+  Player.prototype._kind = 'Player';
 
-  function Pview(properties) {
-    this.pview = new Object;
-    Pview.__super__.constructor.apply(this, arguments);
+  function Player(properties) {
+    this.player = new Element;
+    Player.__super__.constructor.apply(this, arguments);
   }
 
-  Pview.prototype.play = function() {
-    this.pview.play();
+  Player.prototype.play = function() {
+    this.player.play();
   };
 
-  Pview.prototype.load = function() {
-    this.pview.load();
+  Player.prototype.load = function() {
+    this.player.load();
   };
 
-  Pview.prototype.pause = function() {
-    this.pview.pause();
+  Player.prototype.pause = function() {
+    this.player.pause();
   };
 
-  Pview.prototype.canPlayType = function(type) {
-    return this.pview.canPlayType(type);
+  Player.prototype.canPlayType = function(type) {
+    return this.player.canPlayType(type);
   };
 
-  Pview.prototype.addTextTrack = function(kind, label, language) {
+  Player.prototype.addTextTrack = function(kind, label, language) {
     this._element.addTextTrack(kind, label, language);
   };
 
-  Pview.define('video', {
+  Player.define('video', {
     get: function() {
-      return this.pview.currentSrc;
+      return this.player.currentSrc;
     },
     set: function(value) {
-      if (this.pview.mediaType !== NULL) {
-        if (this.pview.mediaType === 'video') {
-          this.pview.src = Utils.parseAsset(value);
+      if (this.player.mediaType !== NULL) {
+        if (this.player.mediaType === 'video') {
+          this.player.src = Utils.parseAsset(value);
           return;
         } else {
-          this.pview.pause();
-          this._element.removeChild(this.pview);
+          this.player.pause();
+          this._element.removeChild(this.player);
         }
       }
-      this.pview = document.createElement('video');
-      this.pview.style.overflow = 'hidden';
-      this.pview.style.display = 'block';
-      this.pview.style.width = '100%';
-      this.pview.innerHTML = '';
-      this.pview.mediaType = 'video';
-      this._element.appendChild(this.pview);
-      this.pview.source = document.createElement('source');
-      this.pview.source.setAttribute('src', Utils.parseAsset(value));
-      this.pview.appendChild(this.pview.source);
+      this.player = document.createElement('video');
+      this.player.style.overflow = 'hidden';
+      this.player.style.display = 'block';
+      this.player.style.width = '100%';
+      this.player.innerHTML = '';
+      this.player.mediaType = 'video';
+      this._element.appendChild(this.player);
+      this.player.source = document.createElement('source');
+      this.player.source.setAttribute('src', Utils.parseAsset(value));
+      this.player.appendChild(this.player.source);
       this._updateProperties();
-      this.pview.element = Event.wrap(this.pview).element;
-      this.pview.on = this.pview.addEventListener;
-      this.pview.off = this.pview.removeEventListener;
+      this.player.element = Event.wrap(this.player).element;
+      this.player.on = this.player.addEventListener;
+      this.player.off = this.player.removeEventListener;
     }
   });
 
-  Pview.define('audio', {
+  Player.define('audio', {
     get: function() {
-      return this.pview.currentSrc;
+      return this.player.currentSrc;
     },
     set: function(value) {
-      if (this.pview.mediaType !== NULL) {
-        if (this.pview.mediaType === 'audio') {
-          this.pview.src = Utils.parseAsset(value);
+      if (this.player.mediaType !== NULL) {
+        if (this.player.mediaType === 'audio') {
+          this.player.src = Utils.parseAsset(value);
           return;
         } else {
-          this.pview.pause();
-          this._element.removeChild(this.pview);
+          this.player.pause();
+          this._element.removeChild(this.player);
         }
       }
-      this.pview = document.createElement('audio');
-      this.pview.style.overflow = 'hidden';
-      this.pview.style.display = 'block';
-      this.pview.style.width = '100%';
-      this.pview.innerHTML = '';
-      this.pview.mediaType = 'audio';
-      this._element.appendChild(this.pview);
-      this.pview.source = document.createElement('source');
-      this.pview.source.setAttribute('src', Utils.parseAsset(value));
-      this.pview.appendChild(this.pview.source);
+      this.player = document.createElement('audio');
+      this.player.style.overflow = 'hidden';
+      this.player.style.display = 'block';
+      this.player.style.width = '100%';
+      this.player.innerHTML = '';
+      this.player.mediaType = 'audio';
+      this._element.appendChild(this.player);
+      this.player.source = document.createElement('source');
+      this.player.source.setAttribute('src', Utils.parseAsset(value));
+      this.player.appendChild(this.player.source);
       this._updateProperties();
-      this.pview.element = Event.wrap(this.pview).element;
-      this.pview.on = this.pview.addEventListener;
-      this.pview.off = this.pview.removeEventListener;
+      this.player.element = Event.wrap(this.player).element;
+      this.player.on = this.player.addEventListener;
+      this.player.off = this.player.removeEventListener;
     }
   });
 
-  Pview.define('autoplay', {
+  Player.define('autoplay', {
     get: function() {
-      return this.pview.autoplay;
+      return this.player.autoplay;
     },
     set: function(value) {
       this._autoplay = value;
-      this.pview.autoplay = value;
+      this.player.autoplay = value;
     }
   });
 
-  Pview.define('buffered', {
+  Player.define('buffered', {
     get: function() {
-      return this.pview.buffered;
+      return this.player.buffered;
     },
     set: function(value) {
-      log('Pview: cannot set buffered property.');
+      log('Player: cannot set buffered property.');
     }
   });
 
-  Pview.define('controls', {
+  Player.define('controls', {
     get: function() {
-      return this.pview.controls;
+      return this.player.controls;
     },
     set: function(value) {
       this._controls = value;
-      this.pview.controls = value;
+      this.player.controls = value;
     }
   });
 
-  Pview.define('currentTime', {
+  Player.define('currentTime', {
     get: function() {
-      return this.pview.currentTime;
+      return this.player.currentTime;
     },
     set: function(value) {
       this._currentTime = value;
-      this.pview.currentTime = value;
+      this.player.currentTime = value;
     }
   });
 
-  Pview.define('defaultMuted', {
+  Player.define('defaultMuted', {
     get: function() {
-      return this.pview.defaultMuted;
+      return this.player.defaultMuted;
     },
     set: function(value) {
       this._defaultMuted = value;
-      this.pview.defaultMuted = value;
+      this.player.defaultMuted = value;
     }
   });
 
-  Pview.define('defaultPlaybackRate', {
+  Player.define('defaultPlaybackRate', {
     get: function() {
-      return this.pview.defaultPlaybackRate;
+      return this.player.defaultPlaybackRate;
     },
     set: function(value) {
       this._defaultPlaybackRate = value;
-      this.pview.defaultPlaybackRate = value;
+      this.player.defaultPlaybackRate = value;
     }
   });
 
-  Pview.define('duration', {
+  Player.define('duration', {
     get: function() {
-      return this.pview.duration;
+      return this.player.duration;
     },
     set: function(value) {
-      log('Pview: cannot set duration property.');
+      log('Player: cannot set duration property.');
     }
   });
 
-  Pview.define('ended', {
+  Player.define('ended', {
     get: function() {
-      return this.pview.ended;
+      return this.player.ended;
     },
     set: function(value) {
-      log('Pview: cannot set ended property.');
+      log('Player: cannot set ended property.');
     }
   });
 
-  Pview.define('loop', {
+  Player.define('loop', {
     get: function() {
       return this._element.loop;
     },
     set: function(value) {
       this._loop = value;
-      this.pview.loop = value;
+      this.player.loop = value;
     }
   });
 
-  Pview.define('mediaGroup', {
+  Player.define('mediaGroup', {
     get: function() {
       return this._element.mediaGroup;
     },
     set: function(value) {
       this._mediaGroup = value;
-      this.pview.mediaGroup = value;
+      this.player.mediaGroup = value;
     }
   });
 
-  Pview.define('muted', {
+  Player.define('muted', {
     get: function() {
       return this._element.muted;
     },
     set: function(value) {
       this._muted = value;
-      this.pview.muted = value;
+      this.player.muted = value;
     }
   });
 
-  Pview.define('networkState', {
+  Player.define('networkState', {
     get: function() {
-      return this.pview.networkState;
+      return this.player.networkState;
     },
     set: function(value) {
-      log('Pview: cannot set networkState property.');
+      log('Player: cannot set networkState property.');
     }
   });
 
-  Pview.define('paused', {
+  Player.define('paused', {
     get: function() {
-      return this.pview.paused;
+      return this.player.paused;
     },
     set: function(value) {
-      log('Pview: cannot set paused property.');
+      log('Player: cannot set paused property.');
     }
   });
 
-  Pview.define('playbackRate', {
+  Player.define('playbackRate', {
     get: function() {
-      return this.pview.playbackRate;
+      return this.player.playbackRate;
     },
     set: function(value) {
       this._playbackRate = value;
-      this.pview.playbackRate = value;
+      this.player.playbackRate = value;
     }
   });
 
-  Pview.define('played', {
+  Player.define('played', {
     get: function() {
-      return this.pview.played;
+      return this.player.played;
     },
     set: function(value) {
-      log('Pview: cannot set played property.');
+      log('Player: cannot set played property.');
     }
   });
 
-  Pview.define('preload', {
+  Player.define('preload', {
     get: function() {
-      return this.pview.preload;
+      return this.player.preload;
     },
     set: function(value) {
       this._preload = value;
-      this.pview.preload = value;
+      this.player.preload = value;
     }
   });
 
-  Pview.define('readyState', {
+  Player.define('readyState', {
     get: function() {
-      return this.pview.readyState;
+      return this.player.readyState;
     },
     set: function(value) {
-      log('Pview: cannot set readyState property.');
+      log('Player: cannot set readyState property.');
     }
   });
 
-  Pview.define('seekable', {
+  Player.define('seekable', {
     get: function() {
-      return this.pview.seekable;
+      return this.player.seekable;
     },
     set: function(value) {
-      console.log('Pview: cannot set seekable property.');
+      console.log('Player: cannot set seekable property.');
     }
   });
 
-  Pview.define('seeking', {
+  Player.define('seeking', {
     get: function() {
-      return this.pview.seeking;
+      return this.player.seeking;
     },
     set: function(value) {
-      console.log('Pview: cannot set seeking property.');
+      console.log('Player: cannot set seeking property.');
     }
   });
 
-  Pview.define('textTracks', {
+  Player.define('textTracks', {
     get: function() {
-      return this.pview.textTracks;
+      return this.player.textTracks;
     },
     set: function(value) {
-      console.log('Pview: cannot set textTracks property.');
+      console.log('Player: cannot set textTracks property.');
     }
   });
 
-  Pview.define('volume', {
+  Player.define('volume', {
     get: function() {
-      return this.pview.volume;
+      return this.player.volume;
     },
     set: function(value) {
       this._volume = value;
-      this.pview.volume = value;
+      this.player.volume = value;
     }
   });
 
-  Pview.prototype.on = function(eventName, fn) {
-    return this.pview.on(eventName, fn);
+  Player.prototype.on = function(eventName, fn) {
+    return this.player.on(eventName, fn);
   };
 
-  Pview.prototype.off = function(eventName, fn) {
-    return this.pview.off(eventName, fn);
+  Player.prototype.off = function(eventName, fn) {
+    return this.player.off(eventName, fn);
   };
 
-  Pview.prototype.onCanPlay = function(cb) {
+  Player.prototype.onCanPlay = function(cb) {
     return this.on(Event.CanPlay, cb);
   };
 
-  Pview.prototype.onCanPlayThrough = function(cb) {
+  Player.prototype.onCanPlayThrough = function(cb) {
     return this.on(Event.CanPlayThrough, cb);
   };
 
-  Pview.prototype.onDurationChange = function(cb) {
+  Player.prototype.onDurationChange = function(cb) {
     return this.on(Event.DurationChange, cb);
   };
 
-  Pview.prototype.onEmptied = function(cb) {
+  Player.prototype.onEmptied = function(cb) {
     return this.on(Event.Emptied, cb);
   };
 
-  Pview.prototype.onReachEnd = function(cb) {
+  Player.prototype.onReachEnd = function(cb) {
     return this.on(Event.ReachEnd, cb);
   };
 
-  Pview.prototype.onLoadedData = function(cb) {
+  Player.prototype.onLoadedData = function(cb) {
     return this.on(Event.LoadedData, cb);
   };
 
-  Pview.prototype.onLoadedMetaData = function(cb) {
+  Player.prototype.onLoadedMetaData = function(cb) {
     return this.on(Event.LoadedMetaData, cb);
   };
 
-  Pview.prototype.onLoadStart = function(cb) {
+  Player.prototype.onLoadStart = function(cb) {
     return this.on(Event.LoadStart, cb);
   };
 
-  Pview.prototype.onPause = function(cb) {
+  Player.prototype.onPause = function(cb) {
     return this.on(Event.Pause, cb);
   };
 
-  Pview.prototype.onPlay = function(cb) {
+  Player.prototype.onPlay = function(cb) {
     return this.on(Event.Play, cb);
   };
 
-  Pview.prototype.onPlaying = function(cb) {
+  Player.prototype.onPlaying = function(cb) {
     return this.on(Event.Playing, cb);
   };
 
-  Pview.prototype.onProgress = function(cb) {
+  Player.prototype.onProgress = function(cb) {
     return this.on(Event.Progress, cb);
   };
 
-  Pview.prototype.onSpeedChange = function(cb) {
+  Player.prototype.onSpeedChange = function(cb) {
     return this.on(Event.SpeedChange, cb);
   };
 
-  Pview.prototype.onSeeked = function(cb) {
+  Player.prototype.onSeeked = function(cb) {
     return this.on(Event.Seeked, cb);
   };
 
-  Pview.prototype.onSeeking = function(cb) {
+  Player.prototype.onSeeking = function(cb) {
     return this.on(Event.Seeking, cb);
   };
 
-  Pview.prototype.onStalled = function(cb) {
+  Player.prototype.onStalled = function(cb) {
     return this.on(Event.Stalled, cb);
   };
 
-  Pview.prototype.onSuspend = function(cb) {
+  Player.prototype.onSuspend = function(cb) {
     return this.on(Event.Suspend, cb);
   };
 
-  Pview.prototype.onTimeUpdate = function(cb) {
+  Player.prototype.onTimeUpdate = function(cb) {
     return this.on(Event.TimeUpdate, cb);
   };
 
-  Pview.prototype.onVolumeChange = function(cb) {
+  Player.prototype.onVolumeChange = function(cb) {
     return this.on(Event.VolumeChange, cb);
   };
 
-  Pview.prototype.onWaiting = function(cb) {
+  Player.prototype.onWaiting = function(cb) {
     return this.on(Event.Waiting, cb);
   };
 
-  Pview._updateProperties = function() {
+  Player.prototype._updateProperties = function() {
     if (this._autoplay !== NULL) {
       this.autoplay = this._autoplay;
     }
@@ -418,6 +418,6 @@ Pview = (function(_super) {
     }
   };
 
-  return Pview;
+  return Player;
 
 })(View);

@@ -612,6 +612,13 @@ Utils.isLocalUrl = (url) ->
 Utils.devicePixelRatio = ->
 	window.devicePixelRatio
 
+
+Utils.isJP2Supported = ->
+	return Utils.isWebKit() and not Utils.isChrome()
+
+Utils.isWebPSupported = ->
+	return Utils.isChrome()
+
 Utils.deviceType = ->
 
 	# Taken from
@@ -629,7 +636,8 @@ Utils.deviceType = ->
 Utils.pathJoin = ->
 	Utils.arrayFromArguments(arguments).join("/")
 
-
+Utils.filenameFromURL = (url)->
+	url.substring(url.lastIndexOf('/')+1)
 
 ######################################################
 # MATH FUNCTIONS
@@ -674,6 +682,14 @@ Utils.modulate = (value, rangeA, rangeB, limit=false) ->
 			return toLow if result > toLow
 			return toHigh if result < toHigh
 
+	result
+
+Utils.pickRandomProperty = (obj) ->
+	result = undefined
+	count = 0
+	for prop of obj
+		if Math.random() < 1 / ++count
+			result = prop
 	result
 
 

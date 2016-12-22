@@ -1,9 +1,4 @@
-# *********************************
-# *********************************
 # When
-# *********************************
-# ** By Etienne Pinchon
-# ** ©2016
 
 # * Allow you to add media queries to a view
 
@@ -54,6 +49,11 @@ TV = 'TV'
 QHD = 'QHD'
 UHD = 'UHD'
 
+# Devices
+iPad = 'iPad'
+iPhone5 = 'iPhone5'
+iPhone7 = 'iPhone7'
+
 When = (direction, def, actions) ->
 
 	direction = Utils.capitalizeFirst(direction)
@@ -96,6 +96,7 @@ When = (direction, def, actions) ->
 				action.view._originalValues = Utils.defaults action.view._originalValues, arr
 
 			# If def in view does not exist
+
 			if not action.view['_' + direction + def]
 				action.view['_' + direction + def] = {}
 			
@@ -123,49 +124,60 @@ Above = (def, actions, optional) ->
 Screen =
 	definitions:
 		Watch: 0
+		iPhone5: 320
 		Mobile: 320
+		iPhone7: 375
 		Phone: 480
 		Tablet: 760
+		iPad: 768
 		Netbook: 960
 		Desktop: 1200
 		TV: 1600
 		QHD: 1980
 		UHD: 2600
-
-	below : [UHD, QHD, TV, Desktop, Netbook, Tablet, Phone, Mobile, Watch]
-	above : [Watch, Mobile, Phone, Tablet, Netbook, Desktop, TV, QHD, UHD]
+		
+	below : [UHD, QHD, TV, Desktop, Netbook, iPad, Tablet, Phone, iPhone7, Mobile, iPhone5, Watch]
+	above : [Watch, iPhone5, Mobile, iPhone7, Phone, Tablet, iPad, Netbook, Desktop, TV, QHD, UHD]
 
 App._updateResponsivesStates = ->
 	
 	# 1: reset the states
 	Below.states = 
-		Watch: false
-		Mobile: false
-		Phone: false
-		Tablet: false
-		Netbook: false
-		UHD: false
-		QHD: false
-		TV: false
-		Desktop: false
+		Watch: no
+		iPhone5: no
+		Mobile: no
+		iPhone7: no
+		Phone: no
+		Tablet: no
+		iPad: no
+		Netbook: no
+		UHD: no
+		QHD: no
+		TV: no
+		Desktop: no
 
 	Above.states = 
-		Watch: false
-		Mobile: false
-		Phone: false
-		Tablet: false
-		Netbook: false
-		UHD: false
-		QHD: false
-		TV: false
-		Desktop: false
+		Watch: no
+		iPhone5: no
+		Mobile: no
+		Phone: no
+		Tablet: no
+		iPad: no
+		Netbook: no
+		UHD: no
+		QHD: no
+		TV: no
+		Desktop: no
 
 	# 2: update the states
 	for definition of Screen.definitions
-		if App.width >= Screen.definitions[definition]
-			Above.states[definition] = true
-		if App.width <= Screen.definitions[definition]
-			Below.states[definition] = true
+		w = App.width
+		w = App.device.content.width if App.device and App.device.content
+		
+		if w >= Screen.definitions[definition]
+			Above.states[definition] = yes
+		if w <= Screen.definitions[definition]
+			Below.states[definition] = yes
 
 	# 3: Stop if no page is set
 	return if not App.page
@@ -183,14 +195,15 @@ App._updateResponsives = (responsives) ->
 		view = responsives[viewID]
 		props = {}
 
-		for definition in Screen.below
-			def = Utils.capitalizeFirst(definition)
-			if view['_Below' + def] and Below.states[def] is true
+		for def in Screen.below
+			#def = Utils.capitalizeFirst(definition)
+			#console.log view['_Below' + def]
+			if view['_Below' + def] and Below.states[def] is yes
 				props = Utils.extend props, view['_Below' + def]
 
-		for definition in Screen.above
-			def = Utils.capitalizeFirst(definition)
-			if view['_Above' + def] and Above.states[def] is true
+		for def in Screen.above
+			#def = Utils.capitalizeFirst(definition)
+			if view['_Above' + def] and Above.states[def] is yes
 				props = Utils.extend props, view['_Above' + def]
 
 		view.props = view._originalValues

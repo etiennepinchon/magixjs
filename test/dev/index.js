@@ -1,55 +1,212 @@
-var __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
-
 App.run(function() {
-  var HomePage, boo, foo;
-  HomePage = (function(_super) {
-    __extends(HomePage, _super);
-
-    function HomePage() {
-      return HomePage.__super__.constructor.apply(this, arguments);
-    }
-
-    HomePage.prototype.didAppear = function(properties) {
-      return console.log(4);
-    };
-
-    return HomePage;
-
-  })(Page);
-  foo = new Text({
-    backgroundColor: red,
-    text: 'hello',
-    fontName: 'Comfortaa'
+  var Playground, myGradient, myView;
+  Font('Montserrat', '400, 700');
+  App.setDevice(Device.iPad);
+  Playground = new Page({
+    parent: App
   });
-  boo = new TextInput({
-    placeholder: 'demo',
-    text: 'dd',
-    fontName: 'Quicksand'
+  myGradient = Gradient('#f52fee', '#6600FF');
+  Playground.backgroundColor = myGradient;
+  myView = new View({
+    width: 200,
+    height: 200,
+    backgroundColor: white,
+    borderRadius: 5
   });
-  foo = new Page({
-    url: "demo",
-    backgroundColor: green
+  myView.center();
+  myView.onMouseIn(function() {
+    return this.animate({
+      properties: {
+        scale: 1.1,
+        rotate: 45
+      },
+      curve: 'spring(800, 20, 10)'
+    });
   });
-  return Routes({
-    main: function() {
-      var arrow;
-      App.page = new HomePage({
-        backgroundColor: red
+  myView.onMouseOut(function() {
+    return this.animate({
+      properties: {
+        scale: 1,
+        rotate: 0
+      },
+      curve: 'spring(800, 20, 10)'
+    });
+  });
+  return Delay(2, function() {
+    return App.run(function() {
+      Font('Montserrat', '400, 700');
+      App.setDevice(Device.iPad);
+      App.setDeviceBackground(Gradient(red, blue));
+      Playground = new Page({
+        parent: App
       });
-      arrow = new View({
-        bottom: 100,
-        width: 42,
-        height: 42,
-        bc: blue,
-        parent: App.page
-      });
-      arrow.absoluteCenterX();
-      return App.onResize(function() {
-        return log(4);
-      });
-    }
+      myGradient = Gradient('#f52fee', red);
+      return Playground.backgroundColor = myGradient;
+    });
   });
+
+  /*
+  	 * Create a new list
+  	myList = new List
+  		y: 100
+  		width: 300
+  		length: 20
+  
+  	myList.centerX()
+  
+  	App.page.background = red
+  	 * For each element of the list
+  	myList.each (item, index) ->
+  		if not item
+  			item = new ListItem
+  				width: '100%'
+  				height: 128
+  				marginBottom: 10
+  				borderRadius: 5
+  				transition: yes
+  				
+  			container = new View
+  	         width: '100%'
+  	         height: '100%'
+  	         backgroundColor: white
+  	         parent: item
+  	            
+  	      item.onSwipeLeftEnd ->
+  	         container.fadeOut
+  	            x: -300
+  	            duration: .3
+  	            then: ->
+  	               item.height = 0
+  	               item.marginBottom = 0
+  		return item
+   */
+
+  /*
+  	test = new View
+  		bc: red
+  		width: 750
+  		height: 120
+  
+  	App.device.background = Color.random()
+  
+  	Below Tablet, test,
+  		width: 100
+  		backgroundColor: blue
+   */
+
+  /*
+  	myPlayer = new Player
+  		width: 400
+  		height: 400
+  		video: 'http://www.sample-videos.com/video/mp4/720/big_buck_bunny_720p_1mb.mp4'
+  	myPlayer.play()
+   */
+
+  /*
+  	test = new Button
+  		bc: red
+  		width: 310
+  		height: 120
+  		mouseDown: ->
+  			this.animate
+  				properties:
+  					x: 10
+  					
+  			 *	this.backgroundColor = Color.random()
+   */
+
+  /*
+  	Below iPhone7, test,
+  		width: 100
+  		backgroundColor: blue
+   */
+
+  /*
+  	speech = new SpeechRecognition
+  		continuous: yes
+  		lang: 'en-US'
+  		interimResults: yes
+  		 *grammars: speechRecognitionList
+  
+  	speech.onResult (event) ->
+    		console.log event
+  
+  	test = new View
+  		bc: red
+  		width: 750
+  		height: 120
+  		click: ->
+  			speech.start()
+   */
+
+  /*
+  	myPlayer = new Player
+  		width: 480
+  
+  	myCapture = new Capture
+  		video: true
+  		audio: true
+  		success: (stream) ->
+  			myPlayer.video = stream
+  			myPlayer.play()
+  		error: ->
+  			console.log 'err'
+   */
+
+  /*
+  	demo = new Text
+  		width: auto
+  		image: 'http://yoksel.github.io/about-svg/assets/img/parts/fire.gif'
+  		text: 'Hello'
+  		imagePosition: center
+  		imageScale: 1.5
+  		backgroundClip: text
+  		fontSize: 140
+  		color: clear
+  	demo.center()
+  	App.page.backgroundColor = black
+  
+  	started = no
+  	speech = NULL
+  	demo.onClick ->
+  		if started is no
+  			speech = new SpeechRecognition()
+  			if speech.supported
+  				started = yes
+  				speech.onEnd (event)->
+  					console.log event
+  				speech.onResult (event)->
+  					console.log event
+  				speech.start()
+  		else
+  			started = no
+  			speech.stop()
+   */
+
+  /*
+  	demo = new Text
+  		width: auto
+  		 *image: 'http://yoksel.github.io/about-svg/assets/img/parts/fire.gif' 
+  		image: '-webkit-linear-gradient(90deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, 1), rgba(0, 0, 0, 0))'
+  		imageRepeat: yes
+  		imagePosition:
+  			x: 0
+  			y: -308
+  		text: 'Hello'
+  		backgroundClip: text
+  		imageSize: '100% 100%'
+  		fontSize: 140
+  		color: clear
+  	demo.center()
+  
+  	App.page.backgroundColor = '#f5f5f5'
+  	demo.animate
+  		props:
+  			imagePositionY: -500
+  		duration: 2
+  		repeat: 10
+  		curve: 'linear'
+   */
 
   /*
   	Routes

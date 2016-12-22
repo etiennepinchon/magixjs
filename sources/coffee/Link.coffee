@@ -51,7 +51,19 @@ class Link extends Text
 			@url = value
 			return
 
-
+	@define 'download',
+		get: ->
+			return no if @_download is NULL
+			@_download
+		set: (value) ->
+			if value is yes
+				@_download = yes
+				@_element.setAttribute 'download', Utils.filenameFromURL @url
+			else
+				@_download = no
+				@_element.removeAttribute 'download'
+			return
+	
 	# *********************************
 	# auto property
 	# *********************************
@@ -131,6 +143,9 @@ class Link extends Text
 			App.go @url, true
 			if event then event.preventDefault()
 
+
+	trigger: ->
+		@element.click()
 
 	##############################################################
 	# PRIVATE

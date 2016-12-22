@@ -782,6 +782,14 @@ Utils.devicePixelRatio = function() {
   return window.devicePixelRatio;
 };
 
+Utils.isJP2Supported = function() {
+  return Utils.isWebKit() && !Utils.isChrome();
+};
+
+Utils.isWebPSupported = function() {
+  return Utils.isChrome();
+};
+
 Utils.deviceType = function() {
   if (/(tablet)|(iPad)|(Nexus 9)/i.test(navigator.userAgent)) {
     return "tablet";
@@ -794,6 +802,10 @@ Utils.deviceType = function() {
 
 Utils.pathJoin = function() {
   return Utils.arrayFromArguments(arguments).join("/");
+};
+
+Utils.filenameFromURL = function(url) {
+  return url.substring(url.lastIndexOf('/') + 1);
 };
 
 Utils.round = function(value, decimals) {
@@ -845,6 +857,18 @@ Utils.modulate = function(value, rangeA, rangeB, limit) {
       if (result < toHigh) {
         return toHigh;
       }
+    }
+  }
+  return result;
+};
+
+Utils.pickRandomProperty = function(obj) {
+  var count, prop, result;
+  result = void 0;
+  count = 0;
+  for (prop in obj) {
+    if (Math.random() < 1 / ++count) {
+      result = prop;
     }
   }
   return result;

@@ -389,3 +389,20 @@ Event.wrap = function(element) {
 Event.isGesture = function(eventName) {
   return __indexOf.call(Gesture, eventName) >= 0;
 };
+
+Event.enableEmulatedTouchEvents = function(enable) {
+  if (enable == null) {
+    enable = true;
+  }
+  if (enable) {
+    Event.TouchStart = Event.MouseDown;
+    Event.TouchEnd = Event.MouseUp;
+    return Event.TouchMove = Event.MouseMove;
+  } else {
+    Event.TouchStart = "touchstart";
+    Event.TouchEnd = "touchend";
+    return Event.TouchMove = "touchmove";
+  }
+};
+
+Event.enableEmulatedTouchEvents(false);

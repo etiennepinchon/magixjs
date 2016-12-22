@@ -49,13 +49,13 @@ List = (function(_super) {
 
   List.prototype.length = function(functionToCount) {
     var number, value;
-    if (functionToCount && typeof functionToCount === 'number') {
+    if (functionToCount !== NULL && typeof functionToCount === 'number') {
       value = functionToCount;
       functionToCount = function() {
         return value;
       };
     }
-    if (functionToCount) {
+    if (functionToCount !== NULL) {
       this.functionToCount = functionToCount;
       return;
     }

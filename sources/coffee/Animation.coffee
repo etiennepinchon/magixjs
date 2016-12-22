@@ -30,13 +30,39 @@ class Animation extends Element
 
 		if options.props
 			options.properties = options.props
-
+		else if not options.properties
+			options.properties = {}
+			opts = Utils.clone options
+			keyToRemove = [
+				'view'
+				'properties'
+				'curve'
+				'curveOptions'
+				'time'
+				'duration'
+				'repeat'
+				'delay'
+				'debug',
+				'colorModel'
+				'then'
+				'options'
+			]
+			for item of opts
+				found = no
+				for op in keyToRemove
+					if item is op
+						found = yes
+				if found is no
+					options.properties[item] = opts[item]
+		if options.options
+			for item of options.options
+				options[item] = options.options[item]
 		if options.duration
 			options.time = options.duration
 		
 		options = Defaults.get "Animation", options
 
-		super options
+		super options.properties
 
 		@options = Utils.clone Utils.defaults options,
 			view: null
@@ -51,10 +77,6 @@ class Animation extends Element
 
 		finishCallback = false
 		finishCallback = options.then if options.then isnt undefined
-		finishCallback = options.finish if options.finish isnt undefined
-		finishCallback = options.done if options.done isnt undefined
-		finishCallback = options.end if options.end isnt undefined
-		finishCallback = options.finished if options.finished isnt undefined
 		
 		if finishCallback
 			@on Event.AnimationEnd, ->

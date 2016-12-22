@@ -15,13 +15,15 @@ SpeechRecognition = (function(_super) {
 
   SpeechRecognition.prototype._kind = 'SpeechRecognition';
 
-  SpeechRecognition.prototype.supported = false;
+  SpeechRecognition.prototype.supported = true;
 
   function SpeechRecognition(str, options) {
+    var that;
     if (options == null) {
       options = {};
     }
-    if (!window._SpeechRecognition) {
+    that = this;
+    if (window._SpeechRecognition === NULL) {
       if (options.unsupported) {
         options.unsupported();
       }

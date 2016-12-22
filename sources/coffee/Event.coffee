@@ -307,3 +307,16 @@ Event.wrap = (element) ->
 
 Event.isGesture = (eventName) ->
   return eventName in Gesture
+
+# Standard touch events
+Event.enableEmulatedTouchEvents = (enable=true) ->
+	if enable
+		Event.TouchStart = Event.MouseDown
+		Event.TouchEnd = Event.MouseUp
+		Event.TouchMove = Event.MouseMove
+	else
+		Event.TouchStart = "touchstart"
+		Event.TouchEnd = "touchend"
+		Event.TouchMove = "touchmove"
+
+Event.enableEmulatedTouchEvents(false)

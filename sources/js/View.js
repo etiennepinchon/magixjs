@@ -9,6 +9,7 @@ View = (function(_super) {
   __extends(View, _super);
 
   function View(options) {
+    var getParent, that;
     if (options == null) {
       options = {};
     }
@@ -21,20 +22,51 @@ View = (function(_super) {
     this._context.addView(this);
     this._context.emit("view:create", this);
     this.userInteraction = false;
-    if (!options.parent) {
-      if (this._kind === 'Page') {
-        options.parent = App.page;
-      } else if (App.running) {
-        if (App.page) {
-          options.parent = App.page;
-        } else {
-          App.page = new Page({
-            backgroundColor: white,
-            parent: App
+    that = this;
+    getParent = function(normal) {
+      var p;
+      if (App.page && that._kind !== 'Page') {
+        return App.page;
+      } else {
+        if (App.deviceType !== NULL && App.device === NULL) {
+          App.device = new Device({
+            background: App.deviceBackground,
+            padding: 10
           });
-          options.parent = App.page;
+          if (App.deviceType) {
+            App.device.type = App.deviceType;
+          }
         }
+        p = NULL;
+        if (normal === false) {
+          p = App;
+          if (App.device) {
+            p = App.device.content;
+          }
+        }
+        return p;
       }
+    };
+    if (!options.parent) {
+      if (this._kind === 'Device') {
+        options.parent = App._wrapper;
+      } else if (this._kind === 'Page') {
+        options.parent = getParent(true);
+      } else if (App.running && !App.page) {
+        App.page = new Page({
+          backgroundColor: white,
+          parent: getParent(false)
+        });
+        options.parent = App.page;
+      } else {
+        options.parent = App.page;
+      }
+    } else if (this._kind === 'Page' && options.parent === App) {
+      options.parent = getParent(false);
+      App.page = this;
+    }
+    if (options.parent === 'app') {
+      options.parent = NULL;
     }
     this.props = Defaults.getDefaults(this._kind, options);
     if (options.parent) {
@@ -1051,6 +1083,23 @@ View = (function(_super) {
 
   View._alias('bc', 'backgroundColor');
 
+  View.define('backgroundClip', {
+    configurable: true,
+    get: function() {
+      if (this._backgroundClip === NULL) {
+        return null;
+      }
+      return this._backgroundClip;
+    },
+    set: function(value) {
+      if (!value) {
+        value = 'border-box';
+      }
+      this._element.style.backgroundClip = value;
+      return this._element.style.webkitBackgroundClip = value;
+    }
+  });
+
   View.define('image', {
     configurable: true,
     get: function() {
@@ -1062,7 +1111,11 @@ View = (function(_super) {
     set: function(value) {
       this._background = null;
       this._image = value;
-      this._element.style.backgroundImage = 'url(' + Utils.parseAsset(value) + ')';
+      if (Utils.isString(value) && value.indexOf('linear-gradient') > -1) {
+        this._element.style.backgroundImage = value;
+      } else {
+        this._element.style.backgroundImage = 'url(' + Utils.parseAsset(value) + ')';
+      }
       this._element.style.backgroundSize = 'cover';
       return this.imageRepeat = false;
     }
@@ -1144,6 +1197,36 @@ View = (function(_super) {
     }
   });
 
+  View.define('imagePositionX', {
+    get: function() {
+      if (this._imagePositionX === NULL) {
+        this._imagePositionX = 0;
+      }
+      return this._imagePositionX;
+    },
+    set: function(value) {
+      this._imagePositionX = value;
+      return this.imagePosition = {
+        x: value
+      };
+    }
+  });
+
+  View.define('imagePositionY', {
+    get: function() {
+      if (this._imagePositionY === NULL) {
+        this._imagePositionY = 0;
+      }
+      return this._imagePositionY;
+    },
+    set: function(value) {
+      this._imagePositionY = value;
+      return this.imagePosition = {
+        y: value
+      };
+    }
+  });
+
   View.define('imagePosition', {
     get: function() {
       if (this._imagePosition === NULL) {
@@ -1153,8 +1236,18 @@ View = (function(_super) {
     },
     set: function(value) {
       this._imagePosition = value;
-      if (typeof value === 'number') {
-        value = value + 'px';
+      if (Utils.isObject(value)) {
+        if (value.x !== NULL) {
+          this._imagePositionX = value.x;
+        }
+        if (value.y !== NULL) {
+          this._imagePositionY = value.y;
+        }
+        value = "" + this.imagePositionX + " " + this.imagePositionY;
+      } else {
+        if (typeof value === 'number') {
+          value = value + 'px';
+        }
       }
       return this._element.style.backgroundPosition = value;
     }
@@ -2490,7 +2583,7 @@ View = (function(_super) {
     clonedView._element.instance = clonedView;
     clonedView._events = NULL;
     clonedView._id = Utils.randomID();
-    clonedView._element.setAttribute('id', ("MagiX" + this._kind + "::") + clonedView.id);
+    clonedView._element.setAttribute('id', ("MagiX" + this._kind + "-") + clonedView.id);
     clonedView._parent = null;
     return clonedView;
   };
@@ -2502,7 +2595,7 @@ View = (function(_super) {
     clonedView._element = this._element.cloneNode(false);
     clonedView._events = NULL;
     clonedView._id = Utils.randomID();
-    clonedView._element.setAttribute('id', ("MagiX" + this._kind + "::") + clonedView.id);
+    clonedView._element.setAttribute('id', ("MagiX" + this._kind + "-") + clonedView.id);
     clonedView._children = [];
     return clonedView;
   };
@@ -3280,7 +3373,7 @@ View = (function(_super) {
 
   View.prototype._createElement = function() {
     this._element = document.createElement(this._elementType);
-    this._element.setAttribute('id', ("MagiX" + this._kind + "::") + this.id);
+    this._element.setAttribute('id', ("MagiX" + this._kind + "-") + this.id);
     this._element.style.overflow = 'hidden';
     this._element.style.outline = 'none';
     this._element.style.position = 'relative';
@@ -3293,7 +3386,7 @@ View = (function(_super) {
   };
 
   View.prototype._fade = function(opacity, parameters) {
-    var time;
+    var final_param, item, time, tmp_param;
     if (!parameters) {
       parameters = {};
     }
@@ -3302,20 +3395,32 @@ View = (function(_super) {
       time = parameters;
       parameters = {};
     }
-    if (parameters.props) {
-      parameters.properties = parameters.props;
+    tmp_param = NULL;
+    final_param = {};
+    if (parameters && parameters.props) {
+      tmp_param = Utils.clone(parameters.props);
     }
-    if (!parameters.properties) {
-      parameters.properties = {};
+    if (parameters && parameters.properties) {
+      tmp_param = Utils.clone(parameters.properties);
     }
-    parameters.properties.opacity = opacity;
-    if (!parameters.curve) {
-      parameters.curve = 'linear';
+    for (item in parameters) {
+      if (item !== 'props' && item !== 'properties') {
+        final_param[item] = parameters[item];
+      }
+    }
+    if (tmp_param !== NULL) {
+      for (item in tmp_param) {
+        final_param[item] = tmp_param[item];
+      }
+    }
+    final_param.opacity = opacity;
+    if (!final_param.curve) {
+      final_param.curve = 'linear';
     }
     if (time) {
-      parameters.time = time;
+      final_param.time = time;
     }
-    return this.animate(parameters);
+    return this.animate(final_param);
   };
 
   View.prototype._updateShadow = function() {

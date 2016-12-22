@@ -105,6 +105,7 @@ var framework_files = [
 	"../sources/js/Location.js",
 	"../sources/js/Thread.js",
 	"../sources/js/Notification.js",
+	"../sources/js/Capture.js",
 
 	"../sources/js/App.js",
 	"../sources/js/Fonts.js",
@@ -134,7 +135,8 @@ var framework_files = [
 	"../sources/js/Player.js",
 	"../sources/js/List.js",
 	"../sources/js/ListItem.js",
-	"../sources/js/Helper.js"
+	"../sources/js/Helper.js",
+	"../sources/js/Device.js"
 ];
 
 server.get('/compile', function (req, res, next) {

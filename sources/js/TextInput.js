@@ -91,6 +91,29 @@ TextInput = (function(_super) {
     }
   });
 
+  TextInput.define('placeholderColor', {
+    get: function() {
+      if (!this._placeholderColor) {
+        return '';
+      }
+      return this._placeholderColor;
+    },
+    set: function(value) {
+      var id;
+      if (value === 'clear') {
+        value = 'transparent';
+      }
+      value = Color.toColor(value);
+      if (value && value.color) {
+        this._placeholderColor = value.color;
+      } else {
+        this._placeholderColor = value;
+      }
+      id = ("MagiX" + this._kind + "-") + this.id;
+      return CSS('#' + id + '::-webkit-input-placeholder {color:    ' + this._placeholderColor + ';}#' + id + ':-moz-placeholder {color:    ' + this._placeholderColor + ';}#' + id + '::-moz-placeholder {color:    ' + this._placeholderColor + ';}#' + id + ':-ms-input-placeholder {color:    ' + this._placeholderColor + ';}');
+    }
+  });
+
   TextInput.define('secure', {
     get: function() {
       if (this._secureTextEntry === void 0) {

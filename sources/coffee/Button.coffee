@@ -6,6 +6,11 @@ class Button extends Text
 	_kind 			: 'Button'
 	_elementType 	: 'button'
 	
+	constructor: (options={}) ->
+		super
+		if App.device and App.device.content
+			@cursor = 'inherit'
+
 	##############################################################
 	# PROPERTIES
 

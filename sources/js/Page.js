@@ -6,13 +6,23 @@ Page = (function(_super) {
   __extends(Page, _super);
 
   function Page(options) {
+    if (options == null) {
+      options = {};
+    }
+    if (App.device) {
+      options.fixed = false;
+    }
     if (options.url) {
       options.parent = -1;
     }
-    if (!options.parent && !options.url) {
-      options.parent = App;
-    }
     Page.__super__.constructor.apply(this, arguments);
+    this.touchCursor();
+    this.onMouseDown(function() {
+      return this.touchActiveCursor();
+    });
+    this.onMouseUp(function() {
+      return this.touchCursor();
+    });
   }
 
   Page.prototype._kind = 'Page';
@@ -49,6 +59,32 @@ Page = (function(_super) {
       return "<Page id:" + this.id + " name:" + this.name + ">";
     }
     return "<Page id:" + this.id + ">";
+  };
+
+  Page.prototype.touchCursor = function() {
+    var c;
+    if (App.device && App.device.type !== NULL && App.device.type !== '') {
+      c = 'url(//s3.amazonaws.com/data.magixjs.com/static/cursors/cursor.png) 32 32, auto';
+      if (Utils.isWebKit()) {
+        c = '-webkit-image-set(url(//s3.amazonaws.com/data.magixjs.com/static/cursors/cursor.png) 1x, url(//s3.amazonaws.com/data.magixjs.com/static/cursors/cursor@2x.png) 2x) 32 32, auto';
+      }
+      return this.cursor = c;
+    } else {
+      return this.cursor = 'default';
+    }
+  };
+
+  Page.prototype.touchActiveCursor = function() {
+    var c;
+    if (App.device && App.device.type !== NULL && App.device.type !== '') {
+      c = 'url(//s3.amazonaws.com/data.magixjs.com/static/cursors/cursorActive.png) 32 32, auto';
+      if (Utils.isWebKit()) {
+        c = '-webkit-image-set(url(//s3.amazonaws.com/data.magixjs.com/static/cursors/cursorActive.png) 1x, url(//s3.amazonaws.com/data.magixjs.com/static/cursors/cursorActive@2x.png) 2x) 32 32, auto';
+      }
+      return this.cursor = c;
+    } else {
+      return this.cursor = 'default';
+    }
   };
 
   return Page;

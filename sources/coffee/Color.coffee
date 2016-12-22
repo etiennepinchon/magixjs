@@ -327,11 +327,11 @@ class Color extends Element
 			if Utils.isNumber(arg)
 				orientation = arg + 'deg'
 			# DEG STRING
-			else if arg.indexOf('deg') > -1
+			else if Utils.isArray(arg) and arg.indexOf('deg') > -1
 				orientation = arg
 			else if arg is 'top' or arg is 'bottom' or arg is 'left' or arg is 'right'
 				orientation = 'to ' + arg
-			else if typeof arg is "string" and @isColorString(arg)
+			else if typeof arg is "string" and Color.isColorString(arg)
 				arg = new Color arg
 				colors.push arg
 			else if arg isnt undefined and arg.toString

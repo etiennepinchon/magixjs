@@ -14,23 +14,57 @@ class View extends Element
 		@_context.emit("view:create", @)
 		@userInteraction = no
 
+		that = @
+		getParent = (normal)->
+			if App.page and that._kind isnt 'Page'
+				return App.page
+			else
+				#console.log App.deviceType, App.device
+				if App.deviceType isnt NULL and App.device is NULL
+					App.device = new Device
+						background: App.deviceBackground
+						padding: 10
+					if App.deviceType
+						App.device.type = App.deviceType
+				p = NULL
+				if normal is no
+					p = App
+					p = App.device.content if App.device
+				return p
+			return
+
 		# If a route is defined -> missing parent == current page
-		if not options.parent
-			if @_kind is 'Page'
+		if not options.parent# or options.parent is NULL
+			# when inserting a device
+			if @_kind is 'Device'
+				options.parent = App._wrapper
+
+			# when inserting a page
+			else if @_kind is 'Page'
+				options.parent = getParent(yes)
+
+			# Views without parent and not current page
+			else if App.running and not App.page
+				App.page = new Page
+					backgroundColor: white
+					parent: getParent(no)
 				options.parent = App.page
-			else if App.running
-				if App.page
-					options.parent = App.page
-				else
-					App.page = new Page
-						backgroundColor: white
-						parent: App
-					options.parent = App.page
+
+			# Other views
+			else
+				options.parent = App.page
+		else if @_kind is 'Page' and options.parent is App
+			options.parent = getParent(no)
+			App.page = @
+
+		if options.parent is 'app'
+			options.parent = NULL
 
 		@props = Defaults.getDefaults @_kind, options
 		delete options.parent if options.parent
 		delete options.addTo if options.addTo
 		@props = options.props if options.props
+
 		
 	##############################################################
 	# PROPERTIES
@@ -697,6 +731,21 @@ class View extends Element
 
 	@_alias 'bc', 'backgroundColor'
 
+
+	##############################################################
+	# BACKGROUND CLIP
+	# ** The background-clip property specifies the painting area of the background.
+
+	@define 'backgroundClip',
+		configurable: yes
+		get: ->
+			return null if @_backgroundClip is NULL
+			@_backgroundClip
+		set: (value) ->
+			value = 'border-box'  if not value
+			@_element.style.backgroundClip = value
+			@_element.style.webkitBackgroundClip = value
+
 	##############################################################
 	# IMAGE
 	# ** Add a background image to your view
@@ -709,7 +758,10 @@ class View extends Element
 		set: (value) ->
 			@_background 					= null
 			@_image 						= value
-			@_element.style.backgroundImage = 'url(' + Utils.parseAsset(value) + ')'
+			if Utils.isString(value) and value.indexOf('linear-gradient') > -1
+				@_element.style.backgroundImage = value
+			else
+				@_element.style.backgroundImage = 'url(' + Utils.parseAsset(value) + ')'
 			@_element.style.backgroundSize 	= 'cover'
 			@imageRepeat 					= no
 	@_alias 'backgroundImage', 'image'
@@ -778,13 +830,36 @@ class View extends Element
 	# IMAGE POSITION
 	# * Chage the position of the background image
 
+	@define 'imagePositionX',
+		get: ->
+			@_imagePositionX = 0 if @_imagePositionX is NULL
+			@_imagePositionX
+		set: (value) ->
+			@_imagePositionX = value
+			@imagePosition = x: value
+
+	@define 'imagePositionY',
+		get: ->
+			@_imagePositionY = 0 if @_imagePositionY is NULL
+			@_imagePositionY
+		set: (value) ->
+			@_imagePositionY = value
+			@imagePosition = y: value
+
 	@define 'imagePosition',
 		get: ->
 			@_imagePosition = '' if @_imagePosition is NULL
 			@_imagePosition
 		set: (value) ->
 			@_imagePosition = value
-			value = value+'px' if typeof value is 'number'
+			if Utils.isObject value
+				if value.x isnt NULL
+					@_imagePositionX = value.x
+				if value.y isnt NULL
+					@_imagePositionY = value.y
+				value = "#{@imagePositionX} #{@imagePositionY}"
+			else
+				value = value+'px' if typeof value is 'number'
 			@_element.style.backgroundPosition = value
 
 
@@ -1625,7 +1700,7 @@ class View extends Element
 		clonedView._element.instance 	= clonedView
 		clonedView._events 				= NULL
 		clonedView._id 					= Utils.randomID()
-		clonedView._element.setAttribute 'id', "MagiX#{@_kind}::" + clonedView.id
+		clonedView._element.setAttribute 'id', "MagiX#{@_kind}-" + clonedView.id
 		clonedView._parent = null
 		clonedView
 		
@@ -1635,7 +1710,7 @@ class View extends Element
 		clonedView._element = @_element.cloneNode no		
 		clonedView._events 	= NULL
 		clonedView._id 		= Utils.randomID()
-		clonedView._element.setAttribute 'id', "MagiX#{@_kind}::" + clonedView.id
+		clonedView._element.setAttribute 'id', "MagiX#{@_kind}-" + clonedView.id
 		clonedView._children = []
 		clonedView
 
@@ -2242,7 +2317,7 @@ class View extends Element
 
 	_createElement: ->
 		@_element = document.createElement(@_elementType)
-		@_element.setAttribute 'id', "MagiX#{@_kind}::" + @id
+		@_element.setAttribute 'id', "MagiX#{@_kind}-" + @id
 		@_element.style.overflow = 'hidden'
 		@_element.style.outline  = 'none'
 		@_element.style.position = 'relative'
@@ -2255,16 +2330,31 @@ class View extends Element
 	_fade : (opacity, parameters)->
 		parameters 	= {} if not parameters
 		time 		= no
-
+		
 		if typeof parameters is 'number'
 			time = parameters
 			parameters = {}
-		parameters.properties 			= parameters.props if parameters.props
-		parameters.properties 			= {} if not parameters.properties
-		parameters.properties.opacity 	= opacity
-		parameters.curve 				= 'linear' if not parameters.curve
-		parameters.time 				= time if time
-		@animate parameters
+
+		tmp_param = NULL
+		final_param = {}
+		if parameters and parameters.props
+			tmp_param = Utils.clone parameters.props
+		if parameters and parameters.properties
+			tmp_param = Utils.clone parameters.properties
+
+		for item of parameters
+			if item isnt 'props' and item isnt 'properties'
+				final_param[item] = parameters[item]
+
+		if tmp_param isnt NULL
+			for item of tmp_param
+				final_param[item] = tmp_param[item]
+
+		final_param.opacity 	= opacity
+		final_param.curve 	= 'linear' if not final_param.curve
+		final_param.time 	= time if time
+
+		@animate final_param
 
 	_updateShadow : ->
 		return @_element.style.boxShadow = @shadowX + 'px ' + @shadowY + 'px ' + @shadowBlur + 'px ' + @shadowSpread + 'px ' + @shadowColor + ' ' + @shadowInset

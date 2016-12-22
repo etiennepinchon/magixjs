@@ -71,6 +71,31 @@ class TextInput extends Text
 			@_element.setAttribute 'placeholder', value
 			return
 
+	@define 'placeholderColor',
+		get: ->
+			return '' if not @_placeholderColor
+			return @_placeholderColor
+		set: (value) ->
+			value = 'transparent' if value is 'clear'
+			value = Color.toColor(value)
+			if value and value.color
+				@_placeholderColor = value.color
+			else
+				@_placeholderColor = value
+			id = "MagiX#{@_kind}-"+@id
+			CSS '#'+id+'::-webkit-input-placeholder {\
+			    color:    '+@_placeholderColor+';\
+			}\
+			#'+id+':-moz-placeholder {\
+			    color:    '+@_placeholderColor+';\
+			}\
+			#'+id+'::-moz-placeholder {\
+			    color:    '+@_placeholderColor+';\
+			}\
+			#'+id+':-ms-input-placeholder {\
+			    color:    '+@_placeholderColor+';\
+			}'
+
 	# *********************************
 
 	@define 'secure',

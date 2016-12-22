@@ -8,7 +8,11 @@ App._ee = new EventEmitter();
 
 App._pages_counter = 0;
 
-App._keywords = ['center', 'left', 'right', 'top', 'bottom', 'auto', 'inline-block', 'inline', 'block', 'none', 'fit', 'fitCenter', 'fill', 'fillWidth', 'fillHeight', 'fillHeightCenter', 'text', 'pointer', 'progress', 'move', 'help', 'grabbing', 'grab', 'default', 'crosshair', 'copy', 'col-resize', 'e-resize', 'normal', 'multiply', 'screen', 'overlay', 'darken', 'lighten', 'color-dodge', 'color-burn', 'hard-light', 'soft-light', 'difference', 'exclusion', 'hue', 'saturation', 'color', 'luminosity', 'vertical', 'horizontal'];
+App.deviceType = NULL;
+
+App.deviceBackground = white;
+
+App._keywords = ['center', 'left', 'right', 'top', 'bottom', 'auto', 'inline-block', 'inline', 'block', 'none', 'fit', 'fitCenter', 'fill', 'fillWidth', 'fillHeight', 'fillHeightCenter', 'text', 'pointer', 'progress', 'move', 'help', 'grabbing', 'grab', 'default', 'crosshair', 'copy', 'col-resize', 'e-resize', 'normal', 'multiply', 'screen', 'overlay', 'darken', 'lighten', 'color-dodge', 'color-burn', 'hard-light', 'soft-light', 'difference', 'exclusion', 'hue', 'saturation', 'color', 'luminosity', 'vertical', 'horizontal', 'border-box', 'padding-box', 'content-box'];
 
 _ref = App._keywords;
 for (_i = 0, _len = _ref.length; _i < _len; _i++) {
@@ -76,6 +80,9 @@ App.reset = function() {
   this._responsives = {};
   this._fonts = [];
   this._fontsCollection = [];
+  App.device = NULL;
+  App.deviceType = NULL;
+  App.deviceBackground = white;
   if (!this.DefaultContext) {
     this.DefaultContext = new Context({
       name: 'Default',
@@ -121,10 +128,20 @@ App.run = function(callback) {
     this.CurrentContext._element.appendChild(this._element);
     this._wrapper = new View({
       width: '100%',
-      height: '100%'
+      height: '100%',
+      parent: 'app'
     });
     this._element.appendChild(this._wrapper._element);
     this._wrapper._element.setAttribute('id', 'MagiXWrapper::' + this._wrapper.id);
+
+    /*
+    		if App.deviceType isnt NULL
+    			App.device = new Device
+    				background: App.deviceBackground
+    				padding: 10
+    			if App.deviceType
+    				App.device.type = App.deviceType
+     */
     App.on(Event.HistoryChanged, function(e) {
       if (e.state) {
         return Routes.routing();
@@ -347,7 +364,7 @@ App.setup = function() {
     return location.hash.replace('#', '');
   };
   this.addPage = function(page) {
-    var child, _j, _len1, _ref1;
+    var child, p, _j, _len1, _ref1;
     App._responsives = {};
     _ref1 = App._wrapper.children;
     for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
@@ -361,7 +378,11 @@ App.setup = function() {
     }
     if (page._kind && page._kind === 'Page') {
       App._page = page;
-      return App._page.parent = this;
+      p = App;
+      if (App.device) {
+        p = App.device.content;
+      }
+      return App._page.parent = p;
     }
   };
   this.removePage = function(page) {
@@ -405,6 +426,18 @@ App.setup = function() {
       return false;
     }
     window.navigator.vibrate(pattern);
+  };
+  this.setDevice = function(device) {
+    App.deviceType = device;
+    if (App.device) {
+      App.device.type = App.deviceType;
+    }
+  };
+  this.setDeviceBackground = function(background) {
+    App.deviceBackground = background;
+    if (App.device) {
+      App.device.background = App.deviceBackground;
+    }
   };
   return;
   return history.pushState({}, null, '/' + this.pathname.join('/'));

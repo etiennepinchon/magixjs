@@ -5,13 +5,19 @@ var Button,
 Button = (function(_super) {
   __extends(Button, _super);
 
-  function Button() {
-    return Button.__super__.constructor.apply(this, arguments);
-  }
-
   Button.prototype._kind = 'Button';
 
   Button.prototype._elementType = 'button';
+
+  function Button(options) {
+    if (options == null) {
+      options = {};
+    }
+    Button.__super__.constructor.apply(this, arguments);
+    if (App.device && App.device.content) {
+      this.cursor = 'inherit';
+    }
+  }
 
   Button.define('icon', {
     get: function() {

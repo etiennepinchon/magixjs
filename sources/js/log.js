@@ -18,9 +18,11 @@ log = function() {
     if (!sameOrigin) {
       return;
     }
-    window.top.ORB_CONSOLE.push(message);
-    if (window.top.REFRESH_ORB_CONSOLE !== NULL) {
-      window.top.REFRESH_ORB_CONSOLE();
+    if (window.top.__CONSOLE !== NULL) {
+      window.top.__CONSOLE.push(message);
+      if (window.top.__REFRESH_CONSOLE !== NULL) {
+        window.top.__REFRESH_CONSOLE();
+      }
     }
   } else {
     console.log(message);

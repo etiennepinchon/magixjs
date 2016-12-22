@@ -6,10 +6,11 @@ window._SpeechRecognition = window.SpeechRecognition if window.SpeechRecognition
 class SpeechRecognition extends Element
 
 	_kind 		: 'SpeechRecognition'
-	supported 	: no
+	supported 	: yes
 
 	constructor: (str, options={})->
-		if not window._SpeechRecognition
+		that = @
+		if window._SpeechRecognition is NULL
 			if options.unsupported then options.unsupported()
 			@emit Event.Unsupported
 			@supported = no
@@ -22,7 +23,7 @@ class SpeechRecognition extends Element
 		@recognition.lang = options.language if options.language
 		@recognition.grammars = options.grammars if options.grammars
 		@recognition.maxAlternatives = options.maxAlternatives if options.maxAlternatives
-			
+		
 		@recognition.onaudiostart = (e) ->
 			that.emit Event.AudioStart, e
 			return

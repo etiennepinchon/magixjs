@@ -31,7 +31,7 @@ Below Mobile, viewB,
 Above Mobile, viewB,
 	backgroundColor: 'green'
  */
-var Above, Below, Desktop, Mobile, Netbook, Phone, QHD, Screen, TV, Tablet, UHD, Watch, When;
+var Above, Below, Desktop, Mobile, Netbook, Phone, QHD, Screen, TV, Tablet, UHD, Watch, When, iPad, iPhone5, iPhone7;
 
 Watch = 'Watch';
 
@@ -50,6 +50,12 @@ TV = 'TV';
 QHD = 'QHD';
 
 UHD = 'UHD';
+
+iPad = 'iPad';
+
+iPhone5 = 'iPhone5';
+
+iPhone7 = 'iPhone7';
 
 When = function(direction, def, actions) {
   var action, arr, key, keys, responsives, _i, _j, _k, _len, _len1, _len2;
@@ -111,26 +117,32 @@ Above = function(def, actions, optional) {
 Screen = {
   definitions: {
     Watch: 0,
+    iPhone5: 320,
     Mobile: 320,
+    iPhone7: 375,
     Phone: 480,
     Tablet: 760,
+    iPad: 768,
     Netbook: 960,
     Desktop: 1200,
     TV: 1600,
     QHD: 1980,
     UHD: 2600
   },
-  below: [UHD, QHD, TV, Desktop, Netbook, Tablet, Phone, Mobile, Watch],
-  above: [Watch, Mobile, Phone, Tablet, Netbook, Desktop, TV, QHD, UHD]
+  below: [UHD, QHD, TV, Desktop, Netbook, iPad, Tablet, Phone, iPhone7, Mobile, iPhone5, Watch],
+  above: [Watch, iPhone5, Mobile, iPhone7, Phone, Tablet, iPad, Netbook, Desktop, TV, QHD, UHD]
 };
 
 App._updateResponsivesStates = function() {
-  var definition;
+  var definition, w;
   Below.states = {
     Watch: false,
+    iPhone5: false,
     Mobile: false,
+    iPhone7: false,
     Phone: false,
     Tablet: false,
+    iPad: false,
     Netbook: false,
     UHD: false,
     QHD: false,
@@ -139,9 +151,11 @@ App._updateResponsivesStates = function() {
   };
   Above.states = {
     Watch: false,
+    iPhone5: false,
     Mobile: false,
     Phone: false,
     Tablet: false,
+    iPad: false,
     Netbook: false,
     UHD: false,
     QHD: false,
@@ -149,10 +163,14 @@ App._updateResponsivesStates = function() {
     Desktop: false
   };
   for (definition in Screen.definitions) {
-    if (App.width >= Screen.definitions[definition]) {
+    w = App.width;
+    if (App.device && App.device.content) {
+      w = App.device.content.width;
+    }
+    if (w >= Screen.definitions[definition]) {
       Above.states[definition] = true;
     }
-    if (App.width <= Screen.definitions[definition]) {
+    if (w <= Screen.definitions[definition]) {
       Below.states[definition] = true;
     }
   }
@@ -163,22 +181,20 @@ App._updateResponsivesStates = function() {
 };
 
 App._updateResponsives = function(responsives) {
-  var def, definition, props, view, viewID, _i, _j, _len, _len1, _ref, _ref1;
+  var def, props, view, viewID, _i, _j, _len, _len1, _ref, _ref1;
   for (viewID in responsives) {
     view = responsives[viewID];
     props = {};
     _ref = Screen.below;
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-      definition = _ref[_i];
-      def = Utils.capitalizeFirst(definition);
+      def = _ref[_i];
       if (view['_Below' + def] && Below.states[def] === true) {
         props = Utils.extend(props, view['_Below' + def]);
       }
     }
     _ref1 = Screen.above;
     for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
-      definition = _ref1[_j];
-      def = Utils.capitalizeFirst(definition);
+      def = _ref1[_j];
       if (view['_Above' + def] && Above.states[def] === true) {
         props = Utils.extend(props, view['_Above' + def]);
       }

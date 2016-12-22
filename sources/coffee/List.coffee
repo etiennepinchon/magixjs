@@ -49,13 +49,13 @@ class List extends View
 	# * Set the number of item in the list with the help of a function
 
 	length : (functionToCount) ->
-		if functionToCount and typeof functionToCount is 'number'
+		if functionToCount isnt NULL and typeof functionToCount is 'number'
 			value = functionToCount
 			functionToCount = ->
 				value
 
 		# If the count function is defined we add it
-		if functionToCount
+		if functionToCount isnt NULL
 			@functionToCount = functionToCount
 			return
 

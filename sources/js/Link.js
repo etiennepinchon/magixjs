@@ -62,6 +62,24 @@ Link = (function(_super) {
     }
   });
 
+  Link.define('download', {
+    get: function() {
+      if (this._download === NULL) {
+        return false;
+      }
+      return this._download;
+    },
+    set: function(value) {
+      if (value === true) {
+        this._download = true;
+        this._element.setAttribute('download', Utils.filenameFromURL(this.url));
+      } else {
+        this._download = false;
+        this._element.removeAttribute('download');
+      }
+    }
+  });
+
   Link.define('auto', {
     get: function() {
       if (this._auto === NULL) {
@@ -136,6 +154,10 @@ Link = (function(_super) {
         return event.preventDefault();
       }
     }
+  };
+
+  Link.prototype.trigger = function() {
+    return this.element.click();
   };
 
   Link.prototype._isExternal = function(url) {

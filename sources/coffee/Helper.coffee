@@ -7,3 +7,4 @@ FadeOut = (view, options)-> view.fadeIn(options)
 Show = (view)-> view.show()
 Hide = (view)-> view.hide()
 CSS = Utils.insertCSS
+Gradient = Color.gradient
