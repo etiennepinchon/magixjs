@@ -2,6 +2,9 @@
 # Page
 
 class Page extends View
+
+	cursorPath : '//s3.amazonaws.com/data.magixjs.com/static/cursors/'
+
 	constructor: (options={}) ->
 		if App.device
 			options.fixed = no
@@ -47,18 +50,18 @@ class Page extends View
 
 	touchCursor : ->
 		if App.device and App.device.type isnt NULL and App.device.type isnt ''
-			c =  'url(//s3.amazonaws.com/data.magixjs.com/static/cursors/cursor.png) 32 32, auto'
+			c =  'url('+@cursorPath+'cursor.png) 32 32, auto'
 			if Utils.isWebKit()
-				c = '-webkit-image-set(url(//s3.amazonaws.com/data.magixjs.com/static/cursors/cursor.png) 1x, url(//s3.amazonaws.com/data.magixjs.com/static/cursors/cursor@2x.png) 2x) 32 32, auto'
+				c = '-webkit-image-set(url('+@cursorPath+'cursor.png) 1x, url('+@cursorPath+'cursor@2x.png) 2x) 32 32, auto'
 			@cursor = c
 		else
 			@cursor = 'default'
 		
 	touchActiveCursor : ->
 		if App.device and App.device.type isnt NULL and App.device.type isnt ''
-			c = 'url(//s3.amazonaws.com/data.magixjs.com/static/cursors/cursorActive.png) 32 32, auto'
+			c = 'url('+@cursorPath+'cursorActive.png) 32 32, auto'
 			if Utils.isWebKit()
-				c = '-webkit-image-set(url(//s3.amazonaws.com/data.magixjs.com/static/cursors/cursorActive.png) 1x, url(//s3.amazonaws.com/data.magixjs.com/static/cursors/cursorActive@2x.png) 2x) 32 32, auto'
+				c = '-webkit-image-set(url('+@cursorPath+'cursorActive.png) 1x, url('+@cursorPath+'cursorActive@2x.png) 2x) 32 32, auto'
 			@cursor = c
 		else
 			@cursor = 'default'

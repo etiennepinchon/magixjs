@@ -9,6 +9,12 @@ Import = function(paths, cb) {
     paths = [paths];
   }
   toImport = [];
+  if (cb !== NULL && !Utils.isFunction(cb)) {
+    print('Import: callback must be function.', {
+      error: true
+    });
+    return;
+  }
   for (_i = 0, _len = paths.length; _i < _len; _i++) {
     path = paths[_i];
     if (path.indexOf('.js') === -1) {

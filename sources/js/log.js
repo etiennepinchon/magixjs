@@ -1,9 +1,13 @@
-var log,
+var log, print,
   __slice = [].slice;
 
 log = function() {
-  var args, e, message, sameOrigin;
+  var args, e, message, options, sameOrigin;
   args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+  options = {};
+  if (Utils.isObject(args[args.length - 1])) {
+    options = args.pop();
+  }
   message = '» ' + args.map(function(obj) {
     return Utils.inspect(obj);
   }).join(", ");
@@ -25,6 +29,10 @@ log = function() {
       }
     }
   } else {
+    if (options !== NULL && options.error) {
+      console.error(message);
+      return;
+    }
     console.log(message);
   }
 };
@@ -41,6 +49,8 @@ log.timeEnd = function(name) {
   }
   return log(Utils.round(window.performance.now() - log._times[name], 2) + 'ms');
 };
+
+print = log;
 
 
 /*

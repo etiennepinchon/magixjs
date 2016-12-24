@@ -1,57 +1,28 @@
 
 App.run ->
-	
+	Import 'dss'
+
 	Font 'Montserrat', '400, 700'
-	App.setDevice Device.iPad
-	#App.setDeviceBackground Gradient red, blue
 
-	Playground = new Page
-		parent: App
+	# Choose device to emulate
+	App.setDevice Device.iPhoneGold
 
-	myGradient = Gradient('#f52fee', '#6600FF')
-	Playground.backgroundColor = myGradient
+	# Create a new text
+	myText = new Text
+		width: auto
+		text: 'Hello'
+		image: 'http://goo.gl/TY8mx3'
+		imagePosition: center
+		imageScale: 1
+		backgroundClip: text
+		fontSize: 120
+		fontWeight: 700
+		color: clear
+	myText.center()
 
-	# Create a new container
-	myView = new View
-		width: 200
-		height: 200
-		backgroundColor: white
-		borderRadius: 5
-
-	# Center the container
-	myView.center()
-
-	# Add action when the mouse enter
-	myView.onMouseIn ->
-		this.animate
-			properties:
-				scale: 1.1
-				rotate: 45
-			curve: 'spring(800, 20, 10)'
-
-	# Add action when the mouse leave
-	myView.onMouseOut ->
-		this.animate
-			properties:
-				scale: 1
-				rotate: 0
-			curve: 'spring(800, 20, 10)'
-
-
-
-	Delay 2, ->
-		App.run ->
-			Font 'Montserrat', '400, 700'
-			App.setDevice Device.iPad
-			App.setDeviceBackground Gradient red, blue
-
-			Playground = new Page
-				parent: App
-
-			myGradient = Gradient('#f52fee', red)
-			Playground.backgroundColor = myGradient
-
-
+	Request.send 'http://localhost:8880',
+		parameters:
+			data: 42
 
 
 

@@ -9,6 +9,11 @@ Import = (paths, cb) ->
 	paths = [paths] if Utils.isString(paths)
 	toImport = []
 
+	if cb isnt NULL and not Utils.isFunction(cb)
+		print 'Import: callback must be function.', 
+			error: yes
+		return
+
 	# Parse paths
 	for path in paths
 

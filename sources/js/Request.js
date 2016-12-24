@@ -28,7 +28,7 @@ RequestEngine = (function(_super) {
   RequestEngine.prototype.xhttp = new XMLHttpRequest;
 
   function RequestEngine(type, args) {
-    var item;
+    var item, that;
     if (!Utils.isString(args[0])) {
       return null;
     }
@@ -71,8 +71,9 @@ RequestEngine = (function(_super) {
       }
     }
     if (this.parameters) {
+      that = this;
       this._parameters = Object.keys(this.parameters).map(function(k) {
-        return encodeURIComponent(k) + '=' + encodeURIComponent(this.parameters[k]);
+        return encodeURIComponent(k) + '=' + encodeURIComponent(that.parameters[k]);
       }).join('&');
     }
     if (this.files) {
@@ -86,6 +87,7 @@ RequestEngine = (function(_super) {
     if (type === 'POST' && this.files) {
       this._parameters = new FormData;
       for (item in this.parameters) {
+        console.log(this.parameters);
         this._parameters.append(item, this.parameters[item]);
       }
       for (item in this.files) {

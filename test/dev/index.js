@@ -1,48 +1,24 @@
 App.run(function() {
-  var Playground, myGradient, myView;
+  var myText;
+  Import('dss');
   Font('Montserrat', '400, 700');
-  App.setDevice(Device.iPad);
-  Playground = new Page({
-    parent: App
+  App.setDevice(Device.iPhoneGold);
+  myText = new Text({
+    width: auto,
+    text: 'Hello',
+    image: 'http://goo.gl/TY8mx3',
+    imagePosition: center,
+    imageScale: 1,
+    backgroundClip: text,
+    fontSize: 120,
+    fontWeight: 700,
+    color: clear
   });
-  myGradient = Gradient('#f52fee', '#6600FF');
-  Playground.backgroundColor = myGradient;
-  myView = new View({
-    width: 200,
-    height: 200,
-    backgroundColor: white,
-    borderRadius: 5
-  });
-  myView.center();
-  myView.onMouseIn(function() {
-    return this.animate({
-      properties: {
-        scale: 1.1,
-        rotate: 45
-      },
-      curve: 'spring(800, 20, 10)'
-    });
-  });
-  myView.onMouseOut(function() {
-    return this.animate({
-      properties: {
-        scale: 1,
-        rotate: 0
-      },
-      curve: 'spring(800, 20, 10)'
-    });
-  });
-  return Delay(2, function() {
-    return App.run(function() {
-      Font('Montserrat', '400, 700');
-      App.setDevice(Device.iPad);
-      App.setDeviceBackground(Gradient(red, blue));
-      Playground = new Page({
-        parent: App
-      });
-      myGradient = Gradient('#f52fee', red);
-      return Playground.backgroundColor = myGradient;
-    });
+  myText.center();
+  return Request.send('http://localhost:8880', {
+    parameters: {
+      data: 42
+    }
   });
 
   /*

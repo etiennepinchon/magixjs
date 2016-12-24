@@ -5,6 +5,8 @@ var Page,
 Page = (function(_super) {
   __extends(Page, _super);
 
+  Page.prototype.cursorPath = '//s3.amazonaws.com/data.magixjs.com/static/cursors/';
+
   function Page(options) {
     if (options == null) {
       options = {};
@@ -64,9 +66,9 @@ Page = (function(_super) {
   Page.prototype.touchCursor = function() {
     var c;
     if (App.device && App.device.type !== NULL && App.device.type !== '') {
-      c = 'url(//s3.amazonaws.com/data.magixjs.com/static/cursors/cursor.png) 32 32, auto';
+      c = 'url(' + this.cursorPath + 'cursor.png) 32 32, auto';
       if (Utils.isWebKit()) {
-        c = '-webkit-image-set(url(//s3.amazonaws.com/data.magixjs.com/static/cursors/cursor.png) 1x, url(//s3.amazonaws.com/data.magixjs.com/static/cursors/cursor@2x.png) 2x) 32 32, auto';
+        c = '-webkit-image-set(url(' + this.cursorPath + 'cursor.png) 1x, url(' + this.cursorPath + 'cursor@2x.png) 2x) 32 32, auto';
       }
       return this.cursor = c;
     } else {
@@ -77,9 +79,9 @@ Page = (function(_super) {
   Page.prototype.touchActiveCursor = function() {
     var c;
     if (App.device && App.device.type !== NULL && App.device.type !== '') {
-      c = 'url(//s3.amazonaws.com/data.magixjs.com/static/cursors/cursorActive.png) 32 32, auto';
+      c = 'url(' + this.cursorPath + 'cursorActive.png) 32 32, auto';
       if (Utils.isWebKit()) {
-        c = '-webkit-image-set(url(//s3.amazonaws.com/data.magixjs.com/static/cursors/cursorActive.png) 1x, url(//s3.amazonaws.com/data.magixjs.com/static/cursors/cursorActive@2x.png) 2x) 32 32, auto';
+        c = '-webkit-image-set(url(' + this.cursorPath + 'cursorActive.png) 1x, url(' + this.cursorPath + 'cursorActive@2x.png) 2x) 32 32, auto';
       }
       return this.cursor = c;
     } else {

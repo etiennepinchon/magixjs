@@ -33,14 +33,12 @@ View = (function(_super) {
             background: App.deviceBackground,
             padding: 10
           });
-          if (App.deviceType) {
-            App.device.type = App.deviceType;
-          }
+          App.device.type = App.deviceType;
         }
         p = NULL;
         if (normal === false) {
           p = App;
-          if (App.device) {
+          if (App.device !== NULL) {
             p = App.device.content;
           }
         }

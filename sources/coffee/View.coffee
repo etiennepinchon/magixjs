@@ -24,12 +24,11 @@ class View extends Element
 					App.device = new Device
 						background: App.deviceBackground
 						padding: 10
-					if App.deviceType
-						App.device.type = App.deviceType
+					App.device.type = App.deviceType
 				p = NULL
 				if normal is no
 					p = App
-					p = App.device.content if App.device
+					p = App.device.content if App.device isnt NULL
 				return p
 			return
 

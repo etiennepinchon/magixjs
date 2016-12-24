@@ -1,5 +1,8 @@
 log = (args...)->
-	
+	options = {}
+	if Utils.isObject args[args.length-1]
+		options = args.pop()
+
 	message 	= '» ' + args.map((obj) -> Utils.inspect(obj)).join(", ")
 	sameOrigin 	= NULL
 
@@ -16,6 +19,9 @@ log = (args...)->
 			if window.top.__REFRESH_CONSOLE isnt NULL
 				window.top.__REFRESH_CONSOLE()
 	else
+		if options isnt NULL and options.error
+			console.error message
+			return
 		console.log message
 	return
 

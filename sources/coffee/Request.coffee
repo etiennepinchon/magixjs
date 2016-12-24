@@ -34,8 +34,9 @@ class RequestEngine extends Element
 				@success = args[2]
 				@error   = args[3] if Utils.isFunction(args[3])
 		if @parameters
+			that = @
 			@_parameters = Object.keys(@parameters).map((k) ->
-				encodeURIComponent(k) + '=' + encodeURIComponent(@parameters[k])
+				encodeURIComponent(k) + '=' + encodeURIComponent(that.parameters[k])
 			).join('&')
 		if @files then @setUploadEvents()
 		@xhttp.onreadystatechange = @responseProcess.bind(this)
@@ -45,6 +46,7 @@ class RequestEngine extends Element
 		if type is 'POST' and @files
 			@_parameters = new FormData
 			for item of @parameters
+				console.log @parameters
 				@_parameters.append item, @parameters[item]
 			for item of @files
 				@_parameters.append item, @files[item]

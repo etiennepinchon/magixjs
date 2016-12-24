@@ -9,7 +9,6 @@ Originals = {
     backgroundColor: 'rgba(123,123,123,0.5)'
   },
   Page: {
-    fixed: true,
     x: 0,
     y: 0,
     width: '100%',
