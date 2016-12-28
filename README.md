@@ -19,10 +19,13 @@ Combined with Coffeescript, MagiX get ride of HTML/CSS and Javascript allowing y
 
 To find help visit:
 [Documentation](https://magixjs.com/learn)
-[Twitter](https://twitter.com/etiennepinchon)
+[Twitter](https://twitter.com/magixjs)
+[Facebook](https://www.facebook.com/magixjs/)
+[Facebook Group](https://www.facebook.com/groups/magixjs/)
+[Slack](https://magixjs.slack.com)
 
 #############################################
 # About
-Created by Etienne Pinchon (@etiennepinchon)
-[Twitter](https://twitter.com/etiennepinchon)
+Created by Etienne Pinchon ([@etiennepinchon](https://twitter.com/etiennepinchon))
+
 ©2016
