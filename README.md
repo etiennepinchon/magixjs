@@ -19,9 +19,8 @@ Combined with Coffeescript, MagiX get ride of HTML/CSS and Javascript allowing y
 * No stress, no anxiety, only friendly coding!
 
 #############################################
-# Help
+# Help: you are not alone!
 
-To find help visit:  
 [Documentation](https://magixjs.com/learn)  
 [Twitter](https://twitter.com/magixjs)  
 [Facebook](https://www.facebook.com/magixjs/)  
