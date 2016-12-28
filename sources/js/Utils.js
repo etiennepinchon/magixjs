@@ -9,6 +9,9 @@ Utils.parseAsset = function(value) {
   if (!value || value.length === 0) {
     return value;
   }
+  if (!Utils.isString(value)) {
+    return value;
+  }
   if (window.__CATALOG !== void 0) {
     tmp_value = '';
     extension = value.split('.').pop();

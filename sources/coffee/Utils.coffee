@@ -8,6 +8,7 @@ Utils = {}
 
 Utils.parseAsset = (value) ->
 	return value if not value or value.length is 0
+	return value if not Utils.isString(value)
 
 	if window.__CATALOG isnt undefined
 		tmp_value = ''
