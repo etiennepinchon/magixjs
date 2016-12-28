@@ -31,6 +31,6 @@ To find help visit:
 #############################################
 # About
 
-Created by Etienne Pinchon ([@etiennepinchon](https://twitter.com/etiennepinchon))
+Created by Etienne Pinchon ([@etiennepinchon](https://twitter.com/etiennepinchon)) at [42US](https://www.42.us.org/)
 
 ©2016
