@@ -18,11 +18,11 @@ Combined with Coffeescript, MagiX get ride of HTML/CSS and Javascript allowing y
 # Help
 
 To find help visit:
-[Documentation](https://magixjs.com/learn)
-[Twitter](https://twitter.com/magixjs)
-[Facebook](https://www.facebook.com/magixjs/)
-[Facebook Group](https://www.facebook.com/groups/magixjs/)
-[Slack](https://magixjs.slack.com)
+[Documentation](https://magixjs.com/learn)  
+[Twitter](https://twitter.com/magixjs)  
+[Facebook](https://www.facebook.com/magixjs/)  
+[Facebook Group](https://www.facebook.com/groups/magixjs/)  
+[Slack](https://magixjs.slack.com)  
 
 #############################################
 # About
