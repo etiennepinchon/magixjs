@@ -1,9 +1,9 @@
-# MagiX
+# MagiXJS
 
 ![MagiXJS. Beyond magical.](https://magixjs.com/documents/images/logo/logo.svg)
 
-Beyond magical. 
-[magixjs](https://magixjs.com)
+# Beyond magical.  
+[Visit magixjs.com](https://magixjs.com)
 
 MagiXJS allow you to create the most advance webapps ever built.
 Combined with Coffeescript, MagiX get ride of HTML/CSS and Javascript allowing you to create webapps only using one language and one framework. It is easy to learn and will push your next project to new heights.
